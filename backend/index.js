@@ -4,9 +4,8 @@ import DB from './db.js'
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 
-import { check, validationResult } from 'express-validator';
+import { check } from 'express-validator';
 import cookieParser from 'cookie-parser';
-import { getRandomValues } from 'crypto';
 
 const PORT = process.env.PORT || 3000;
 
