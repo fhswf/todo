@@ -29,13 +29,9 @@ jobs:
         node-version: 14
 
     - name: Install project dependencies
-      run: |
-        cd ./backend
-        npm install
+      run: npm install
       working-directory: ./backend
 
     - name: Run tests
-      run: |
-        cd ./backend
-        npm run test
+      run: npm run test
       working-directory: ./backend
