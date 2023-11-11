@@ -17,10 +17,16 @@ jobs:
     strategy:
       matrix:
         node-version: [18.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
+        mongodb-version: ['6.0']
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/ 
+        
     steps:
     - uses: actions/checkout@v3
+    - name: Start MongoDB
+      uses: supercharge/mongodb-github-action@1.10.0
+      with:
+        mongodb-version: ${{ matrix.mongodb-version }}
+        mongodb-port: 27017
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
