@@ -6,11 +6,10 @@ jobs:
       ubuntu-latest  
     steps:
       - name: Start MongoDB
-       uses: supercharge/mongodb-github-action@1.10.0
-       with:
-         mongodb-version:§{{matrix.mongodg-version}}
+        uses: supercharge/mongodb-github-action@1.10.0
+
       - name: Git Checkout
-            uses: actions/checkout@v4
+        uses: actions/checkout@v4
       - run: npm install
       - run: npm test
         env:
