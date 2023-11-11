@@ -34,5 +34,7 @@ jobs:
         cache: 'npm'
     - run: npm install
       working-directory: ./backend
+    - run: npm start
+      working-directory: ./backend
     - run: npx cypress run
       working-directory: ./backend
