@@ -38,3 +38,5 @@ jobs:
       with:
           build: npm install
           start: npm start
+          working-directory: ./backend
+    
