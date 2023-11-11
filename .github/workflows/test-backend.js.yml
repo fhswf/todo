@@ -1,6 +1,9 @@
 name: Node.js Tests with MongoDB
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
     branches:
       - main
