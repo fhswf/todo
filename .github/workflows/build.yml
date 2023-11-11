@@ -1,29 +1,38 @@
-name: Build
+name: Node.js Tests with MongoDB
 
 on:
-  push:
+  pull_request:
     branches:
       - main
 
-
 jobs:
-  build:
-    name: Build
+  test:
     runs-on: ubuntu-latest
-    permissions: read-all
+
+    services:
+      mongodb:
+        image: mongo:4.4
+        ports:
+          - 27017:27017
+        options: --name mongodb
+
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - uses: sonarsource/sonarqube-scan-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} # Generate a token on SonarQube, add it to the secrets of this repo with the name SONAR_TOKEN (Settings > Secrets > Actions > add new repository secret)
-          SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
-          SONAR_ROOT_CERT: ${{ vars.SONAR_ROOT_CERT }}
-      # If you wish to fail your job when the Quality Gate is red, uncomment the
-      # following lines. This would typically be used to fail a deployment.
-      # - uses: sonarsource/sonarqube-quality-gate-action@master
-      #   timeout-minutes: 5
-      #   env:
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: 14
+
+    - name: Install project dependencies
+      run: |
+        cd backend
+        npm install
+      working-directory: ./backend
+
+    - name: Run tests
+      run: |
+        cd backend
+        npm run test
+      working-directory: ./backend
