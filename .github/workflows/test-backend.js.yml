@@ -1,7 +1,7 @@
 name: Node.js Tests with MongoDB
 
 on:
-  push:
+  pull_request:
     branches:
       - main
 
@@ -27,12 +27,12 @@ jobs:
 
     - name: Install project dependencies
       run: |
-        cd backend
+        cd ./backend
         npm install
       working-directory: ./backend
 
     - name: Run tests
       run: |
-        cd backend
+        cd ./backend
         npm run test
       working-directory: ./backend
