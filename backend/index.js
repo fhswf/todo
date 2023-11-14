@@ -4,7 +4,7 @@ import DB from './db.js'
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 
-import { check, validationResult } from 'express-validator';
+import { check, validationResult, checkSchema, checkExact } from 'express-validator';
 import cookieParser from 'cookie-parser';
 
 const PORT = process.env.PORT || 3000;
@@ -22,6 +22,16 @@ const validate = (req, res, next) => {
     });
 }
 
+const checkSwaggerSchema = (swaggerSchema) => {
+    const validatorSchema = {}
+    for(const [key, value] of Object.entries(swaggerSchema.properties)) {
+        if(key === "_id") continue;
+        const rule = {exists: true}
+        validatorSchema[key] = rule;
+    }
+    
+    return checkExact(checkSchema(validatorSchema))
+}
 
 const swaggerOptions = {
     swaggerDefinition: {
@@ -111,6 +121,7 @@ const todoValidationRules = [
         .withMessage('Titel darf nicht leer sein')
         .isLength({ min: 3 })
         .withMessage('Titel muss mindestens 3 Zeichen lang sein'),
+        checkSwaggerSchema(swaggerOptions.swaggerDefinition.components.schemas.Todo)
 ];
 
 
@@ -282,7 +293,7 @@ app.put('/todos/:id', authenticate,
 app.post('/todos', authenticate, todoValidationRules, validate,
     async (req, res) => {
         let todo = req.body;
-       
+                
         if (!todo) {
             res.sendStatus(400, { message: "Todo fehlt" });
             return;
