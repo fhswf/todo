@@ -54,8 +54,11 @@ describe('ToDo Anwendung', function () {
             //get todo id
             const id = response.body._id
             cy.visit(`http://localhost:${PORT}/todo.html`)
-            cy.get(`#todo-${id}`).find('Löschen').trigger("click")
-            cy.contains(id).should('not.exist')
+            cy.get(`#todo-${id}`).within(()=>{
+                cy.get('.delete').click();
+                
+            });
+            cy.contains('#todo-${id}').should('not.exist');
         })
     })
 })
