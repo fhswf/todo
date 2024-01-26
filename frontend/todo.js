@@ -3,7 +3,7 @@
 let todos = [];
 const status = ["offen", "in Bearbeitung", "erledigt"];
 
-const API = "/todos"
+const API = "../backend/todos.json"
 
 function createTodoElement(todo) {
     let list = document.getElementById("todo-list");
