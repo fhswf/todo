@@ -1,6 +1,6 @@
 import { MongoClient, ObjectId } from 'mongodb';
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/todos';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/todos';
 const MONGO_DB = process.env.MONGO_DB || 'todos';
 
 let db = null;
