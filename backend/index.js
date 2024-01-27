@@ -74,6 +74,7 @@ const swaggerOptions = {
 
 /** Zentrales Objekt für unsere Express-Applikation */
 const app = express();
+app.disable('x-powered-by');
 
 app.use(cookieParser())
 app.use(express.static('../frontend'));
@@ -271,19 +272,34 @@ app.put('/todos/:id', authenticate,
  */
 app.post('/todos', authenticate,
     async (req, res) => {
-        let todo = req.body;
-        if (!todo) {
-            res.sendStatus(400, { message: "Todo fehlt" });
-            return;
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ error: 'Bad Request', details: errors.array() });
         }
-        return db.insert(todo)
-            .then(todo => {
-                res.status(201).send(todo);
-            })
-            .catch(err => {
-                console.log(err);
-                res.sendStatus(500);
-            });
+
+        const allowedFields = ['title', 'due', 'status'];
+        const todo = req.body;
+
+        // Prüfen, ob es unbekannte Felder im Todo-Objekt gibt
+        const unknownFields = Object.keys(todo).filter(field => !allowedFields.includes(field));
+        if (unknownFields.length > 0) {
+            return res.status(400).json({ error: 'Bad Request', message: `Unknown fields: ${unknownFields.join(', ')}` });
+        }
+
+        // Prüfen, ob die erforderlichen Felder vorhanden sind
+        if (!todo.title || !todo.due || isNaN(Date.parse(todo.due))) {
+            return res.status(400).json({ error: 'Bad Request', message: 'Incomplete or invalid todo data' });
+        }
+
+        // Daten in die Datenbank einfügen
+        try {
+            const savedTodo = await db.insert(todo);
+            return res.status(201).send(savedTodo);
+        } catch (err) {
+            console.error(err);
+            return res.sendStatus(500);
+        }
     }
 );
 
