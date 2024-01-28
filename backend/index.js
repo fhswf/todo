@@ -93,6 +93,7 @@ const swaggerOptions = {
 
 /** Zentrales Objekt für unsere Express-Applikation */
 const app = express();
+app.disable("x-powered-by"); // Sicherheitsmaßnahme https://hopper.fh-swf.de/sonarqube/security_hotspots?id=TODon-t-try-this-at-home-kids-&hotspots=AYu9_EGRGhkFKGC0cK2a
 
 app.use(cookieParser())
 app.use(express.static('../frontend'));
