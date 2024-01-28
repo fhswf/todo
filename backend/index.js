@@ -6,7 +6,7 @@ import swaggerJsdoc from 'swagger-jsdoc';
 
 import { check, validationResult, checkSchema, checkExact } from 'express-validator';
 import cookieParser from 'cookie-parser';
-import jwtMiddleware from './jwtMiddleware.js';
+import authenticate from './jwtMiddleware.js';
 
 const PORT = process.env.PORT || 3000;
 
@@ -102,8 +102,6 @@ app.use(express.json());
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-
-
 /** global instance of our database */
 let db = new DB();
 
@@ -122,15 +120,6 @@ const todoValidationRules = [
         .withMessage('Titel muss mindestens 3 Zeichen lang sein'),
         checkSwaggerSchema(swaggerOptions.swaggerDefinition.components.schemas.Todo)
 ];
-
-
-/** Middleware for authentication. 
- * This middleware could be used to implement JWT-based authentication. Currently, this is only a stub.
-*/
-let authenticate = async (req, res, next) => {
-    return jwtMiddleware(req, res, next);
-}
-
 
 /** Return all todos. 
  *  Be aware that the db methods return promises, so we need to use either `await` or `then` here! 

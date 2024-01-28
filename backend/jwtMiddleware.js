@@ -12,20 +12,18 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyn2vP592Ju/iKXQW1DCrSTXyQXyo11Qed1Sd
 
 passport.use(
   new JwtStrategy(opts, (payload, done) => {
-    console.log("JWT payload: %o", payload)
     return done(null, payload);
   })
 );
 
-function authorized(request, response, next) {
-  passport.authenticate('jwt', { session: false, }, async (error, token) => {
+function authenticate(request, response, next) {
+  return passport.authenticate('jwt', { session: false, }, async (error, token) => {
     if (error || !token) {
-      response.status(401)
-      response.send({ error: 'Unauthorized' });
-      return
+      response.send(401, { error: 'Unauthorized' });
+    } else {
+      next();
     }
-    next();
   })(request, response, next);
 }
 
-export default authorized; 
+export default authenticate; 
