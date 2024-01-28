@@ -23,7 +23,7 @@ const validate = (req, res, next) => {
 
 const checkSwaggerSchema = (swaggerSchema) => {
     const validatorSchema = {}
-    for(const [key, _] of Object.entries(swaggerSchema.properties)) {
+    for(const [key] of Object.entries(swaggerSchema.properties)) {
         if(key === "_id") continue;
         const rule = {exists: true}
         validatorSchema[key] = rule;

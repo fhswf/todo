@@ -19,7 +19,8 @@ passport.use(
 function authenticate(request, response, next) {
   return passport.authenticate('jwt', { session: false, }, async (error, token) => {
     if (error || !token) {
-      response.send(401, { error: 'Unauthorized' });
+      response.status(401)
+      response.send({ error: 'Unauthorized' });
     } else {
       next();
     }
