@@ -4,14 +4,34 @@ import DB from './db.js'
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 
-import { check, validationResult } from 'express-validator';
+import { check, validationResult, checkSchema, checkExact } from 'express-validator';
 import cookieParser from 'cookie-parser';
-import { getRandomValues } from 'crypto';
 
 const PORT = process.env.PORT || 3000;
 
 const TOKEN_URL = "https://jupiter.fh-swf.de/keycloak/realms/webentwicklung/protocol/openid-connect/token"
 
+const validate = (req, res, next) => {
+    const errors = validationResult(req);
+    if (errors.isEmpty()) {
+        return next();
+    }
+    return res.status(400).json({
+        error: "Bad Request",
+        errors: errors.array()
+    });
+}
+
+const checkSwaggerSchema = (swaggerSchema) => {
+    const validatorSchema = {}
+    for(const [key, value] of Object.entries(swaggerSchema.properties)) {
+        if(key === "_id") continue;
+        const rule = {exists: true}
+        validatorSchema[key] = rule;
+    }
+    
+    return checkExact(checkSchema(validatorSchema))
+}
 
 const swaggerOptions = {
     swaggerDefinition: {
@@ -101,6 +121,7 @@ const todoValidationRules = [
         .withMessage('Titel darf nicht leer sein')
         .isLength({ min: 3 })
         .withMessage('Titel muss mindestens 3 Zeichen lang sein'),
+        checkSwaggerSchema(swaggerOptions.swaggerDefinition.components.schemas.Todo)
 ];
 
 
@@ -269,9 +290,10 @@ app.put('/todos/:id', authenticate,
  *     '500':
  *       description: Serverfehler
  */
-app.post('/todos', authenticate,
+app.post('/todos', authenticate, todoValidationRules, validate,
     async (req, res) => {
         let todo = req.body;
+                
         if (!todo) {
             res.sendStatus(400, { message: "Todo fehlt" });
             return;
