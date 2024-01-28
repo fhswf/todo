@@ -9,6 +9,7 @@ Gruppe:
 
 - Schrittweise die Anforederungen der Aufgabe umgesetzt
 - SonarQube eingebunden
+  - Keys als Secrets hinterlegt
 - Korrekturen anhand der Analyseergebnisse vorgenommen
 - Aufgrund von Auth-Problemen, diesen Test erstmal entfernt
 - Updaten der Abhängigkeiten
