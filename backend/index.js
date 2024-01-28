@@ -6,10 +6,9 @@ import swaggerJsdoc from 'swagger-jsdoc';
 
 import { check, validationResult, checkSchema, checkExact } from 'express-validator';
 import cookieParser from 'cookie-parser';
+import jwtMiddleware from './jwtMiddleware.js';
 
 const PORT = process.env.PORT || 3000;
-
-const TOKEN_URL = "https://jupiter.fh-swf.de/keycloak/realms/webentwicklung/protocol/openid-connect/token"
 
 const validate = (req, res, next) => {
     const errors = validationResult(req);
@@ -128,9 +127,8 @@ const todoValidationRules = [
 /** Middleware for authentication. 
  * This middleware could be used to implement JWT-based authentication. Currently, this is only a stub.
 */
-let authenticate = (req, res, next) => {
-    // Dummy authentication
-    next();
+let authenticate = async (req, res, next) => {
+    return jwtMiddleware(req, res, next);
 }
 
 
