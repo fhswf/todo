@@ -7,19 +7,19 @@ Gruppe:
 
 ## Vorgehensweise
 
-- Schrittweise die Anforederungen der Aufgabe umgesetzt
+- Schrittweise die Anforderungen der Aufgabe umgesetzt
 - SonarQube eingebunden
   - Keys als Secrets hinterlegt
 - Korrekturen anhand der Analyseergebnisse vorgenommen
-- Aufgrund von Auth-Problemen, diesen Test erstmal entfernt
-- Updaten der Abhängigkeiten
+- Aufgrund von Auth-Problemen diesen Test zunächst entfernt
+- Abhängigkeiten upgedatet
 - Testabdeckung erhöht
-  - Hierbei wurde das Swagger-Schema als Grundlage für die Tests verwendet. Es wird direkt anhand des Schemas validiert. 
+  - Hierbei wurde das Swagger-Schema als Grundlage für die Tests verwendet. Es wird direkt anhand des Schemas validiert
 - Autorisierung implementiert
-- Aufräumen des Codes
+- Code aufgeräumt
 - Bericht erstellt
 
 ## Schwierigkeiten
 
-- Unterschiede zwischen Dokumentation und der NPM-Version von `express-validator`. Dies konnte durch ein Update auf 7.0.0 behoben werden. `checkExact` und `checkSchema` waren bei der implementierung sehr hilfreich.
-- Einrichtung der Actions: Hierbei hatten wir Anfangs schwierigkeiten, zu definieren, wann genau diese Ausgeführt werden. Durch etwas probieren und lesen der Dokumentation konnten wir dies jedoch lösen.
+- Unterschiede zwischen Dokumentation und der NPM-Version von `express-validator`. Dies konnte durch ein Update auf 7.0.0 behoben werden. `checkExact` und `checkSchema` waren bei der Implementierung sehr hilfreich.
+- Einrichtung der Actions: Hierbei hatten wir anfangs Schwierigkeiten zu definieren wann genau diese ausgeführt werden. Durch etwas probieren und lesen der Dokumentation konnten wir dies jedoch lösen.
