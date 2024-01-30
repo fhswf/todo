@@ -1,5 +1,4 @@
-name: testsuite.yml CI
-
+name: testsuite
 on:
   push:
     branches: [ master ]
