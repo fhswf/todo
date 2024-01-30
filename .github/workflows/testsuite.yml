@@ -27,6 +27,8 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
+    - run: npm install
+      working-directory: backend
     - run: npm install --save-dev nyc
       working-directory: backend
     - run: npm test
