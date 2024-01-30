@@ -172,6 +172,30 @@ describe('DELETE /todos/:id', () => {
     });
 });
 
+describe('PUT /todos/:id/status', () => {
+    it('sollte den Status eines ToDos aktualisieren', async () => {
+        const newTodo = {
+            "title": "Übung 5 machen",
+            "due": "2022-11-13T00:00:00.000Z",
+            "status": 0
+        };
+
+        const response = await request(app)
+            .post('/todos')
+            .set('Authorization', `Bearer ${token}`)
+            .send(newTodo);
+
+        const newStatus = 1;
+        const updateResponse = await request(app)
+            .put(`/todos/${response.body._id}/status`)
+            .set('Authorization', `Bearer ${token}`)
+            .send({ status: newStatus });
+
+        expect(updateResponse.statusCode).toBe(200);
+        expect(updateResponse.body.status).toBe(newStatus);
+    });
+});
+
 
 afterAll(async () => {
     server.close()
