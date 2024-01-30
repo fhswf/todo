@@ -35,8 +35,3 @@ jobs:
         CI: true
         MONGODB_URI: mongodb://localhost:27017/test
         
-    - name: SonarQube Scan
-      uses: sonarsource/sonarqube-scan-action@master
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
