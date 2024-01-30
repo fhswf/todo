@@ -19,6 +19,16 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information
+          SONAR_ROOT_CERT: ${{ vars.SONAR_ROOT_CERT }}
+
+        with:
+          # Additional arguments for the sonarcloud scanner
+          args:
+            # Unique key of your project. You can find it in SonarQube > [my project] > Project Information (top-right menu)
+            # mandatory
+            -Dsonar.projectKey=todo_DoBo_SeSch
+            
       # If you wish to fail your job when the Quality Gate is red, uncomment the
       # following lines. This would typically be used to fail a deployment.
       # - uses: sonarsource/sonarqube-quality-gate-action@master
