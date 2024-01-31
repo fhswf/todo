@@ -101,7 +101,22 @@ const todoValidationRules = [
         .withMessage('Titel darf nicht leer sein')
         .isLength({ min: 3 })
         .withMessage('Titel muss mindestens 3 Zeichen lang sein'),
+
 ];
+
+
+
+
+const validateToDo = (req, res, next) => {
+    const errors = validationResult(req);
+    if (errors.isEmpty()) {
+        return next();
+    }
+    return res.status(400).json({
+        error: "Bad Request",
+        errors: errors.array()
+    });
+}
 
 
 /** Middleware for authentication. 
@@ -109,6 +124,13 @@ const todoValidationRules = [
 */
 let authenticate = (req, res, next) => {
     // Dummy authentication
+
+    const token = req.headers.authorization;
+
+    if (!token) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }    
+
     next();
 }
 
@@ -225,6 +247,7 @@ app.put('/todos/:id', authenticate,
     async (req, res) => {
         let id = req.params.id;
         let todo = req.body;
+        
         if (todo._id !== id) {
             console.log("id in body does not match id in path: %s != %s", todo._id, id);
             res.sendStatus(400, "{ message: id in body does not match id in path}");
@@ -243,6 +266,10 @@ app.put('/todos/:id', authenticate,
                 res.sendStatus(500);
             })
     });
+
+
+
+
 
 /** Create a new todo.
  * @swagger
@@ -269,9 +296,13 @@ app.put('/todos/:id', authenticate,
  *     '500':
  *       description: Serverfehler
  */
-app.post('/todos', authenticate,
+
+
+
+app.post('/todos', authenticate, todoValidationRules, validateToDo,
     async (req, res) => {
         let todo = req.body;
+                
         if (!todo) {
             res.sendStatus(400, { message: "Todo fehlt" });
             return;
@@ -286,6 +317,7 @@ app.post('/todos', authenticate,
             });
     }
 );
+
 
 /** Delete a todo by id.
  * @swagger
@@ -325,6 +357,7 @@ app.delete('/todos/:id', authenticate,
             });
     }
 );
+
 
 
 
