@@ -26,3 +26,5 @@
   - Verbindung von Github zu SonarQube herstellen (s. auch nächster Punkt)
   - Die Coverage(Unit Tests) von Sonarqube konnten wir leider nicht so anpassen, dass Sonarqube das Protokoll annimmt und erkennt. Istanbul-Tool und lcov.info haben keine Abhilfe geschaffen.
   - fails bei den testcases und Behebung durch Zuhilfenahme der gängigen Entwicklerplattformen wie stackoverflow 
+
+### Weitere Infos s. [Bericht](./Bericht.md)
