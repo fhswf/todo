@@ -6,7 +6,7 @@ import swaggerJsdoc from 'swagger-jsdoc';
 
 import { check, validationResult } from 'express-validator';
 import cookieParser from 'cookie-parser';
-import { getRandomValues } from 'crypto';
+
 
 const PORT = process.env.PORT || 3000;
 
@@ -101,7 +101,34 @@ const todoValidationRules = [
         .withMessage('Titel darf nicht leer sein')
         .isLength({ min: 3 })
         .withMessage('Titel muss mindestens 3 Zeichen lang sein'),
+    /*überpr+fen ob invalid auf invalid steht*/
+    check('due')
+        .optional({ nullable: true })
+        .isISO8601()
+        .withMessage('Fälligkeitsdatum muss ein gültiges Datum sein'),  
+    check('status')
+        .optional({ nullable: true })
+        .isInt({ min: 0, max: 2 })
+        .withMessage('Status muss zwischen 0 und 2 liegen'),
+    check('invalid')
+        .not()
+        .equals('invalid')
+        .withMessage('invalid darf nicht auf invalid stehen')
 ];
+
+
+
+
+const validateToDo = (req, res, next) => {
+    const errors = validationResult(req);
+    if (errors.isEmpty()) {
+        return next();
+    }
+    return res.status(400).json({
+        error: "Bad Request",
+        errors: errors.array()
+    });
+}
 
 
 /** Middleware for authentication. 
@@ -109,6 +136,13 @@ const todoValidationRules = [
 */
 let authenticate = (req, res, next) => {
     // Dummy authentication
+
+    const token = req.headers.authorization;
+
+    if (!token) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }    
+
     next();
 }
 
@@ -225,6 +259,7 @@ app.put('/todos/:id', authenticate,
     async (req, res) => {
         let id = req.params.id;
         let todo = req.body;
+        
         if (todo._id !== id) {
             console.log("id in body does not match id in path: %s != %s", todo._id, id);
             res.sendStatus(400, "{ message: id in body does not match id in path}");
@@ -243,6 +278,10 @@ app.put('/todos/:id', authenticate,
                 res.sendStatus(500);
             })
     });
+
+
+
+
 
 /** Create a new todo.
  * @swagger
@@ -269,9 +308,13 @@ app.put('/todos/:id', authenticate,
  *     '500':
  *       description: Serverfehler
  */
-app.post('/todos', authenticate,
+
+
+
+app.post('/todos', authenticate, todoValidationRules, validateToDo,
     async (req, res) => {
         let todo = req.body;
+                
         if (!todo) {
             res.sendStatus(400, { message: "Todo fehlt" });
             return;
@@ -286,6 +329,7 @@ app.post('/todos', authenticate,
             });
     }
 );
+
 
 /** Delete a todo by id.
  * @swagger
@@ -326,6 +370,61 @@ app.delete('/todos/:id', authenticate,
     }
 );
 
+
+
+/**
+ * @swagger
+ * /todos/{id}/status:
+ *   put:
+ *     summary: Aktualisiert den Status eines ToDos
+ *     tags: [Todos]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Die ID des ToDos
+ *     requestBody:
+ *       description: Der neue Status
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               status:
+ *                 type: string
+ *     responses:
+ *       '200':
+ *         description: Der Status wurde erfolgreich aktualisiert
+ *       '404':
+ *         description: ToDo nicht gefunden
+ *       '500':
+ *         description: Serverfehler
+ */
+app.put('/todos/:id/status', authenticate, async (req, res) => {
+    let id = req.params.id;
+    let newStatus = req.body.status;
+
+    if (!newStatus) {
+        res.status(400).json({ message: "Neuer Status fehlt" });
+        return;
+    }
+
+    return db.update(id, { status: newStatus })
+        .then(todo => {
+            if (todo) {
+                res.status(200).json(todo);
+            } else {
+                res.sendStatus(404);
+            }
+        })
+        .catch(err => {
+            console.log(err);
+            res.sendStatus(500);
+        });
+});
 
 
 let server;
