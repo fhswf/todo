@@ -38,5 +38,6 @@ jobs:
     - name: Run Tests
       working-directory: ./backend
       run: npm test
+      
       env:
         CI: true
