@@ -34,7 +34,7 @@ const checkSwaggerSchema = (swaggerSchema) => {
     return checkExact(checkSchema(validatorSchema))
 }
 
-//const PORT = process.env.PORT || 3000;
+
 
 //const TOKEN_URL = "https://jupiter.fh-swf.de/keycloak/realms/webentwicklung/protocol/openid-connect/token"
 
@@ -121,12 +121,22 @@ async function initDB() {
 }
 
 
+
+
 const todoValidationRules = [
     check('title')
         .notEmpty()
         .withMessage('Titel darf nicht leer sein')
         .isLength({ min: 3 })
         .withMessage('Titel muss mindestens 3 Zeichen lang sein'),
+    check().custom((value, { req }) => {
+        const invalidFields = Object.keys(req.body).filter(key => !['title', 'due', 'status'].includes(key));
+        if (invalidFields.length > 0) {
+            throw new Error(`Ungültiges Feld(er) gefunden: ${invalidFields.join(', ')}`);
+        }
+        return true;
+    })
+    
 ];
 
 
@@ -295,7 +305,7 @@ app.put('/todos/:id', authenticate,
  *     '500':
  *       description: Serverfehler
  */
-app.post('/todos', authenticate,
+app.post('/todos', authenticate, todoValidationRules, validate,
     async (req, res) => {
         let todo = req.body;
         if (!todo) {

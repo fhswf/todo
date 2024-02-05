@@ -28,6 +28,8 @@ describe('GET /todos', () => {
     });
 });
 
+
+
 describe('POST /todos', () => {
     it('sollte ein neues Todo erstellen', async () => {
         const newTodo = {
@@ -76,7 +78,7 @@ describe('POST /todos', () => {
         expect(response.statusCode).toBe(400);
         expect(response.body.error).toBe('Bad Request');
     });
-}); 0
+
 
 describe('GET /todos/:id', () => {
     it('sollte ein Todo abrufen', async () => {
@@ -114,6 +116,8 @@ describe('GET /todos/:id', () => {
     });
 });
 
+//
+
 describe('PUT /todos/:id', () => {
     it('sollte ein Todo aktualisieren', async () => {
         const newTodo = {
@@ -144,6 +148,8 @@ describe('PUT /todos/:id', () => {
     });
 });
 
+}); 
+
 describe('DELETE /todos/:id', () => {
     it('sollte ein Todo löschen', async () => {
         const newTodo = {
@@ -151,7 +157,6 @@ describe('DELETE /todos/:id', () => {
             "due": "2022-11-12T00:00:00.000Z",
             "status": 0
         };
-
         const response = await request(app)
             .post('/todos')
             .set('Authorization', `Bearer ${token}`)
@@ -160,7 +165,6 @@ describe('DELETE /todos/:id', () => {
         const deleteResponse = await request(app)
             .delete(`/todos/${response.body._id}`)
             .set('Authorization', `Bearer ${token}`);
-
 
         expect(deleteResponse.statusCode).toBe(204);
 
