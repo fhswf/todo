@@ -98,7 +98,7 @@ const swaggerOptions = {
 
 
 
-/** Zentrales Objekt für unsere Express-Applikation */
+/** Zentrales Objekt für unsere Expressi-Applikation */
 const app = express();
 app.disable("x-powered-by");
 
