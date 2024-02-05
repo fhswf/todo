@@ -10,6 +10,8 @@ import cookieParser from 'cookie-parser';
 
 import authenticate from './jwtMiddleware.js';
 
+const PORT = process.env.PORT || 3000;
+
 const validate = (req, res, next) => {
     const errors = validationResult(req);
     if (errors.isEmpty()) {
