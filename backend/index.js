@@ -131,10 +131,10 @@ const todoValidationRules = [
 /** Middleware for authentication. 
  * This middleware could be used to implement JWT-based authentication. Currently, this is only a stub.
 */
-let authenticate = (req, res, next) => {
+//let authenticate = (req, res, next) => {
     // Dummy authentication
-    next();
-}
+//    next();
+//}
 
 
 /** Return all todos. 
