@@ -8,9 +8,33 @@ import { check, validationResult } from 'express-validator';
 import cookieParser from 'cookie-parser';
 //import { getRandomValues } from 'crypto';
 
-const PORT = process.env.PORT || 3000;
+import authenticate from './jwtMiddleware.js';
 
-const TOKEN_URL = "https://jupiter.fh-swf.de/keycloak/realms/webentwicklung/protocol/openid-connect/token"
+const validate = (req, res, next) => {
+    const errors = validationResult(req);
+    if (errors.isEmpty()) {
+        return next();
+    }
+    return res.status(400).json({
+        error: "Bad Request",
+        errors: errors.array()
+    });
+}
+
+const checkSwaggerSchema = (swaggerSchema) => {
+    const validatorSchema = {}
+    for(const [key] of Object.entries(swaggerSchema.properties)) {
+        if(key === "_id") continue;
+        const rule = {exists: true}
+        validatorSchema[key] = rule;
+    }
+    
+    return checkExact(checkSchema(validatorSchema))
+}
+
+//const PORT = process.env.PORT || 3000;
+
+//const TOKEN_URL = "https://jupiter.fh-swf.de/keycloak/realms/webentwicklung/protocol/openid-connect/token"
 
 
 const swaggerOptions = {
