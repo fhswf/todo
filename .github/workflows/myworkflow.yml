@@ -1,15 +1,13 @@
-name: Test Suite
-
+name: testsuite CI
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   pull_request:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
-  test:
+  build:
+
     runs-on: ubuntu-latest
 
     services:
@@ -17,24 +15,23 @@ jobs:
         image: mongo:4.4
         ports:
           - 27017:27017
-       # options: --name mongodb
 
-       strategy:
-        matrix:
-          node-version: [14.x]
-  
-      steps:
-      - uses: actions/checkout@v4
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-      - run: npm install
-        working-directory: backend
-      - run: npm install --save-dev nyc
-        working-directory: backend
-      - run: npm test
-        working-directory: backend
-        env:
-          CI: true
-          MONGODB_URI: mongodb://localhost:27017/test
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm install
+      working-directory: backend
+    - run: npm install --save-dev nyc
+      working-directory: backend
+    - run: npm test
+      working-directory: backend
+      env:
+        CI: true
+        MONGODB_URI: mongodb://localhost:27017/test
