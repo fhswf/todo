@@ -155,7 +155,7 @@ const todoValidationRules = [
  * @swagger
  * /todos:
  *  get:
- *    summary: Gibt alle Todos zurück
+ *    summary: Gibt alle Todos  zurück
  *    tags: [Todos]
  *    responses:
  *      '401':
