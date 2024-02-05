@@ -35,3 +35,6 @@ jobs:
     - name: Run tests
       run: npm run test
       working-directory: ./backend
+
+    - name: Run tests with trace warnings
+      run: node --trace-warnings $(npm bin)/jest
