@@ -73,7 +73,8 @@ const swaggerOptions = {
 
 
 /** Zentrales Objekt für unsere Express-Applikation */
-const app = express();
+let app = express();
+app.disable("x-powered-by");
 
 app.use(cookieParser())
 app.use(express.static('../frontend'));
