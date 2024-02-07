@@ -3,9 +3,7 @@
 ## Teilnehmer
 Prathees Kumaravel          -Matrikel Nr. 30248993
 
-## GitHub und SonarQube Repo
-
-## [GitHub](https://github.com/Pikay93/todo)
+## SonarQube Repo
 
 ## [SonarQube](https://hopper.fh-swf.de/sonarqube/project/information?id=todo_pk_SQ)
 
