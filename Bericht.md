@@ -9,7 +9,7 @@ Prathees Kumaravel          -Matrikel Nr. 30248993
 
 [![Quality Gate Status](https://hopper.fh-swf.de/sonarqube/api/project_badges/measure?project=todo_pk_SQ&metric=alert_status&token=sqb_4028052f1e65242d81df048f14c2e725ddb4cb17)](https://hopper.fh-swf.de/sonarqube/dashboard?id=todo_pk_SQ)
 
-https://hopper.fh-swf.de/sonarqube/api/project_badges/measure?project=todo_pk_SQ&metric=alert_status&token=sqb_4028052f1e65242d81df048f14c2e725ddb4cb17
+[Quality Gate Status](https://hopper.fh-swf.de/sonarqube/api/project_badges/measure?project=todo_pk_SQ&metric=alert_status&token=sqb_4028052f1e65242d81df048f14c2e725ddb4cb17)
 
 ## Vorgehensweise
 - Anforderungen aus der [Aufgabe](https://github.com/fhswf/softwarequalitaet/tree/main/Exercises/CI_ToDo) umgesetzt
