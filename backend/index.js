@@ -8,7 +8,8 @@ import { check, validationResult } from 'express-validator';
 import cookieParser from 'cookie-parser';
 //import { getRandomValues } from 'crypto';
 
-import authenticate from './jwtMiddleware.js';
+//import authenticate from './jwtMiddleware.js';
+const TOKEN_URL = "https://jupiter.fh-swf.de/keycloak/realms/webentwicklung/protocol/openid-connect/token"
 
 const PORT = process.env.PORT || 3000;
 
@@ -148,6 +149,18 @@ const todoValidationRules = [
     // Dummy authentication
 //    next();
 //}
+
+let authenticate = (req, res, next) => {
+    // Dummy authentication
+
+    const token = req.headers.authorization;
+
+    if (!token) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }    
+
+    next();
+}
 
 
 /** Return all todos. 
