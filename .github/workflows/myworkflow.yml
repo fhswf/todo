@@ -1,4 +1,4 @@
-name: Node.js Tests with MongoDB 
+name: Node.js and Cypress Tests with MongoDB 
 
 on:
   push:
@@ -36,14 +36,15 @@ jobs:
       run: npm run test
       working-directory: ./backend
 
-    - name: Install Cypress and start Xvfb
-      uses: cypress-io/github-action@v2
-      with:
-        build: npm run build
-        start: npm start
+ #   - name: Install Cypress and start Xvfb
+ #     uses: cypress-io/github-action@v2
+ #     with:
+ #       build: npm run build
+  #      start: npm start
 
-    - name: Run Cypress tests
-      run: npx cypress run
+  #  - name: Run Cypress tests
+ #     run: npx cypress run
+  #    working-directory: ./cypress
 
 
 

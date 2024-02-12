@@ -116,7 +116,7 @@ describe('GET /todos/:id', () => {
     });
 });
 
-//
+
 
 describe('PUT /todos/:id', () => {
     it('sollte ein Todo aktualisieren', async () => {
@@ -132,8 +132,8 @@ describe('PUT /todos/:id', () => {
             .send(newTodo);
 
         const updatedTodo = {
-            "title": "Übung 4 machen",
-            "due": "2022-11-12T00:00:00.000Z",
+            "title": "Übung 5 machen",
+            "due": "2023-11-12T00:00:00.000Z",
             "status": 1,
             "_id": response.body._id
         };
@@ -173,6 +173,36 @@ describe('DELETE /todos/:id', () => {
             .set('Authorization', `Bearer ${token}`);
 
         expect(getResponse.statusCode).toBe(404);
+    });
+});
+
+describe('PUT /todos/:id', () => {
+    it('sollte den Status aktualisieren', async () => {
+        const newTodo = {
+            "title": "Übung 4 machen",
+            "due": "2022-11-12T00:00:00.000Z",
+            "status": 0
+        };
+
+        const response = await request(app)
+            .post('/todos')
+            .set('Authorization', `Bearer ${token}`)
+            .send(newTodo);
+
+        const updatedTodo = {
+            "title": "Übung 4 machen",
+            "due": "2022-11-12T00:00:00.000Z",
+            "status": 1,
+            "_id": response.body._id
+        };
+
+        const updateResponse = await request(app)
+            .put(`/todos/${response.body._id}`)
+            .set('Authorization', `Bearer ${token}`)
+            .send(updatedTodo);
+
+        expect(updateResponse.statusCode).toBe(200);
+        expect(updateResponse.body.status).toBe(updatedTodo.status);
     });
 });
 

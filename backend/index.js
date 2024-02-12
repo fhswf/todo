@@ -9,6 +9,9 @@ import cookieParser from 'cookie-parser';
 //import { getRandomValues } from 'crypto';
 
 
+
+
+
 const TOKEN_URL = "https://jupiter.fh-swf.de/keycloak/realms/webentwicklung/protocol/openid-connect/token"
 
 const PORT = process.env.PORT || 3000;
@@ -148,15 +151,13 @@ const todoValidationRules = [
 //    next();
 //}
 
+
 let authenticate = (req, res, next) => {
-    // Dummy authentication
-
+    // Dummy 
     const token = req.headers.authorization;
-
     if (!token) {
         return res.status(401).json({ error: 'Unauthorized' });
     }    
-
     next();
 }
 
