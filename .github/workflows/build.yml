@@ -1,0 +1,58 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    services:
+      mongodb:
+        image: mongo:4.4
+        ports:
+          - 27017:27017
+    permissions: read-all
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '16'
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./backend
+      - name: Run tests
+        run: npm test
+        working-directory: ./backend
+        env:
+          MONGO_URL: mongodb://localhost:27017/todos
+
+      # Install frontend dependencies, including Cypress
+      - name: Install frontend dependencies
+        run: npm install
+        working-directory: ./frontend
+        
+      # Run Cypress tests
+      - name: Run Cypress tests
+        uses: cypress-io/github-action@v2
+        with:
+          start: npm run cypress:run
+          wait-on: 'http://localhost:3000' # Adjust if your app runs on a different port
+          working-directory: ./frontend
+          
+      - name: SonarQube Scan
+        uses: sonarsource/sonarqube-scan-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} # Generate a token on SonarQube, add it to the secrets of this repo with the name SONAR_TOKEN (Settings > Secrets > Actions > add new repository secret)
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          SONAR_ROOT_CERT: ${{ vars.SONAR_ROOT_CERT }}
+        # Optional: Uncomment to fail the job when the Quality Gate is red
+        # - name: SonarQube Quality Gate Check
+        #   uses: sonarsource/sonarqube-quality-gate-action@master
+        #   env:
+        #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

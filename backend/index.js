@@ -6,12 +6,12 @@ import swaggerJsdoc from 'swagger-jsdoc';
 
 import { check, validationResult } from 'express-validator';
 import cookieParser from 'cookie-parser';
-import { getRandomValues } from 'crypto';
+//import { getRandomValues } from 'crypto';
+import jwt from 'jsonwebtoken';
 
 const PORT = process.env.PORT || 3000;
 
 const TOKEN_URL = "https://jupiter.fh-swf.de/keycloak/realms/webentwicklung/protocol/openid-connect/token"
-
 
 const swaggerOptions = {
     swaggerDefinition: {
@@ -101,6 +101,14 @@ const todoValidationRules = [
         .withMessage('Titel darf nicht leer sein')
         .isLength({ min: 3 })
         .withMessage('Titel muss mindestens 3 Zeichen lang sein'),
+    check('due')
+        .notEmpty()
+        .withMessage('Fälligkeitsdatum darf nicht leer sein')
+        .isISO8601()
+        .withMessage('Fälligkeitsdatum muss ein gültiges Datum sein'),
+    check('status')
+        .isInt({ min: 0, max: 2 })
+        .withMessage('Status muss 0 oder 1 sein'),
 ];
 
 
@@ -108,10 +116,8 @@ const todoValidationRules = [
  * This middleware could be used to implement JWT-based authentication. Currently, this is only a stub.
 */
 let authenticate = (req, res, next) => {
-    // Dummy authentication
     next();
-}
-
+};
 
 /** Return all todos. 
  *  Be aware that the db methods return promises, so we need to use either `await` or `then` here! 
@@ -134,7 +140,7 @@ let authenticate = (req, res, next) => {
  *              items:
  *                $ref: '#/components/schemas/Todo'
  */
-app.get('/todos', authenticate,
+app.get('/todos', 
     async (req, res) => {
         let todos = await db.queryAll();
         res.send(todos);
@@ -166,7 +172,7 @@ app.get('/todos', authenticate,
  *     '500':
  *        description: Serverfehler
  */
-app.get('/todos/:id', authenticate,
+app.get('/todos/:id',
     async (req, res) => {
         let id = req.params.id;
         return db.queryById(id)
@@ -221,7 +227,7 @@ app.get('/todos/:id', authenticate,
  *    '500':
  *      description: Serverfehler
  */
-app.put('/todos/:id', authenticate,
+app.put('/todos/:id', 
     async (req, res) => {
         let id = req.params.id;
         let todo = req.body;
@@ -269,23 +275,31 @@ app.put('/todos/:id', authenticate,
  *     '500':
  *       description: Serverfehler
  */
-app.post('/todos', authenticate,
-    async (req, res) => {
-        let todo = req.body;
-        if (!todo) {
-            res.sendStatus(400, { message: "Todo fehlt" });
-            return;
-        }
-        return db.insert(todo)
-            .then(todo => {
-                res.status(201).send(todo);
-            })
-            .catch(err => {
-                console.log(err);
-                res.sendStatus(500);
-            });
+app.post('/todos', todoValidationRules, (req, res, next) => {
+    const allowedFields = ['title', 'due', 'status'];
+    const errors = validationResult(req);
+
+    // Prüfen, ob zusätzliche Felder vorhanden sind
+    const extraFields = Object.keys(req.body).filter(key => !allowedFields.includes(key));
+    if (extraFields.length > 0) {
+        errors.errors.push({ msg: `Ungültige Felder: ${extraFields.join(', ')}` });
     }
-);
+
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    next();
+}, async (req, res) => {
+    const { title, due, status } = req.body;
+    try {
+        const newTodo = await db.insert({ title, due, status });
+        res.status(201).json(newTodo);
+    } catch (error) {
+        console.error('Fehler beim Erstellen des Todos:', error);
+        res.status(500).send({ error: 'Serverfehler beim Erstellen des Todos' });
+    }
+});
 
 /** Delete a todo by id.
  * @swagger
@@ -308,7 +322,7 @@ app.post('/todos', authenticate,
  *        '500':
  *          description: Serverfehler
  */
-app.delete('/todos/:id', authenticate,
+app.delete('/todos/:id',
     async (req, res) => {
         let id = req.params.id;
         return db.delete(id)

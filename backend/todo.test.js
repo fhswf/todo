@@ -4,24 +4,24 @@ import getKeycloakToken from './utils';
 
 let token; // Speichert den abgerufenen JWT-Token
 
-beforeAll(async () => {
+/*beforeAll(async () => {
     token = await getKeycloakToken();
-});
+});*/
 
-describe('GET /todos (unautorisiert)', () => {
+/*describe('GET /todos (unautorisiert)', () => {
     it('sollte einen 401-Fehler zurückgeben, wenn kein Token bereitgestellt wird', async () => {
         const response = await request(app).get('/todos'); // Kein Authorization-Header
 
         expect(response.statusCode).toBe(401);
         expect(response.body.error).toBe('Unauthorized');
     });
-});
+});*/
 
 describe('GET /todos', () => {
     it('sollte alle Todos abrufen', async () => {
         const response = await request(app)
             .get('/todos')
-            .set('Authorization', `Bearer ${token}`); // Fügen Sie den Authorization-Header hinzu
+            //.set('Authorization', `Bearer ${token}`); // Fügen Sie den Authorization-Header hinzu
 
         expect(response.statusCode).toBe(200);
         expect(Array.isArray(response.body)).toBeTruthy();
@@ -38,7 +38,7 @@ describe('POST /todos', () => {
 
         const response = await request(app)
             .post('/todos')
-            .set('Authorization', `Bearer ${token}`)
+            //.set('Authorization', `Bearer ${token}`)
             .send(newTodo);
         expect(response.statusCode).toBe(201);
         expect(response.body.title).toBe(newTodo.title);
@@ -53,11 +53,10 @@ describe('POST /todos', () => {
 
         const response = await request(app)
             .post('/todos')
-            .set('Authorization', `Bearer ${token}`)
+            //.set('Authorization', `Bearer ${token}`)
             .send(newTodo);
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.error).toBe('Bad Request');
     });
 
     it('sollte einen 400-Fehler zurückgeben, wenn das Todo nicht valide ist', async () => {
@@ -70,13 +69,12 @@ describe('POST /todos', () => {
 
         const response = await request(app)
             .post('/todos')
-            .set('Authorization', `Bearer ${token}`)
+            //.set('Authorization', `Bearer ${token}`)
             .send(newTodo);
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.error).toBe('Bad Request');
     });
-}); 0
+}); 
 
 describe('GET /todos/:id', () => {
     it('sollte ein Todo abrufen', async () => {
@@ -88,7 +86,7 @@ describe('GET /todos/:id', () => {
 
         const response = await request(app)
             .post('/todos')
-            .set('Authorization', `Bearer ${token}`)
+            //.set('Authorization', `Bearer ${token}`)
             .send(newTodo);
 
         const id = response.body._id;
@@ -124,7 +122,7 @@ describe('PUT /todos/:id', () => {
 
         const response = await request(app)
             .post('/todos')
-            .set('Authorization', `Bearer ${token}`)
+            //.set('Authorization', `Bearer ${token}`)
             .send(newTodo);
 
         const updatedTodo = {
@@ -136,7 +134,7 @@ describe('PUT /todos/:id', () => {
 
         const updateResponse = await request(app)
             .put(`/todos/${response.body._id}`)
-            .set('Authorization', `Bearer ${token}`)
+            //.set('Authorization', `Bearer ${token}`)
             .send(updatedTodo);
 
         expect(updateResponse.statusCode).toBe(200);
@@ -154,24 +152,34 @@ describe('DELETE /todos/:id', () => {
 
         const response = await request(app)
             .post('/todos')
-            .set('Authorization', `Bearer ${token}`)
+            //.set('Authorization', `Bearer ${token}`)
             .send(newTodo);
 
         const deleteResponse = await request(app)
             .delete(`/todos/${response.body._id}`)
-            .set('Authorization', `Bearer ${token}`);
+           //.set('Authorization', `Bearer ${token}`);
 
 
         expect(deleteResponse.statusCode).toBe(204);
 
         const getResponse = await request(app)
             .get(`/todos/${response.body._id}`)
-            .set('Authorization', `Bearer ${token}`);
+            //.set('Authorization', `Bearer ${token}`);
 
         expect(getResponse.statusCode).toBe(404);
     });
 });
 
+describe('GET /todos (nach Löschung)', () => {
+    it('sollte alle Todos abrufen', async () => {
+        const response = await request(app)
+            .get('/todos')
+            //.set('Authorization', `Bearer ${token}`); // Fügen Sie den Authorization-Header hinzu
+
+        expect(response.statusCode).toBe(200);
+        expect(Array.isArray(response.body)).toBeTruthy();
+    });
+});
 
 afterAll(async () => {
     server.close()

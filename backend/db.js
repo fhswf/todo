@@ -9,6 +9,9 @@ let client = null;
 
 export default class DB {
 
+    getMongoUri() {
+        return process.env.MONGO_URI || 'mongodb://localhost:27017/todos';
+    }
     /** Connect to MongoDB and open client */
     connect() {
         return MongoClient.connect(MONGO_URI)
@@ -102,4 +105,13 @@ export default class DB {
                 }
             });
     }
+
+        // Inside your DB class
+
+    /** Clears all todos from the collection */
+    clearAll() {
+        return collection.deleteMany({});
+    }
+
+
 }
