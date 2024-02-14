@@ -20,8 +20,8 @@ Siehe [README_Aufgabe2.md](./README_Aufgabe2.md)
 
 ### SonarQube
 
-![](assets/2024-01-28-20-35-54.png)
-Coverage wird von SonarQube nicht erkannt.
+Durch `npm run coverage` wird `coverage/lcov.info` generiert, welches Sonarqube zur Verfügung gestellt wird. 
+In `sonar-project.properties` ist der Pfad hierfür hinterlegt.
 
 ### Jest
 
