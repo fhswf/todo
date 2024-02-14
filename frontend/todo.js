@@ -66,7 +66,6 @@ function saveTodo(evt) {
     let _id = Number.parseInt(evt.target.dataset.id) || Date.now();
 
     let todo = {
-        _id,
         title: evt.target.title.value,
         due: evt.target.due.valueAsDate,
         status: Number.parseInt(evt.target.status.value) || 0
@@ -83,7 +82,7 @@ function saveTodo(evt) {
             },
             body: JSON.stringify(todo)
         })
-            .then(checkLogin)
+            //.then(checkLogin)
             .then(response => response.json())
             .then(response => {
                 console.log("PUT %s: %o", API + "/" + _id, response)
@@ -100,7 +99,7 @@ function saveTodo(evt) {
             },
             body: JSON.stringify(todo)
         })
-            .then(checkLogin)
+            //.then(checkLogin)
             .then(response => response.json())
             .then(response => {
                 console.log("POST %s: %o", API, response)
