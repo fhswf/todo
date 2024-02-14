@@ -11,6 +11,8 @@ on:
 
 jobs:
   coverage:
+    name: Coverage
+    runs-on: ubuntu-latest
     steps:
       - uses: Adzz/jest_test_action@v1.0.0
         with:
