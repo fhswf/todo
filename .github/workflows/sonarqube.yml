@@ -19,9 +19,11 @@ jobs:
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: Install Dependencies
-        run: cd backend && npm i
+        working-directory: ./backend
+        run: npm i
       - name: Coverage
-        run: cd backend && npm run coverage
+        working-directory: ./backend
+        run: npm run coverage
       - uses: sonarsource/sonarqube-scan-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information
