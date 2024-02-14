@@ -10,6 +10,11 @@ on:
 
 
 jobs:
+  coverage:
+    steps:
+      - uses: Adzz/jest_test_action@v1.0.0
+        with:
+          command: coverage
   build:
     name: Build
     runs-on: ubuntu-latest
@@ -24,9 +29,3 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} # Generate a token on SonarQube, add it to the secrets of this repo with the name SONAR_TOKEN (Settings > Secrets > Actions > add new repository secret)
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
           SONAR_ROOT_CERT: ${{ secrets.SONAR_ROOT_CERT }}
-      # If you wish to fail your job when the Quality Gate is red, uncomment the
-      # following lines. This would typically be used to fail a deployment.
-      # - uses: sonarsource/sonarqube-quality-gate-action@master
-      #   timeout-minutes: 5
-      #   env:
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
