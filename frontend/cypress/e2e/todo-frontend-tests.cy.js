@@ -1,6 +1,6 @@
 describe('Todo List', () => {
     it('Adds a new todo', () => {
-     cy.visit('/todo.html'); // Assuming your todo app is served on the root path
+     cy.visit('/todo.html'); 
      it('loads the initial page', () => {
       cy.contains('h1', 'Todo Liste')
     })
