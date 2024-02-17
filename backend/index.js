@@ -8,10 +8,10 @@ import { check, validationResult } from 'express-validator';
 import cookieParser from 'cookie-parser';
 import { getRandomValues } from 'crypto';
 
+import authenticate from './authenticate.js';
 const PORT = process.env.PORT || 3000;
 
 const TOKEN_URL = "https://jupiter.fh-swf.de/keycloak/realms/webentwicklung/protocol/openid-connect/token"
-
 
 const swaggerOptions = {
     swaggerDefinition: {
@@ -102,16 +102,6 @@ const todoValidationRules = [
         .isLength({ min: 3 })
         .withMessage('Titel muss mindestens 3 Zeichen lang sein'),
 ];
-
-
-/** Middleware for authentication. 
- * This middleware could be used to implement JWT-based authentication. Currently, this is only a stub.
-*/
-let authenticate = (req, res, next) => {
-    // Dummy authentication
-    next();
-}
-
 
 /** Return all todos. 
  *  Be aware that the db methods return promises, so we need to use either `await` or `then` here! 
@@ -273,7 +263,11 @@ app.post('/todos', authenticate,
     async (req, res) => {
         let todo = req.body;
         if (!todo) {
-            res.sendStatus(400, { message: "Todo fehlt" });
+            res.sendStatus(400, { error: "Todo fehlt" });
+            return;
+        }
+        if (Object.keys(req.body).length != 3) {
+            res.status(400).json({ error: "Bad Request" });
             return;
         }
         return db.insert(todo)
