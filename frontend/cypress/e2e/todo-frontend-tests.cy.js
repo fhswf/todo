@@ -14,3 +14,16 @@ describe('Todo List', () => {
   })
 });
 });
+
+
+describe('UI Tests', () => {
+  it('changes the status of a todo', () => {
+    cy.visit('/todo.html');
+  
+    cy.get('#todo #status').eq(0).should('contain', 'offen');
+    cy.get('#todo #status').eq(0).click();
+    cy.get('#todo #status').eq(0).should('contain', 'in Bearbeitung');
+  });
+});
+
+

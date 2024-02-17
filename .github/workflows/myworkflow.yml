@@ -1,4 +1,4 @@
-name: Node.js  with MongoDB 
+name: Backend- und Frontend-Tests 
 
 on:
   push:
