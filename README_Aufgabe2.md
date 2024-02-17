@@ -28,3 +28,5 @@
         - *Lösung: "Unauthorized" wurde als "message" gesendet, nicht aber als "error". JWT Strategy wurde angepasst und es funktionierte.*
 - Verständnisproblem: "Invalide" Todos: Paremter "invalid" oder zu viele Parameter?
     - *Lösung: "Zu viele Paramter" ergibt mehr Sinn - ist bereits mit vorherigem Test (zu wenig Parameter) abgedeckt*
+- Anwendung nicht im Root Verzeichnis des Repos führt zu Problemen bei Actions
+    - *Lösung: entsprechende Parameter in der Action gesetzt*
