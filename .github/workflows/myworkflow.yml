@@ -36,7 +36,7 @@ jobs:
       run: npm test
       working-directory: ./backend
 
- #   - name: Install Cypress and start Xvfb
+ #   - name: Install  Cypress and start Xvfb
  #     uses: cypress-io/github-action@v2
  #     with:
  #       build: npm run build
