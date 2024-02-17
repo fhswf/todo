@@ -263,7 +263,11 @@ app.post('/todos', authenticate,
     async (req, res) => {
         let todo = req.body;
         if (!todo) {
-            res.sendStatus(400, { message: "Todo fehlt" });
+            res.sendStatus(400, { error: "Todo fehlt" });
+            return;
+        }
+        if (Object.keys(req.body).length != 3) {
+            res.status(400).json({ error: "Bad Request" });
             return;
         }
         return db.insert(todo)
