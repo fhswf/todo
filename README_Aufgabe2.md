@@ -21,9 +21,10 @@
     - undefined bei Authentifizierung anstatt "Unauthorized"
         - Lösungsansätze:
             - versucht den Authorization Header im Test explizit auf '' zu setzen -> ohne Erfolg
-            - versucht anstatt auf !token, auf token === undefined zu prüfen -> kein Erfolgf
+            - versucht anstatt auf !token, auf token === undefined zu prüfen -> kein Erfolg
             - Test für Middleware implementiert, um Konfiguration zu prüfen 
                 - Lösungsansätze von ChatGPT funktionierten nicht, Fehlersuche mit ChatGPT und Google aussichtslos
             - selbes Problem bei Nutzung von Passport
         - *Lösung: "Unauthorized" wurde als "message" gesendet, nicht aber als "error". JWT Strategy wurde angepasst und es funktionierte.*
-
+- Verständnisproblem: "Invalide" Todos: Paremter "invalid" oder zu viele Parameter?
+    - *Lösung: "Zu viele Paramter" ergibt mehr Sinn - ist bereits mit vorherigem Test (zu wenig Parameter) abgedeckt*
