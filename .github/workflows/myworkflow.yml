@@ -42,6 +42,9 @@ jobs:
         build: npm run build
         start: npm start
 
+    - name: Install project dependencies (Frontend)
+      run: npm install
+      working-directory: ./frontend
 
     - name: Run Cypress tests
       run: npx cypress run
