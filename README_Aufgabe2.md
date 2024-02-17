@@ -4,7 +4,7 @@
 - Felix Weßollek
 
 ## Vorgehen:
-- Überbnlick über Anwendung verschafft
+- Überblick über Anwendung verschafft
 
 
 ## Schwierigkeiten:
