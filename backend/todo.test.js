@@ -4,9 +4,9 @@ import getKeycloakToken from './utils';
 
 let token; // Speichert den abgerufenen JWT-Token
 
-beforeAll(async () => {
-    token = await getKeycloakToken();
-});
+//beforeAll(async () => {
+//    token = await getKeycloakToken();
+//});
 
 describe('GET /todos (unautorisiert)', () => {
     it('sollte einen 401-Fehler zurückgeben, wenn kein Token bereitgestellt wird', async () => {
