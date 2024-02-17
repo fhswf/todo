@@ -1,0 +1,12 @@
+{
+    "name": "frontend-tests",
+    "version": "1.0.0",
+    "description": "Cypress für Frontend-Tests.",
+    "scripts": {
+        "cypress:open": "cypress open",
+        "cypress:run": "cypress run"
+    },
+    "devDependencies": {
+        "cypress": "^13.6.4"
+    }
+}
