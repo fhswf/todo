@@ -61,7 +61,7 @@ describe('Form Input Test - Normal Input', () => {
     cy.get('#due').type('2024-02-18');
     cy.get('#status').select('offen');
 
-    cy.get('#todo-form').submit();
+    cy.get('form').submit()
 
     cy.contains('.todo .title', 'Neue Aufgabe')
 
