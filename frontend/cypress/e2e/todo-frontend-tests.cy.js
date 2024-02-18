@@ -63,9 +63,7 @@ describe('Form Input Test - Normal Input', () => {
 
     cy.get('#todo-form').submit();
 
-    cy.wait(2000); // Anpassen der Wartezeit, wenn nötig
+    cy.contains('.todo .title', 'Neue Aufgabe')
 
-
-    cy.get('.todo .title').should('contain', 'Neue Aufgabe');
   });
 });
