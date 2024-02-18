@@ -94,7 +94,6 @@ async function initDB() {
     console.log("Connected to database");
 }
 
-
 const todoValidationRules = [
     check('title')
         .notEmpty()
@@ -110,6 +109,18 @@ const todoValidationRules = [
         .notEmpty()
         .withMessage('Status darf nicht leer sind'),
 ];
+
+//Middleware mit der grprüft wird, ob die toDoValidationRules eingehalten wurden
+const validate = (req, res, next) => {
+    const errors = validationResult(req);
+    if (errors.isEmpty()) {
+        return next();
+    }
+    return res.status(400).json({
+        error: "Bad Request",
+        errors: errors.array()
+    });
+}
 
 
 /** Middleware for authentication. 
@@ -229,11 +240,8 @@ app.get('/todos/:id', authenticate,
  *    '500':
  *      description: Serverfehler
  */
-app.put('/todos/:id', authenticate, todoValidationRules,
+app.put('/todos/:id', authenticate, todoValidationRules, validate,
     async (req, res) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });}
         let id = req.params.id;
         let todo = req.body;
         if (todo._id !== id) {
@@ -280,11 +288,8 @@ app.put('/todos/:id', authenticate, todoValidationRules,
  *     '500':
  *       description: Serverfehler
  */
-app.post('/todos', authenticate, todoValidationRules,
+app.post('/todos', authenticate, todoValidationRules, validate,
     async (req, res) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });}
         let todo = req.body;
         if (!todo) {
             res.sendStatus(400, { message: "Todo fehlt" });
