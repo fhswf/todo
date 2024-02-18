@@ -108,9 +108,12 @@ const todoValidationRules = [
         .withMessage('Bitte ein gültiges Datum eingeben'),
     check('status')
         .notEmpty()
-        .withMessage('Status darf nicht leer sind')
-        .isInt({ min: 0, max: 2})
-        .withMessage('Der Status darf nur die Werte 0,1 oder 2 haben.')
+        .withMessage('Status darf nicht leer sind'),
+    oneOf([
+        check('status').equals('0'),
+        check('status').equals('1'),
+        check('status').equals('2'),
+        ], {message: 'Der Status darf nur die Werte 0,1 oder 2 haben.'})
 ];
 
 
