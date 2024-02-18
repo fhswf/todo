@@ -9,6 +9,9 @@
 - Bereits vorhandene Tests ausgeführt
 - Code angepasst, bis vorhandene Tests erfolgreich waren
 - Action für Test erstellt, "Node.js" Template als Ausgang gewählt und angepasst
+- sonarqube verbunden
+- Behebbare Fehler aus sonarqube behoben
+
 
 
 ## Schwierigkeiten:
@@ -33,4 +36,46 @@
 - Anwendung nicht im Root Verzeichnis des Repos führt zu Problemen bei Actions
     - *Lösung: entsprechende Parameter in der Action gesetzt*
 - GitHub Action läuft in Timeout: thrown: "Exceeded timeout of 5000 ms for a hook."
-    - *Lösung: Timeout Werte als dritten Paramter in den "it()" Blöcken der Tests hinzugefügt*
+    - *Lösung: Timeout Werte als dritten Parameter in den "it()" Blöcken der Tests hinzugefügt*
+- Unklarheit, woher GITHUB_TOKEN kommt
+    - Recherche im Internet
+
+
+## Tests
+
+### Jest
+` PASS  ./todo.test.js
+  GET /todos (unautorisiert)
+    ✓ sollte einen 401-Fehler zurückgeben, wenn kein Token bereitgestellt wird (13 ms)
+  GET /todos
+    ✓ sollte alle Todos abrufen (16 ms)
+  POST /todos
+    ✓ sollte ein neues Todo erstellen (14 ms)
+    ✓ sollte einen 400-Fehler zurückgeben, wenn das Todo unvollständig ist (3 ms)
+    ✓ sollte einen 400-Fehler zurückgeben, wenn das Todo nicht valide ist (4 ms)
+  GET /todos/:id
+    ✓ sollte ein Todo abrufen (8 ms)
+    ✓ sollte einen 404-Fehler zurückgeben, wenn das Todo nicht gefunden wurde (4 ms)
+  PUT /todos/:id
+    ✓ sollte ein Todo aktualisieren (11 ms)
+  DELETE /todos/:id
+    ✓ sollte ein Todo löschen (15 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       9 passed, 9 total
+Snapshots:   0 total
+Time:        2.285 s, estimated 3 s
+Ran all test suites. `
+
+### sonarqube
+
+Erste Ausführung
+![Erste Ausführung](./sonarqube_vorher.png)
+
+Was nicht behoben wurde:
+
+- Code Smells zu "Todo" und "Status" -> False Positives
+- Hardcoded Keycloak Credentials -> Ging aus Aufgabenstellung nicht anders hervor
+
+Letzte Ausführung
+![Letzte Ausführung](./sonarqube_nachher.png)
