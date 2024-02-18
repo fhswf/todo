@@ -94,21 +94,6 @@ async function initDB() {
     console.log("Connected to database");
 }
 
-const postTodoValidationRules = [
-    check('title')
-        .notEmpty()
-        .withMessage('Titel darf nicht leer sein')
-        .isLength({ min: 3 })
-        .withMessage('Titel muss mindestens 3 Zeichen lang sein'),
-    check('due')
-        .notEmpty()
-        .withMessage('Datum darf nicht leer sein'),
-    check('status')
-        .notEmpty()
-        .withMessage('Status darf nicht leer sind'),
-    checkExact()
-];
-
 const todoValidationRules = [
     check('title')
         .notEmpty()
@@ -125,6 +110,8 @@ const todoValidationRules = [
         .optional()
         .isString()
         .withMessage('Die Id des ToDos muss ein String sein'),
+    //Mit checkExact() wird sichergestellt, dass das übergebene ToDo ausschließlich
+    //über die oben genannten Attribute verfügt.
     checkExact([], { locations: ['body'] })
 ];
 
