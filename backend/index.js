@@ -229,7 +229,7 @@ app.get('/todos/:id', authenticate,
  *    '500':
  *      description: Serverfehler
  */
-app.put('/todos/:id', /*authenticate,*/ todoValidationRules,
+app.put('/todos/:id', authenticate, todoValidationRules,
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -280,7 +280,7 @@ app.put('/todos/:id', /*authenticate,*/ todoValidationRules,
  *     '500':
  *       description: Serverfehler
  */
-app.post('/todos', /*authenticate,*/ todoValidationRules,
+app.post('/todos', authenticate, todoValidationRules,
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
