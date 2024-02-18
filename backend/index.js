@@ -246,7 +246,7 @@ app.put('/todos/:id', authenticate, todoValidationRules, validate,
     async (req, res) => {
         let id = req.params.id;
         let todo = req.body;
-        if (String(todo._id) != String(id)) {
+        if (String(todo._id).valueOf() != String(id).valueOf()) {
             console.log("id in body does not match id in path: %s != %s", todo._id, id);
             res.sendStatus(400, "{ message: id in body does not match id in path}");
             return;
