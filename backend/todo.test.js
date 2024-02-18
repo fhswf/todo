@@ -126,16 +126,18 @@ describe('PUT /todos/:id', () => {
             .post('/todos')
             .set('Authorization', `Bearer ${token}`)
             .send(newTodo);
+        
+            const id = response.body._id;
 
         const updatedTodo = {
             "title": "Übung 4 machen",
             "due": "2022-11-12T00:00:00.000Z",
             "status": 1,
-            "_id": response.body._id
+            "_id": id
         };
 
         const updateResponse = await request(app)
-            .put(`/todos/${response.body._id}`)
+            .put(`/todos/${id}`)
             .set('Authorization', `Bearer ${token}`)
             .send(updatedTodo);
 
