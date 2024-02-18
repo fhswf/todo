@@ -12,6 +12,7 @@ describe('Todo List', () => {
       cy.get('form').submit()
       cy.contains('.todo .title', 'Neues Todo von Cypress')
   })
+
 });
 });
 
@@ -31,39 +32,22 @@ describe('UI Tests', () => {
 
 
 const { v4: uuidv4 } = require('uuid');
-/*
-describe('Todo List Test (add todo)', () => {
-  it('should add a new todo identified by GUID', () => {
-
-    cy.visit('/todo.html');
-
-    const uniqueId = uuidv4();
-
-    cy.get('#todo').type(`Todo_${uniqueId}`);
-    cy.get('#due').type('2024-02-18');
-    cy.get('#status').select('offen');
-
-    cy.get('#todo-form').submit();
-    cy.wait(2000);
-    cy.get('#todo-list').should('be.visible').and('not.be.empty');
-    cy.get('#todo-list').should('contain', `Todo_${uniqueId}`);
-  });
-});*/
 
 
 describe('Form Input Test - Normal Input', () => {
-  it('should test input fields with different cases', () => {
-    cy.visit('/todo.html');
+  it('Adds a new todo', () => {
+   cy.visit('/todo.html'); 
+   it('loads the initial page', () => {
+    cy.contains('h1', 'Todo Liste')
+  })
 
-
-    // Testfall 1: Normale Eingaben
-    cy.get('#todo').type('Neue Aufgabe');
-    cy.get('#due').type('2024-02-18');
-    cy.get('#status').select('offen');
-
+  it('allows users to add a new todo', () => {
+    cy.get('#todo').type('Neues Todo von Cypress1234')
+    cy.get('#due').type('2025-02-02')
+    cy.get('#status').select('offen')
     cy.get('form').submit()
-
-    cy.contains('.todo .title', 'Neue Aufgabe')
-
-  });
+    cy.contains('.todo .title', 'Neues Todo von Cypress1234')
+    cy.contains('.todo .due', '2025-02-02')
+  })
+});
 });

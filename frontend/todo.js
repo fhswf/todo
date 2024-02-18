@@ -15,7 +15,7 @@ function createTodoElement(todo) {
            <div class="actions">
               <button class="status" onclick="changeStatus(${todo._id})">${status[todo.status || 0]}</button>
               <button class="edit" onclick="editTodo(${todo._id})">Bearbeiten</button>
-              <button class="delete" onclick="deleteTodo(${todo._id})">Löschen</button>
+              <button class="delete" onclick="deleteTodo('${todo._id}')">Löschen</button>
            </div>
          </div>`);
 
