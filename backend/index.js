@@ -94,7 +94,22 @@ async function initDB() {
     console.log("Connected to database");
 }
 
-const todoValidationRules = [
+const postTodoValidationRules = [
+    check('title')
+        .notEmpty()
+        .withMessage('Titel darf nicht leer sein')
+        .isLength({ min: 3 })
+        .withMessage('Titel muss mindestens 3 Zeichen lang sein'),
+    check('due')
+        .notEmpty()
+        .withMessage('Datum darf nicht leer sein'),
+    check('status')
+        .notEmpty()
+        .withMessage('Status darf nicht leer sind'),
+    checkExact()
+];
+
+const putTodoValidationRules = [
     check('title')
         .notEmpty()
         .withMessage('Titel darf nicht leer sein')
@@ -107,7 +122,6 @@ const todoValidationRules = [
         .notEmpty()
         .withMessage('Status darf nicht leer sind'),
     check('_id')
-        .optional()
         .isString()
         .withMessage('Die Id des ToDos muss ein String sein'),
     checkExact()
@@ -242,7 +256,7 @@ app.get('/todos/:id', authenticate,
  *    '500':
  *      description: Serverfehler
  */
-app.put('/todos/:id', authenticate, 
+app.put('/todos/:id', authenticate, putTodoValidationRules, validate,
     async (req, res) => {
         let id = req.params.id;
         let todo = req.body;
@@ -290,7 +304,7 @@ app.put('/todos/:id', authenticate,
  *     '500':
  *       description: Serverfehler
  */
-app.post('/todos', authenticate, todoValidationRules, validate,
+app.post('/todos', authenticate, postTodoValidationRules, validate,
     async (req, res) => {
         let todo = req.body;
         if (!todo) {
