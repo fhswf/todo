@@ -66,6 +66,6 @@ describe('Form Input Test - Normal Input', () => {
     cy.wait(2000); // Anpassen der Wartezeit, wenn nötig
 
 
-    cy.contains('.todo', 'Neue Aufgabe').should('exist');
+    cy.get('.title').should('contain', 'Neue Aufgabe');
   });
 });
