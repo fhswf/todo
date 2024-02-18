@@ -242,7 +242,7 @@ app.get('/todos/:id', authenticate,
  *    '500':
  *      description: Serverfehler
  */
-app.put('/todos/:id', authenticate, todoValidationRules, validate,
+app.put('/todos/:id', authenticate, 
     async (req, res) => {
         let id = req.params.id;
         let todo = req.body;
