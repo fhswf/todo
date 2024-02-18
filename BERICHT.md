@@ -1,0 +1,1 @@
+# Inhalte, die ursprünglich in der BERICHT.md stehen sollten, stehen nun in README_Aufgabe2.md
