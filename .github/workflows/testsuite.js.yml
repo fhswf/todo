@@ -7,14 +7,20 @@ on: [push, pull_request]
 
 
 jobs:
-  build:
+  test:
 
     runs-on: ubuntu-latest
 
+    services:
+      mongodb:
+        image: mongo:4.4
+        ports:
+          - 27017:27017
+    
     strategy:
       matrix:
         node-version: [18.x]
-        
+    
     steps:
     - uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node-version }}
@@ -23,5 +29,10 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
         cache-dependency-path: ./backend/package-lock.json
-    - run: npm run test
-      working-directory: './backend/'
+        
+    - name: Install dependencies
+      run: npm install
+      working-directory: ./backend
+    - name: Run testsuite  
+      run: npm run test
+      working-directory: ./backend
