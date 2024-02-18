@@ -282,7 +282,7 @@ app.put('/todos/:id', authenticate, todoValidationRules,
  */
 app.post('/todos', authenticate, todoValidationRules,
     async (req, res) => {
-        const errors = validationResult(req);
+        const errors = validationResult(req.body);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });}
         let todo = req.body;
