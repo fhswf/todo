@@ -57,12 +57,15 @@ describe('Form Input Test - Normal Input', () => {
 
 
     // Testfall 1: Normale Eingaben
-    cy.get('#todo').type('Normale Aufgabe');
+    cy.get('#todo').type('Neue Aufgabe');
     cy.get('#due').type('2024-02-18');
     cy.get('#status').select('offen');
-    cy.get('#todo-form').submit();
-    
-    cy.contains('.todo', 'Neue Aufgabe').should('exist');
 
+    cy.get('#todo-form').submit();
+
+    cy.wait(2000); // Anpassen der Wartezeit, wenn nötig
+
+
+    cy.contains('.todo', 'Neue Aufgabe').should('exist');
   });
 });
