@@ -44,7 +44,8 @@ describe('Todo List Test (add todo)', () => {
     cy.get('#status').select('offen');
 
     cy.get('#todo-form').submit();
-
+    cy.wait(2000);
+    cy.get('#todo-list').should('be.visible').and('not.be.empty');
     cy.get('#todo-list').should('contain', `Todo_${uniqueId}`);
   });
 });
