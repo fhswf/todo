@@ -127,7 +127,7 @@ describe('PUT /todos/:id', () => {
             .set('Authorization', `Bearer ${token}`)
             .send(newTodo);
         
-            const id = response.body._id;
+        const id = response.body._id;
 
         const updatedTodo = {
             "title": "Übung 4 machen",
@@ -158,16 +158,18 @@ describe('DELETE /todos/:id', () => {
             .post('/todos')
             .set('Authorization', `Bearer ${token}`)
             .send(newTodo);
+        
+        const id = response.body._id;
 
         const deleteResponse = await request(app)
-            .delete(`/todos/${response.body._id}`)
+            .delete(`/todos/${id}`)
             .set('Authorization', `Bearer ${token}`);
 
 
         expect(deleteResponse.statusCode).toBe(204);
 
         const getResponse = await request(app)
-            .get(`/todos/${response.body._id}`)
+            .get(`/todos/${id}`)
             .set('Authorization', `Bearer ${token}`);
 
         expect(getResponse.statusCode).toBe(404);
