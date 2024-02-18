@@ -31,8 +31,6 @@ describe('UI Tests', () => {
 });
 
 
-const { v4: uuidv4 } = require('uuid');
-
 
 describe('Form Input Test - Normal Input', () => {
   it('Adds a new todo', () => {
@@ -48,6 +46,27 @@ describe('Form Input Test - Normal Input', () => {
     cy.get('form').submit()
     cy.contains('.todo .title', 'Neues Todo von Cypress1234')
     cy.contains('.todo .due', '2025-02-02')
+  })
+});
+});
+
+
+describe('Todo deletion', () => {
+  it('Adds a new todo', () => {
+    cy.visit('/todo.html'); 
+    it('loads the initial page', () => {
+     cy.contains('h1', 'Todo Liste')
+   })
+  it('should delete a todo', () => {
+      cy.get('#todo').type('Todo delete')
+      cy.get('#due').type('2025-02-02')
+      cy.get('#status').select('offen')
+      cy.get('form').submit()
+
+      cy.contains('.title', 'Todo delete').siblings('.actions').find('.delete').click();
+
+      // Überprüfe, ob der Todo-Eintrag nach dem Löschen nicht mehr auf der Seite ist
+      cy.get('.title').contains('Todo delete').should('not.exist');
   })
 });
 });
