@@ -93,6 +93,7 @@ function saveTodo(evt) {
             })
     } else {
         console.log("Saving new todo: %o", todo);
+        //ID darf bei Neuanlage nicht existieren
         delete todo._id;
         fetch(API, {
             method: "POST",
