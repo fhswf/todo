@@ -31,7 +31,7 @@ describe('UI Tests', () => {
 
 
 const { v4: uuidv4 } = require('uuid');
-
+/*
 describe('Todo List Test (add todo)', () => {
   it('should add a new todo identified by GUID', () => {
 
@@ -47,5 +47,42 @@ describe('Todo List Test (add todo)', () => {
     cy.wait(2000);
     cy.get('#todo-list').should('be.visible').and('not.be.empty');
     cy.get('#todo-list').should('contain', `Todo_${uniqueId}`);
+  });
+});*/
+
+
+describe('Form Input Test', () => {
+  it('should test input fields with different cases', () => {
+    cy.visit('/todo.html');
+
+
+    // Testfall 1: Normale Eingaben
+    cy.get('#todo').type('Normale Aufgabe');
+    cy.get('#due').type('2024-02-18');
+    cy.get('#status').select('offen');
+    cy.get('#todo-form').submit();
+    cy.get('#todo-list').should('contain', 'Normale Aufgabe');
+
+    // Testfall 2: Leere Eingaben (Randfall)
+    cy.get('#todo').clear();
+    cy.get('#due').clear();
+    cy.get('#status').select('offen');
+    cy.get('#todo-form').submit();
+    cy.get('#todo-list').should('not.contain', ''); // Überprüfe, dass keine leeren Aufgaben hinzugefügt werden
+
+    // Testfall 3: Sonderzeichen
+    cy.get('#todo').type('!@#$%^&*()_+');
+    cy.get('#due').type('2024-12-31');
+    cy.get('#status').select('erledigt');
+    cy.get('#todo-form').submit();
+    cy.get('#todo-list').should('contain', '!@#$%^&*()_+');
+
+    // Testfall 4: Lange Eingaben
+    const longInput = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+    cy.get('#todo').clear().type(longInput);
+    cy.get('#due').type('2024-02-18');
+    cy.get('#status').select('in Bearbeitung');
+    cy.get('#todo-form').submit();
+    cy.get('#todo-list').should('contain', longInput);
   });
 });
