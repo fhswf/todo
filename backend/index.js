@@ -101,6 +101,16 @@ const todoValidationRules = [
         .withMessage('Titel darf nicht leer sein')
         .isLength({ min: 3 })
         .withMessage('Titel muss mindestens 3 Zeichen lang sein'),
+    check('due')
+        .notEmpty()
+        .withMessage('Datum darf nicht leer sein')
+        .isDate()
+        .withMessage('Bitte ein gültiges Datum eingeben'),
+    check('status')
+        .notEmpty()
+        .withMessage('Status darf nicht leer sind')
+        .isInt({ min: 0, max: 2})
+        .withMessage('Der Status darf nur die Werte 0,1 oder 2 haben.')
 ];
 
 
@@ -221,8 +231,11 @@ app.get('/todos/:id', authenticate,
  *    '500':
  *      description: Serverfehler
  */
-app.put('/todos/:id', authenticate,
+app.put('/todos/:id', authenticate, todoValidationRules,
     async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });}
         let id = req.params.id;
         let todo = req.body;
         if (todo._id !== id) {
@@ -269,8 +282,11 @@ app.put('/todos/:id', authenticate,
  *     '500':
  *       description: Serverfehler
  */
-app.post('/todos', authenticate,
+app.post('/todos', authenticate, todoValidationRules,
     async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });}
         let todo = req.body;
         if (!todo) {
             res.sendStatus(400, { message: "Todo fehlt" });
