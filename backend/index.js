@@ -106,7 +106,7 @@ const todoValidationRules = [
     check('status')
         .notEmpty()
         .withMessage('Status darf nicht leer sind'),
-    check(_id)
+    check('_id')
         .isString()
         .withMessage('Die Id des ToDos muss ein String sein'),
     checkExact()
