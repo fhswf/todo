@@ -93,6 +93,7 @@ function saveTodo(evt) {
             })
     } else {
         console.log("Saving new todo: %o", todo);
+        delete todo._id;
         fetch(API, {
             method: "POST",
             headers: {
