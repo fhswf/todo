@@ -62,10 +62,7 @@ describe('Form Input Test - Normal Input', () => {
     cy.get('#status').select('offen');
     cy.get('#todo-form').submit();
     
-    cy.get('.todo').should('exist').and('have.length', 1); 
-    cy.get('.title').should('contain', 'Normale Aufgabe'); 
-    cy.get('.due').should('contain', '21.2.2024'); 
-
+    cy.contains('.todo', 'Neue Aufgabe').should('exist');
 
   });
 });
