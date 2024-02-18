@@ -124,7 +124,7 @@ const putTodoValidationRules = [
     check('_id')
         .isString()
         .withMessage('Die Id des ToDos muss ein String sein'),
-    checkExact()
+    checkExact([], { locations: ['body'] })
 ];
 
 //Middleware mit der geprüft wird, ob die toDoValidationRules eingehalten wurden
