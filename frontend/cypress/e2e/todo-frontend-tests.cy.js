@@ -30,3 +30,21 @@ describe('UI Tests', () => {
 });
 
 
+const { v4: uuidv4 } = require('uuid');
+
+describe('Todo List Test (add todo)', () => {
+  it('should add a new todo identified by GUID', () => {
+
+    cy.visit('/todo.html');
+
+    const uniqueId = uuidv4();
+
+    cy.get('#todo').type(`Todo_${uniqueId}`);
+    cy.get('#due').type('2024-02-18');
+    cy.get('#status').select('offen');
+
+    cy.get('#todo-form').submit();
+
+    cy.get('#todo-list').should('contain', `Todo_${uniqueId}`);
+  });
+});
