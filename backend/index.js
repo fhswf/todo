@@ -106,6 +106,9 @@ const todoValidationRules = [
     check('status')
         .notEmpty()
         .withMessage('Status darf nicht leer sind'),
+    check(_id)
+        .isString()
+        .withMessage('Die Id des ToDos muss ein String sein'),
     checkExact()
 ];
 
@@ -242,6 +245,11 @@ app.put('/todos/:id', authenticate, todoValidationRules, validate,
     async (req, res) => {
         let id = req.params.id;
         let todo = req.body;
+        if (todo._id !== id) {
+            console.log("id in body does not match id in path: %s != %s", todo._id, id);
+            res.sendStatus(400, "{ message: id in body does not match id in path}");
+            return;
+        }
         return db.update(id, todo)
             .then(todo => {
                 if (todo) {
