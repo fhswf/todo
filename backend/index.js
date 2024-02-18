@@ -4,7 +4,7 @@ import DB from './db.js'
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 
-import { check, validationResult } from 'express-validator';
+import { check, checkExact, validationResult } from 'express-validator';
 import cookieParser from 'cookie-parser';
 import { getRandomValues } from 'crypto';
 
@@ -106,17 +106,17 @@ const todoValidationRules = [
     check('status')
         .notEmpty()
         .withMessage('Status darf nicht leer sind'),
+    checkExact()
 ];
 
-//Middleware mit der grprüft wird, ob die toDoValidationRules eingehalten wurden
+//Middleware mit der geprüft wird, ob die toDoValidationRules eingehalten wurden
 const validate = (req, res, next) => {
     const errors = validationResult(req);
     if (errors.isEmpty()) {
         return next();
     }
     return res.status(400).json({
-        error: "Bad Request",
-        errors: errors.array()
+        error: "Bad Request"
     });
 }
 
