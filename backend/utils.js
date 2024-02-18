@@ -1,6 +1,4 @@
 import axios from 'axios';
-import qs from 'qs';
-
 
 async function getKeycloakToken() {
     const keycloakConfig = {
