@@ -33,7 +33,8 @@ describe('POST /todos', () => {
         const newTodo = {
             "title": "Übung 4 machen",
             "due": "2022-11-12T00:00:00.000Z",
-            "status": 0
+            "status": 0,
+            "_id": ""
         };
 
         const response = await request(app)
@@ -65,6 +66,7 @@ describe('POST /todos', () => {
             "title": "Übung 4 machen",
             "due": "2022-11-12T00:00:00.000Z",
             "status": 0,
+            "_id": "",
             "invalid": "invalid"
         };
 
@@ -83,7 +85,8 @@ describe('GET /todos/:id', () => {
         const newTodo = {
             "title": "Übung 4 machen",
             "due": "2022-11-12T00:00:00.000Z",
-            "status": 0
+            "status": 0,
+            "_id": ""
         };
 
         const response = await request(app)
@@ -119,7 +122,8 @@ describe('PUT /todos/:id', () => {
         const newTodo = {
             "title": "Übung 4 machen",
             "due": "2022-11-12T00:00:00.000Z",
-            "status": 0
+            "status": 0,
+            "_id": ""
         };
 
         const response = await request(app)
@@ -149,7 +153,8 @@ describe('DELETE /todos/:id', () => {
         const newTodo = {
             "title": "Übung 4 machen",
             "due": "2022-11-12T00:00:00.000Z",
-            "status": 0
+            "status": 0,
+            "_id": ""
         };
 
         const response = await request(app)
