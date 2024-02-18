@@ -20,9 +20,12 @@ describe('UI Tests', () => {
   it('changes the status of a todo', () => {
     cy.visit('/todo.html');
   
-    cy.get('#todo #status').eq(0).should('contain', 'offen');
-    cy.get('#todo #status').eq(0).click();
-    cy.get('#todo #status').eq(0).should('contain', 'in Bearbeitung');
+    cy.get('#status').select('offen');
+    cy.get('#status').should('have.value', '0');
+    cy.get('#status').select('in Bearbeitung');
+    cy.get('#status').should('have.value', '1');
+    cy.get('#status').select('erledigt');
+    cy.get('#status').should('have.value', '2');
   });
 });
 
