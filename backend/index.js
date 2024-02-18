@@ -109,11 +109,6 @@ const todoValidationRules = [
     check('status')
         .notEmpty()
         .withMessage('Status darf nicht leer sind'),
-    oneOf([
-        check('status').equals('0'),
-        check('status').equals('1'),
-        check('status').equals('2'),
-        ], {message: 'Der Status darf nur die Werte 0,1 oder 2 haben.'})
 ];
 
 
