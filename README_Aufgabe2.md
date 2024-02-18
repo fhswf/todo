@@ -8,6 +8,8 @@
 - Codespace gestartet
 - Bereits vorhandene Tests ausgeführt
 - Code angepasst, bis vorhandene Tests erfolgreich waren
+- Action für Test erstellt, "Node.js" Template als Ausgang gewählt und angepasst
+
 
 ## Schwierigkeiten:
 - Ausführen der Anwendung lokal nicht möglich, fehlende Anleitung
@@ -30,3 +32,5 @@
     - *Lösung: "Zu viele Paramter" ergibt mehr Sinn - ist bereits mit vorherigem Test (zu wenig Parameter) abgedeckt*
 - Anwendung nicht im Root Verzeichnis des Repos führt zu Problemen bei Actions
     - *Lösung: entsprechende Parameter in der Action gesetzt*
+- GitHub Action läuft in Timeout: thrown: "Exceeded timeout of 5000 ms for a hook."
+    - *Lösung: Timeout Werte als dritten Paramter in den "it()" Blöcken der Tests hinzugefügt*
