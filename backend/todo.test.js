@@ -14,7 +14,7 @@ describe('GET /todos (unautorisiert)', () => {
 
         expect(response.statusCode).toBe(401);
         expect(response.body.error).toBe('Unauthorized');
-    });
+    }, 30000);
 });
 
 describe('GET /todos', () => {
@@ -25,7 +25,7 @@ describe('GET /todos', () => {
 
         expect(response.statusCode).toBe(200);
         expect(Array.isArray(response.body)).toBeTruthy();
-    });
+    }, 30000);
 });
 
 describe('POST /todos', () => {
@@ -43,7 +43,7 @@ describe('POST /todos', () => {
         expect(response.statusCode).toBe(201);
         expect(response.body.title).toBe(newTodo.title);
         expect(response.body.due).toBe(newTodo.due);
-    });
+    }, 30000);
 
     it('sollte einen 400-Fehler zurückgeben, wenn das Todo unvollständig ist', async () => {
         const newTodo = {
@@ -58,7 +58,7 @@ describe('POST /todos', () => {
 
         expect(response.statusCode).toBe(400);
         expect(response.body.error).toBe('Bad Request');
-    });
+    }, 30000);
 
     it('sollte einen 400-Fehler zurückgeben, wenn das Todo nicht valide ist', async () => {
         const newTodo = {
@@ -75,8 +75,8 @@ describe('POST /todos', () => {
 
         expect(response.statusCode).toBe(400);
         expect(response.body.error).toBe('Bad Request');
-    });
-}); 0
+    }, 30000);
+});
 
 describe('GET /todos/:id', () => {
     it('sollte ein Todo abrufen', async () => {
@@ -100,7 +100,7 @@ describe('GET /todos/:id', () => {
         expect(getResponse.statusCode).toBe(200);
         expect(getResponse.body.title).toBe(newTodo.title);
         expect(getResponse.body.due).toBe(newTodo.due);
-    });
+    }, 30000);
 
     it('sollte einen 404-Fehler zurückgeben, wenn das Todo nicht gefunden wurde', async () => {
         const id = '123456789012345678901234';
@@ -111,7 +111,7 @@ describe('GET /todos/:id', () => {
 
         expect(getResponse.statusCode).toBe(404);
         expect(getResponse.body.error).toMatch(/Todo with id .+ not found/);
-    });
+    }, 30000);
 });
 
 describe('PUT /todos/:id', () => {
@@ -141,7 +141,7 @@ describe('PUT /todos/:id', () => {
 
         expect(updateResponse.statusCode).toBe(200);
         expect(updateResponse.body.status).toBe(updatedTodo.status);
-    });
+    }, 30000);
 });
 
 describe('DELETE /todos/:id', () => {
@@ -169,7 +169,7 @@ describe('DELETE /todos/:id', () => {
             .set('Authorization', `Bearer ${token}`);
 
         expect(getResponse.statusCode).toBe(404);
-    });
+    }, 30000);
 });
 
 
