@@ -109,7 +109,7 @@ const postTodoValidationRules = [
     checkExact()
 ];
 
-const putTodoValidationRules = [
+const todoValidationRules = [
     check('title')
         .notEmpty()
         .withMessage('Titel darf nicht leer sein')
@@ -122,6 +122,7 @@ const putTodoValidationRules = [
         .notEmpty()
         .withMessage('Status darf nicht leer sind'),
     check('_id')
+        .optional()
         .isString()
         .withMessage('Die Id des ToDos muss ein String sein'),
     checkExact([], { locations: ['body'] })
@@ -256,7 +257,7 @@ app.get('/todos/:id', authenticate,
  *    '500':
  *      description: Serverfehler
  */
-app.put('/todos/:id', authenticate, putTodoValidationRules, validate,
+app.put('/todos/:id', authenticate, todoValidationRules, validate,
     async (req, res) => {
         let id = req.params.id;
         let todo = req.body;
@@ -304,7 +305,7 @@ app.put('/todos/:id', authenticate, putTodoValidationRules, validate,
  *     '500':
  *       description: Serverfehler
  */
-app.post('/todos', authenticate, postTodoValidationRules, validate,
+app.post('/todos', authenticate, todoValidationRules, validate,
     async (req, res) => {
         let todo = req.body;
         if (!todo) {
