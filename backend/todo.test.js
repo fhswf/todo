@@ -133,7 +133,7 @@ describe('PUT /todos/:id', () => {
             "title": "Übung 4 machen",
             "due": "2022-11-12T00:00:00.000Z",
             "status": 1,
-            "_id": id
+            "_id": `${id}`
         };
 
         const updateResponse = await request(app)
