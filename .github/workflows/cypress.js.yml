@@ -4,9 +4,9 @@ name: Cypress frontend Tests CI
 
 on:
   push:
-    branches: '*'
+    branches: ["Main"]
   pull_request:
-    branches: '*'
+    branches: ["Main"]
   workflow_dispatch:
 
 jobs:
