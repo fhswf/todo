@@ -57,7 +57,7 @@ describe('POST /todos', () => {
             .send(newTodo);
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.error).toBe('Bad Request');
+        expect(response.body.error).toBe('Titel darf nicht leer sein');
     });
 
     it('sollte einen 400-Fehler zurückgeben, wenn das Todo nicht valide ist', async () => {
@@ -74,7 +74,7 @@ describe('POST /todos', () => {
             .send(newTodo);
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.error).toBe('Bad Request');
+        expect(response.body.error).toBe('Unknown field(s)');
     });
 }); 0
 
@@ -201,7 +201,7 @@ describe('PUT /todos/:id', () => {
             .send(updatedTodo);
 
         expect(updateResponse.statusCode).toBe(400);
-        expect(updateResponse.body.error).toBe('Bad Request');
+        expect(updateResponse.body.error).toBe('Datum darf nicht leer sein');
     });
 
     it('sollte einen 400-Fehler zurückgeben, wenn das aktualisierte ToDo nicht valide ist', async () => {
@@ -220,6 +220,7 @@ describe('PUT /todos/:id', () => {
 
         const updatedTodo = {
             "title": "Übung 4 machen",
+            "due": "2022-11-12T00:00:00.000Z",
             "status": 1,
             "_id": `${id}`,
             "invalid": "invalid"
@@ -231,7 +232,7 @@ describe('PUT /todos/:id', () => {
             .send(updatedTodo);
 
         expect(updateResponse.statusCode).toBe(400);
-        expect(updateResponse.body.error).toBe('Bad Request');
+        expect(updateResponse.body.error).toBe('Unknown field(s)');
     });
 
     
