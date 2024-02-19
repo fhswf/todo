@@ -22,7 +22,6 @@ async function getKeycloakToken() {
             {
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             });
-
         return response.data.access_token;
     } catch (error) {
         console.error('Fehler beim Abrufen des Keycloak-Tokens', error);
