@@ -3,9 +3,9 @@ name: SonarQube analysis
 
 on:
   push:
-    branches: ["sonarcube"]
+    branches: ["Main"]
   pull_request:
-    branches: ["sonarcube"]
+    branches: ["Main"]
   workflow_dispatch:
 
 permissions:
