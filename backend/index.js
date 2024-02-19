@@ -1,5 +1,5 @@
 import express from 'express';
-import DB from './db.js'
+import DB from './db.js';
 
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
@@ -8,10 +8,12 @@ import { check, validationResult } from 'express-validator';
 import cookieParser from 'cookie-parser';
 import { getRandomValues } from 'crypto';
 
+import passport from 'passport';
+import { Strategy, ExtractJwt } from 'passport-jwt';
+
 const PORT = process.env.PORT || 3000;
 
 const TOKEN_URL = "https://jupiter.fh-swf.de/keycloak/realms/webentwicklung/protocol/openid-connect/token"
-
 
 const swaggerOptions = {
     swaggerDefinition: {
@@ -107,9 +109,43 @@ const todoValidationRules = [
 /** Middleware for authentication. 
  * This middleware could be used to implement JWT-based authentication. Currently, this is only a stub.
 */
+
+const opts = {
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+    secretOrKey: `-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyn2vP592Ju/iKXQW1DCrSTXyQXyo11Qed1SdzFWC+mRtdgioKibzYMBt2MfAJa6YoyrVNgOtGvK659MjHALtotPQGmis1VVvBeMFdfh+zyFJi8NPqgBTXz6bQfnu85dbxVAg95J+1Ud0m4IUXME1ElOyp1pi88+w0C6ErVcFCyEDS3uAajBY6vBIuPrlokbl6RDcvR9zX85s+R/s7JeP1XV/e8gbnYgZwxcn/6+7moHPDl4LqvVDKnDq9n4W6561s8zzw8EoAwwYXUC3ZPe2/3DcUCh+zTF2nOy8HiN808CzqLq1VeD13q9DgkAmBWFNSaXb6vK6RIQ9+zr2cwdXiwIDAQAB
+-----END PUBLIC KEY-----`,
+    ignoreExpiration: true,
+    issuer: "https://jupiter.fh-swf.de/keycloak/realms/webentwicklung"
+};
+
+passport.use(
+    new Strategy(opts, (payload, done)=>{
+        return done(null, payload)
+    })
+)
+
 let authenticate = (req, res, next) => {
-    // Dummy authentication
-    next();
+    let responseObj = {
+        statusCode: 0, 
+        errorMsg: "",
+        data: {}
+    }
+
+    return passport.authenticate('jwt', {session: false}, (err, user, info) => {
+        if (err) { 
+           return next(err);
+        }
+        if (!user) {
+            console.log(req)
+            responseObj.data = info.message 
+            responseObj.statusCode = 401 
+            responseObj.error = "Unauthorized"
+            return res.status(responseObj.statusCode).json(responseObj)
+        }
+        req.user = user;
+        next();
+     })(req, res, next);
 }
 
 
