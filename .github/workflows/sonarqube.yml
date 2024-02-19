@@ -3,9 +3,9 @@ name: SonarQube analysis
 
 on:
   push:
-    branches: ["Main"]
+    branches: ["sonarcube"]
   pull_request:
-    branches: ["Main"]
+    branches: ["sonarcube"]
   workflow_dispatch:
 
 permissions:
@@ -18,12 +18,22 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          # Disabling shallow clone is recommended for improving relevancy of reporting
           fetch-depth: 0
-      - name: Analyze with SonarQube
 
-        # You can pin the exact commit or the version.
-        # uses: SonarSource/sonarqube-scan-action@v1.1.0
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install project dependencies
+        run: npm install
+        working-directory: ./backend
+
+      - name: Coverage
+        run: npm run coverage
+        working-directory: ./backend
+
+      - name: Analyze with SonarQube
         uses: sonarsource/sonarqube-scan-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information
