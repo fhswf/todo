@@ -121,9 +121,7 @@ const validate = (req, res, next) => {
     if (errors.isEmpty()) {
         return next();
     }
-    return res.status(400).json({
-        error: "Bad Request"
-    });
+    return res.status(400).send({ error: `Bad Request` });
 }
 
 
@@ -250,7 +248,7 @@ app.put('/todos/:id', authenticate, todoValidationRules, validate,
         let todo = req.body;
         if (todo._id !== id) {
             console.log("id in body does not match id in path: %s != %s", todo._id, id);
-            res.sendStatus(400, "{ message: id in body does not match id in path}");
+            res.status(400).send({ error: `Id in body does not match Id in path` })
             return;
         }
         return db.update(id, todo)
