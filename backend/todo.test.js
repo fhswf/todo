@@ -36,10 +36,10 @@ describe('POST /todos', () => {
             "status": 0
         };
 
-        cy.request('POST', '/todos', newTodo).then((response) => {
-            expect(response.status).to.equal(401);
-            expect(response.body.error).to.equal('Unauthorized');
-        });
+        const response= await request(app)
+            .post('/todos')
+            .send(newTodo);
+        expect(response.statusCode).toBe(401);
     });
 
     it('sollte ein neues Todo erstellen', async () => {
@@ -125,7 +125,7 @@ describe('POST /todos', () => {
 });
 
 
-describe('GET /todos/:id', () => {
+describe('GET /todos/id', () => {
     it('sollte einen 401-Fehler zurückgeben, wenn kein Token bereitgestellt wird', async () => {
         const newTodo = {
             "title": "Übung 4 machen",
@@ -141,7 +141,7 @@ describe('GET /todos/:id', () => {
         const id = response.body._id;
 
         const getResponse=await request(app)
-            .get(`todos/${id}`)
+            .get(`/todos/${id}`)
 
         expect(getResponse.statusCode).toBe(401);
         expect(getResponse.body.error).toBe('Unauthorized');
@@ -190,19 +190,18 @@ describe('PUT /todos/:id', () => {
             "status": 0
         };
 
-        cy.request({
-            method: 'POST', 
-            url: '/todos', 
-            body: newTodo,
-            Authorization: `Bearer ${token}`
-        }).then((response) => {
-            const id = response.body._id;
+        const response = await request(app)
+            .post('/todos')
+            .set('Authorization', `Bearer ${token}`)
+            .send(newTodo);
+        
+        const id = response.body._id;
 
-            cy.request('PUT', `/todos/${id}`, newTodo).then((updateResponse) => {
-                expect(updateResponse.status).to.equal(401);
-                expect(updateResponse.body.error).to.equal('Unauthorized');
-            });
-        });
+        const updateResponse = await request(app)
+            .put(`/todos/${id}`)
+            .send(newTodo);
+        
+        expect(updateResponse.statusCode).toBe(401);
     })
 
     it('sollte ein Todo aktualisieren', async () => {

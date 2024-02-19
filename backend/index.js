@@ -4,7 +4,7 @@ import DB from './db.js';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 
-import { check, validationResult } from 'express-validator';
+import { check, checkExact, validationResult } from 'express-validator';
 import cookieParser from 'cookie-parser';
 import { getRandomValues } from 'crypto';
 
@@ -98,11 +98,23 @@ async function initDB() {
 
 
 const todoValidationRules = [
-    check('title')
+    checkExact('title')
         .notEmpty()
+        //check if the title is present
+        .exists()
         .withMessage('Titel darf nicht leer sein')
         .isLength({ min: 3 })
         .withMessage('Titel muss mindestens 3 Zeichen lang sein'),
+    checkExact('due')
+        .notEmpty()
+        .exists()
+        .isISO8601()
+        .withMessage('Fälligkeitsdatum muss ein gültiges Datum sein'),
+    checkExact('status')
+        .notEmpty()
+        .exists()
+        .isInt({ min: 0, max: 2 })
+        .withMessage('Status muss zwischen 0 und 2 liegen'),
 ];
 
 
