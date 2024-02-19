@@ -110,8 +110,8 @@ const todoValidationRules = [
     check('status')
         .notEmpty()
         .withMessage('Status darf nicht leer sind')
-        .isInt()
-        .withMessage('Der Status des ToDos muss ein Int sein'),
+        .isInt({ min: 0, max: 2 })
+        .withMessage('Der Status des ToDos muss ein Int mit einem Wert von 0, 1 oder 2 sein'),
     check('_id')
         .optional()
         .isString()
