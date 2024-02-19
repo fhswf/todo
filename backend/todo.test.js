@@ -174,7 +174,7 @@ describe('POST /todos', () => {
         const newTodo = {
             "title": "Übung 4 machen",
             "due": "2022-11-12T00:00:00.000Z",
-            "status": "0"
+            "status": "erledigt"
         };
 
         const response = await request(app)
