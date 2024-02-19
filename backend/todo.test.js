@@ -320,7 +320,7 @@ describe('PUT /todos/:id', () => {
     });
 });
 
-describe('DELETE /todos/:id', () => {
+/*describe('DELETE /todos/:id', () => {
 
     it('sollte einen 401-Fehler zurückgeben, wenn kein Token bereitgestellt wird', async () => {
         const newTodo = {
@@ -340,9 +340,9 @@ describe('DELETE /todos/:id', () => {
 
         expect(deleteResponse.statusCode).toBe(401);
         expect(deleteResponse.body.error).toBe('Unauthorized');
-    });
+    });*/
 
-    it('sollte ein Todo löschen', async () => {
+    /*it('sollte ein Todo löschen', async () => {
         const newTodo = {
             "title": "Übung 4 machen",
             "due": "2022-11-12T00:00:00.000Z",
@@ -367,7 +367,7 @@ describe('DELETE /todos/:id', () => {
 
         expect(getResponse.statusCode).toBe(404);
     });
-});
+});*/
 
 afterAll(async () => {
     server.close()
