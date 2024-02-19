@@ -119,6 +119,7 @@ const todoValidationRules = [
     //Mit checkExact() wird sichergestellt, dass das übergebene ToDo ausschließlich
     //über die oben genannten Attribute verfügt.
     checkExact([], { locations: ['body'] })
+        .withMessage('Ein ToDo darf nur aus Titel, due, status und _id bestehen')
 ];
 
 //Middleware mit der geprüft wird, ob die toDoValidationRules eingehalten wurden
@@ -127,7 +128,7 @@ const validate = (req, res, next) => {
     if (errors.isEmpty()) {
         return next();
     }
-    return res.status(400).send({ error: errors.array({ onlyFirstError: true})});
+    return res.status(400).send({ error: errors.array({ onlyFirstError: true})[0].msg});
 }
 
 
