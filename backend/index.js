@@ -102,6 +102,7 @@ const todoValidationRules = [
         .withMessage('Titel muss mindestens 3 Zeichen lang sein'),
     check('due')
         .notEmpty()
+        .isDate()
         .withMessage('Datum darf nicht leer sein'),
     check('status')
         .notEmpty()
