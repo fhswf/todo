@@ -14,23 +14,25 @@ permissions:
 jobs:
   Analysis:
     runs-on: ubuntu-latest
-
+  
+  
+    strategy:
+      matrix:
+        node-version: [18.x]
+        mongodb-version: ['6.0']
+   
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
         with:
-          node-version: 18
-
-      - name: Install project dependencies
-        run: npm install
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: npm install
         working-directory: ./backend
-
-      - name: Coverage
-        run: npm run coverage
+      - run: npm test
         working-directory: ./backend
 
       - name: Analyze with SonarQube
