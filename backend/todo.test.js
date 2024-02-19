@@ -76,6 +76,132 @@ describe('POST /todos', () => {
         expect(response.statusCode).toBe(400);
         expect(response.body.error).toBe('Unknown field(s)');
     });
+
+    it('sollte einen 400-Fehler zurückgeben, wenn der Titel des ToDos fehlt', async () => {
+        const newTodo = {
+            "due": "2022-11-12T00:00:00.000Z",
+            "status": 0
+        };
+
+        const response = await request(app)
+            .post('/todos')
+            .set('Authorization', `Bearer ${token}`)
+            .send(newTodo);
+
+        expect(response.statusCode).toBe(400);
+        expect(response.body.error).toBe('Titel darf nicht leer sein');
+    });
+
+    it('sollte einen 400-Fehler zurückgeben, wenn der Titel des ToDos zu kurz ist', async () => {
+        const newTodo = {
+            "title": "Ü5",
+            "due": "2022-11-12T00:00:00.000Z",
+            "status": 0
+        };
+
+        const response = await request(app)
+            .post('/todos')
+            .set('Authorization', `Bearer ${token}`)
+            .send(newTodo);
+
+        expect(response.statusCode).toBe(400);
+        expect(response.body.error).toBe('Titel muss mindestens 3 Zeichen lang sein');
+    });
+
+    it('sollte einen 400-Fehler zurückgeben, wenn der Titel des ToDos kein String ist', async () => {
+        const newTodo = {
+            "title": 43210,
+            "due": "2022-11-12T00:00:00.000Z",
+            "status": 0
+        };
+
+        const response = await request(app)
+            .post('/todos')
+            .set('Authorization', `Bearer ${token}`)
+            .send(newTodo);
+
+        expect(response.statusCode).toBe(400);
+        expect(response.body.error).toBe('Der Titel des ToDos muss ein String sein');
+    });
+
+    it('sollte einen 400-Fehler zurückgeben, wenn das Datum des ToDos fehlt', async () => {
+        const newTodo = {
+            "title": "Übung 4 machen",
+            "status": 0
+        };
+
+        const response = await request(app)
+            .post('/todos')
+            .set('Authorization', `Bearer ${token}`)
+            .send(newTodo);
+
+        expect(response.statusCode).toBe(400);
+        expect(response.body.error).toBe('Datum darf nicht leer sein');
+    });
+
+    it('sollte einen 400-Fehler zurückgeben, wenn das Datum des ToDos kein String ist', async () => {
+        const newTodo = {
+            "title": "Übung 4 machen",
+            "due": 12122001,
+            "status": 0
+        };
+
+        const response = await request(app)
+            .post('/todos')
+            .set('Authorization', `Bearer ${token}`)
+            .send(newTodo);
+
+        expect(response.statusCode).toBe(400);
+        expect(response.body.error).toBe('Das Datum des ToDos muss ein String sein');
+    });
+
+    it('sollte einen 400-Fehler zurückgeben, wenn der Status des ToDos fehlt', async () => {
+        const newTodo = {
+            "title": "Übung 4 machen",
+            "due": "2022-11-12T00:00:00.000Z"
+        };
+
+        const response = await request(app)
+            .post('/todos')
+            .set('Authorization', `Bearer ${token}`)
+            .send(newTodo);
+
+        expect(response.statusCode).toBe(400);
+        expect(response.body.error).toBe('Status darf nicht leer sind');
+    });
+
+    it('sollte einen 400-Fehler zurückgeben, wenn der Status des ToDos kein Int ist', async () => {
+        const newTodo = {
+            "title": "Übung 4 machen",
+            "due": "2022-11-12T00:00:00.000Z",
+            "status": "0"
+        };
+
+        const response = await request(app)
+            .post('/todos')
+            .set('Authorization', `Bearer ${token}`)
+            .send(newTodo);
+
+        expect(response.statusCode).toBe(400);
+        expect(response.body.error).toBe('Der Status des ToDos muss ein Int mit einem Wert von 0, 1 oder 2 sein');
+    });
+
+    it('sollte einen 400-Fehler zurückgeben, wenn der Status des ToDos nicht 0, 1 oder 2 ist', async () => {
+        const newTodo = {
+            "title": "Übung 4 machen",
+            "due": "2022-11-12T00:00:00.000Z",
+            "status": 3
+        };
+
+        const response = await request(app)
+            .post('/todos')
+            .set('Authorization', `Bearer ${token}`)
+            .send(newTodo);
+
+        expect(response.statusCode).toBe(400);
+        expect(response.body.error).toBe('Der Status des ToDos muss ein Int mit einem Wert von 0, 1 oder 2 sein');
+    });
+
 }); 0
 
 describe('GET /todos/:id', () => {
