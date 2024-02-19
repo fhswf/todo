@@ -99,14 +99,19 @@ const todoValidationRules = [
         .notEmpty()
         .withMessage('Titel darf nicht leer sein')
         .isLength({ min: 3 })
-        .withMessage('Titel muss mindestens 3 Zeichen lang sein'),
+        .withMessage('Titel muss mindestens 3 Zeichen lang sein')
+        .isString()
+        .withMessage('Der Titel des ToDos muss ein String sein'),
     check('due')
         .notEmpty()
-        .isDate()
-        .withMessage('Datum darf nicht leer sein'),
+        .withMessage('Datum darf nicht leer sein')
+        .isString()
+        .withMessage('Das Datum des ToDos muss ein String sein'),
     check('status')
         .notEmpty()
-        .withMessage('Status darf nicht leer sind'),
+        .withMessage('Status darf nicht leer sind')
+        .isInt()
+        .withMessage('Der Status des ToDos muss ein Int sein'),
     check('_id')
         .optional()
         .isString()
