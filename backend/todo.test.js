@@ -36,12 +36,10 @@ describe('POST /todos', () => {
             "status": 0
         };
 
-        const response = await request(app)
-            .post('/todos') // Kein Authorization-Header
-            .send(newTodo);
-
-        expect(response.statusCode).toBe(401);
-        expect(response.body.error).toBe('Unauthorized');
+        cy.request('POST', '/todos', newTodo).then((response) => {
+            expect(response.status).to.equal(401);
+            expect(response.body.error).to.equal('Unauthorized');
+        });
     });
 
     it('sollte ein neues Todo erstellen', async () => {
@@ -192,19 +190,19 @@ describe('PUT /todos/:id', () => {
             "status": 0
         };
 
-        const response = await request(app)
-            .post('/todos')
-            .set ('Authorization' `Bearer ${token}`)
-            .send(newTodo);
+        cy.request({
+            method: 'POST', 
+            url: '/todos', 
+            body: newTodo,
+            Authorization: `Bearer ${token}`
+        }).then((response) => {
+            const id = response.body._id;
 
-        id=response.body._id;
-
-        const updateResponse = await request(app)
-            .put(`/todos/${id}`)
-            .send(updatedTodo);
-        
-        expect(updateResponse.statusCode).toBe(401);
-        expect(updateResponse.body.error).toBe('Unauthorized');
+            cy.request('PUT', `/todos/${id}`, newTodo).then((updateResponse) => {
+                expect(updateResponse.status).to.equal(401);
+                expect(updateResponse.body.error).to.equal('Unauthorized');
+            });
+        });
     })
 
     it('sollte ein Todo aktualisieren', async () => {
@@ -320,7 +318,7 @@ describe('PUT /todos/:id', () => {
     });
 });
 
-/*describe('DELETE /todos/:id', () => {
+describe('DELETE /todos/:id', () => {
 
     it('sollte einen 401-Fehler zurückgeben, wenn kein Token bereitgestellt wird', async () => {
         const newTodo = {
@@ -340,9 +338,9 @@ describe('PUT /todos/:id', () => {
 
         expect(deleteResponse.statusCode).toBe(401);
         expect(deleteResponse.body.error).toBe('Unauthorized');
-    });*/
+    });
 
-    /*it('sollte ein Todo löschen', async () => {
+    it('sollte ein Todo löschen', async () => {
         const newTodo = {
             "title": "Übung 4 machen",
             "due": "2022-11-12T00:00:00.000Z",
@@ -367,7 +365,7 @@ describe('PUT /todos/:id', () => {
 
         expect(getResponse.statusCode).toBe(404);
     });
-});*/
+});
 
 afterAll(async () => {
     server.close()
