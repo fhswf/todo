@@ -172,7 +172,7 @@ describe('PUT /todos/:id', () => {
             .send(updatedTodo);
 
         expect(updateResponse.statusCode).toBe(400);
-        expect(response.body.error).toBe('Id in body does not match Id in path');
+        expect(updateResponse.body.error).toBe('Id in body does not match Id in path');
     });
 
     it('sollte einen 400-Fehler zurückgeben, wenn das aktualisierte ToDo unvollständig ist', async () => {
@@ -201,7 +201,7 @@ describe('PUT /todos/:id', () => {
             .send(updatedTodo);
 
         expect(updateResponse.statusCode).toBe(400);
-        expect(response.body.error).toBe('Bad Request');
+        expect(updateResponse.body.error).toBe('Bad Request');
     });
 
     it('sollte einen 400-Fehler zurückgeben, wenn das aktualisierte ToDo nicht valide ist', async () => {
@@ -231,7 +231,7 @@ describe('PUT /todos/:id', () => {
             .send(updatedTodo);
 
         expect(updateResponse.statusCode).toBe(400);
-        expect(response.body.error).toBe('Bad Request');
+        expect(updateResponse.body.error).toBe('Bad Request');
     });
 
     
