@@ -32,7 +32,7 @@ jobs:
           cache: 'npm'
       - run: npm install
         working-directory: ./backend
-      - run: npx jest --coverage
+      - run: npm run coverage
         working-directory: ./backend
 
       - name: Analyze with SonarQube
