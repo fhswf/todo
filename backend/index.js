@@ -127,7 +127,7 @@ const validate = (req, res, next) => {
     if (errors.isEmpty()) {
         return next();
     }
-    return res.status(400).send({ error: `Bad Request` });
+    return res.status(400).send({ error: errors });
 }
 
 
