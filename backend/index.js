@@ -151,17 +151,16 @@ const validate = (req, res, next) => {
  * This middleware could be used to implement JWT-based authentication. Currently, this is only a stub.
 */
 const authenticate = (req, res, next) => {
-    return passport.authenticate('jwt', { session: false }, (error, payload) =>{
+    passport.authenticate('jwt', { session: false }, (error, payload) =>{
         if (error){
-            res.status(401).send({error: 'Unauthorized'})
+            return res.status(401).send({error: 'Unauthorized'})
         }
-        else if (!payload){
-            res.status(401).send({error: 'Unauthorized'})
+        if (!payload){
+            return res.status(401).send({error: 'Unauthorized'})
         }
-        else{
-            next()
-        }
-    })   
+
+    })
+    return next()
 }
 
 
