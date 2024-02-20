@@ -86,6 +86,27 @@ describe('Form Input Test - Special Characters', () => {
 });
 });
 
+
+describe('Form Input Test - Long Input', () => {
+  it('Adds a new todo', () => {
+   cy.visit('/todo.html'); 
+   it('loads the initial page', () => {
+    cy.contains('h1', 'Todo Liste')
+  })
+
+  it('allows users to add a new todo', () => {
+    const longInput = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+    cy.get('#todo').clear().type(longInput);
+    cy.get('#due').type('2024-02-18');
+    cy.get('#status').select('in Bearbeitung');
+    cy.get('#todo-form').submit();
+    cy.get('.todo .title').should('contain', longInput);
+  })
+});
+});
+
+
+
 describe('Todo deletion', () => {
   it('Adds a new todo', () => {
     cy.visit('/todo.html'); 
