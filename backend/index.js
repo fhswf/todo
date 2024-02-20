@@ -96,6 +96,7 @@ app.use(express.json());
 /** Middleware für Swagger */
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+app.use(passport.initialize());
 
 
 
@@ -183,7 +184,7 @@ const authenticate = (req, res, next) => {
  *              items:
  *                $ref: '#/components/schemas/Todo'
  */
-app.get('/todos', passport.authenticate('jwt', { session: false }),
+app.get('/todos', authenticate,
     async (req, res) => {
         let todos = await db.queryAll();
         res.send(todos);
