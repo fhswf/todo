@@ -10,8 +10,8 @@ beforeAll(async () => {
 
 describe('GET /todos (unautorisiert)', () => {
     it('sollte einen 401-Fehler zurückgeben, wenn kein Token bereitgestellt wird', async () => {
-        const response = await request(app).get('/todos') // Kein Authorization-Header
-        .set('Authorization', `Bearer 12345`);
+        const response = await request(app).get('/todos'); // Kein Authorization-Header
+
         expect(response.statusCode).toBe(401);
         expect(response.body.error).toBe('Unauthorized');
     });
