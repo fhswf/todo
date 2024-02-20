@@ -96,8 +96,6 @@ app.use(express.json());
 /** Middleware für Swagger */
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
-app.use(passport.initialize());
-
 
 
 /** global instance of our database */
@@ -157,9 +155,8 @@ const authenticate = (req, res, next) => {
         if (!payload){
             return res.status(401).send({error: 'Unauthorized'})
         }
-
-    })
-    return next()
+        next();
+    })(req, res, next)
 }
 
 
