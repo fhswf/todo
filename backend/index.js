@@ -186,8 +186,8 @@ const authenticate = (req, res, next) => {
  *                $ref: '#/components/schemas/Todo'
  */
 app.get('/',
-    async (req, res) => {
-        res.sendFile(path.join(__dirname, '/../frontend/todo.html'));
+    function (req, res){
+        res.sendFile(path.join(__dirname, '../frontend/todo.html'));
     }
 );
 
