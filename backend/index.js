@@ -9,6 +9,7 @@ import cookieParser from 'cookie-parser';
 import { getRandomValues } from 'crypto';
 import passport from 'passport';
 import {Strategy as JwtStrategy, ExtractJwt} from 'passport-jwt';
+import path from 'path';
 
 const PORT = process.env.PORT || 3000;
 
@@ -184,6 +185,13 @@ const authenticate = (req, res, next) => {
  *              items:
  *                $ref: '#/components/schemas/Todo'
  */
+app.get('/',
+    async (req, res) => {
+        res.sendFile(path.join(__dirname, '/../frontend/todo.html'));
+    }
+);
+
+
 app.get('/todos', authenticate,
     async (req, res) => {
         let todos = await db.queryAll();
