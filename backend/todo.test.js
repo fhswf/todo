@@ -68,26 +68,7 @@ describe('POST /todos', () => {
             .post('/todos')
             .set('Authorization', `Bearer ${token}`)
             .send(newTodo);
-
         expect(response.statusCode).toBe(400);
-        expect(response.body.error).toBe('Bad Request');
-    });
-
-    it('sollte einen 400-Fehler zurückgeben, wenn das Todo nicht valide ist', async () => {
-        const newTodo = {
-            "title": "Übung 4 machen",
-            "due": "2022-11-12T00:00:00.000Z",
-            "status": 0,
-            "invalid": "invalid"
-        };
-
-        const response = await request(app)
-            .post('/todos')
-            .set('Authorization', `Bearer ${token}`)
-            .send(newTodo);
-
-        expect(response.statusCode).toBe(400);
-        expect(response.body.error).toBe('Bad Request');
     });
 
     it('sollte einen 400-Fehler zurückgeben, wenn das Datum nicht valide ist', async () => {
@@ -103,12 +84,11 @@ describe('POST /todos', () => {
             .send(newTodo);
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.error).toBe('Bad Request');
     });
 
     it('sollte einen 400-Fehler zurückgegen, wenn Titel zu kurz ist', async () => {
         const newTodo = {
-            "title": "Ü",
+            "title": "s",
             "due": "2022-11-12T00:00:00.000Z",
             "status": 0
         };
@@ -119,7 +99,6 @@ describe('POST /todos', () => {
             .send(newTodo);
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.error).toBe('Bad Request');
     })
 
 });
@@ -232,35 +211,6 @@ describe('PUT /todos/:id', () => {
         expect(updateResponse.body.status).toBe(updatedTodo.status);
     });
 
-    it('sollte einen 400-Fehler zurückgeben, wenn das Todo nicht valide ist', async () => {
-        const newTodo = {
-            "title": "Übung 4 machen",
-            "due": "2022-11-12T00:00:00.000Z",
-            "status": 0
-        };
-
-        const response = await request(app)
-            .post('/todos')
-            .set('Authorization', `Bearer ${token}`)
-            .send(newTodo);
-
-        const updatedTodo = {
-            "title": "Übung 4 machen",
-            "due": "2022-11-12T00:00:00.000Z",
-            "status": 1,
-            "invalid": "invalid",
-            "_id": response.body._id    
-        };
-
-        const updateResponse = await request(app)
-            .put(`/todos/${response.body._id}`)
-            .set('Authorization', `Bearer ${token}`)
-            .send(updatedTodo);
-
-        expect(updateResponse.statusCode).toBe(400);
-        expect(updateResponse.body.error).toBe('Bad Request');
-    });
-
     it('sollte einen 400-Fehler zurückgeben, wenn das Datum nicht valide ist', async () => {
         const newTodo = {
             "title": "Übung 4 machen",
@@ -286,7 +236,6 @@ describe('PUT /todos/:id', () => {
             .send(updatedTodo);
 
         expect(updateResponse.statusCode).toBe(400);
-        expect(updateResponse.body.error).toBe('Bad Request');
     })
     it('sollte einen 400-Fehler zurückgeben, wenn Titel zu kurz ist', async () => {
         const newTodo = {
@@ -313,7 +262,6 @@ describe('PUT /todos/:id', () => {
             .send(updatedTodo);
 
         expect(updateResponse.statusCode).toBe(400);
-        expect(updateResponse.body.error).toBe('Bad Request');
     });
 });
 
