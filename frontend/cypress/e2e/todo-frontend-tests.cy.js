@@ -50,6 +50,23 @@ describe('Form Input Test - Normal Input', () => {
 });
 });
 
+describe('Form Input Test - Empty Input', () => {
+  it('Adds a new todo', () => {
+   cy.visit('/todo.html'); 
+   it('loads the initial page', () => {
+    cy.contains('h1', 'Todo Liste')
+  })
+
+  it('allows users to add a new todo', () => {
+    cy.get('#todo').clear();
+    cy.get('#due').clear();
+    cy.get('#status').select('offen')
+    cy.get('form').submit()
+    cy.get('.todo .title').should('not.contain', ''); 
+    
+  })
+});
+});
 
 describe('Todo deletion', () => {
   it('Adds a new todo', () => {
