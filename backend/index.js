@@ -187,7 +187,7 @@ const authenticate = (req, res, next) => {
  */
 app.get('/',
     function (req, res){
-        res.sendFile(path.join(__dirname, '../frontend/todo.html'));
+        res.sendFile(new URL('../frontend/todo.html', import.meta.url).pathname);
     }
 );
 
