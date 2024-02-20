@@ -24,10 +24,7 @@ const opts ={
 }
 
 passport.use(new JwtStrategy(opts, (payload, done) => {
-    if (payload){
-        return done(null, payload)
-        }
-    return done(null, false)    
+    return done(null, payload)    
     })
 );
 
@@ -154,7 +151,7 @@ const validate = (req, res, next) => {
  * This middleware could be used to implement JWT-based authentication. Currently, this is only a stub.
 */
 const authenticate = (req, res, next) => {
-    passport.authenticate('jwt', { session: false }, async (error, payload) =>{
+    passport.authenticate('jwt', { session: false }, (error, payload) =>{
         if (error){
             return res.status(401).send({error: 'Unauthorized'})
         }
