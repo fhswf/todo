@@ -24,6 +24,82 @@ describe('GET /todos (unautorisiert)', () => {
     });
 });
 
+describe('POST /todos (unautorisiert)', () => {
+    it('sollte einen 401-Fehler zurückgeben, wenn kein Token bereitgestellt wird', async () => {
+        const newTodo = {
+            "title": "Übung 4 machen",
+            "due": "2022-11-12T00:00:00.000Z",
+            "status": 0
+        };
+
+        const response = await request(app)
+            .post('/todos')
+            .send(newTodo);
+        
+        expect(response.statusCode).toBe(401);
+        expect(response.body.error).toBe('Unauthorized');
+    });
+});
+
+describe('PUT /todos/:id (unautorisiert)', () => {
+    it('sollte einen 401-Fehler zurückgeben, wenn ein fehlerhaftes Token bereitgestellt wird', async () => {
+        const newTodo = {
+            "title": "Übung 4 machen",
+            "due": "2022-11-12T00:00:00.000Z",
+            "status": 0
+        };
+
+        //Das ToDo wird mit gültigem Token erstellt
+        const response = await request(app)
+            .post('/todos')
+            .set('Authorization', `Bearer ${token}`)
+            .send(newTodo);
+        
+        const id = response.body._id;
+
+        const updatedTodo = {
+            "title": "Übung 4 machen",
+            "due": "2022-11-12T00:00:00.000Z",
+            "status": 1,
+            "_id": `${id}`
+        };
+
+        //Beim Aktualisieren des ToDos wird ein fehlerhaftes Token verwendet
+        const updateResponse = await request(app)
+            .put(`/todos/${id}`)
+            .set('Authorization', `Bearer 12345`)
+            .send(updatedTodo);
+
+        expect(updateResponse.statusCode).toBe(401);
+        expect(updateResponse.body.error).toBe('Unauthorized');
+    });
+});
+
+describe('DELETE /todos/:id (unautorisiert)', () => {
+    it('sollte einen 401-Fehler zurückgeben, wenn kein Token bereitgestellt wird', async () => {
+        const newTodo = {
+            "title": "Übung 4 machen",
+            "due": "2022-11-12T00:00:00.000Z",
+            "status": 0
+        };
+
+        //Das ToDo wird mit gültigem Token erstellt
+        const response = await request(app)
+            .post('/todos')
+            .set('Authorization', `Bearer ${token}`)
+            .send(newTodo);
+        
+        const id = response.body._id;
+
+        //Beim Löschen des ToDos wird kein Token verwendet
+        const deleteResponse = await request(app)
+            .delete(`/todos/${id}`)
+    
+        expect(deleteResponse.statusCode).toBe(401);
+        expect(deleteResponse.body.error).toBe('Unauthorized');
+    });
+});
+
 describe('GET /todos', () => {
     it('sollte alle Todos abrufen', async () => {
         const response = await request(app)
