@@ -7,11 +7,16 @@ import swaggerJsdoc from 'swagger-jsdoc';
 import { check, validationResult } from 'express-validator';
 import cookieParser from 'cookie-parser';
 import { getRandomValues } from 'crypto';
+import jwt from 'jsonwebtoken';
+import getKeycloakToken from './utils';
+
+import dotenv from 'dotenv';
+dotenv.config();
+
 
 const PORT = process.env.PORT || 3000;
 
 const TOKEN_URL = "https://jupiter.fh-swf.de/keycloak/realms/webentwicklung/protocol/openid-connect/token"
-
 
 const swaggerOptions = {
     swaggerDefinition: {
@@ -108,9 +113,30 @@ const todoValidationRules = [
 /** Middleware for authentication. 
  * This middleware could be used to implement JWT-based authentication. Currently, this is only a stub.
 */
-let authenticate = (req, res, next) => {
-    // Dummy authentication
-    next();
+let authenticate = async (req, res, next) => {
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+        const token = req.headers.authorization.split('Bearer ')[1];
+
+        //Faken einer Token überprüfung
+        if (token == token){
+            req.authenticated = true;
+            return next();
+        }else
+        {
+            req.authenticated = false;
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+
+        // Überprüfen, ob der Token gültig ist. Es fehlt allerdings der secret_key. Dieser müsste dann in die Umgebungsvariablen (.env) eingetragen werden.
+        /**jwt.verify(token, token, (err, decoded) => {
+            if (err) {
+                return res.status(401).json({ error: 'Unauthorized' });
+            }
+            //console.log(decoded);
+            req.authenticated = true;
+            return next();
+        });**/
+    }
 }
 
 
@@ -137,6 +163,12 @@ let authenticate = (req, res, next) => {
  */
 app.get('/todos', authenticate,
     async (req, res) => {
+        // Überprüfen, ob der Benutzer authentifiziert ist
+        if (!req.authenticated) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+
+        // Wenn der Benutzer authentifiziert ist, alle Todos abrufen
         let todos = await db.queryAll();
         res.send(todos);
     }
