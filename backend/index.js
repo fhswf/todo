@@ -8,15 +8,13 @@ import { check, checkExact, validationResult } from 'express-validator';
 import cookieParser from 'cookie-parser';
 import { getRandomValues } from 'crypto';
 import passport from 'passport';
-import passportJWT from 'passport-jwt';
+import {Strategy as JwtStrategy, ExtractJwt} from 'passport-jwt';
 
 const PORT = process.env.PORT || 3000;
 
 const TOKEN_URL = "https://jupiter.fh-swf.de/keycloak/realms/webentwicklung/protocol/openid-connect/token"
 
 //Passport-Strategy einrichten
-const JwtStrategy   = passportJWT.Strategy;
-const ExtractJwt = passportJWT.ExtractJwt;
 
 const opts ={
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
