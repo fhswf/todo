@@ -15,6 +15,13 @@ describe('GET /todos (unautorisiert)', () => {
         expect(response.statusCode).toBe(401);
         expect(response.body.error).toBe('Unauthorized');
     });
+    it('sollte einen 401-Fehler zurückgeben, wenn ein fehlerhaftes Token bereitgestellt wird', async () => {
+        const response = await request(app).get('/todos') 
+        .set('Authorization', `Bearer 12345`);
+
+        expect(response.statusCode).toBe(401);
+        expect(response.body.error).toBe('Unauthorized');
+    });
 });
 
 describe('GET /todos', () => {
