@@ -183,7 +183,7 @@ const authenticate = (req, res, next) => {
  *              items:
  *                $ref: '#/components/schemas/Todo'
  */
-app.get('/todos', authenticate,
+app.get('/todos', passport.authenticate('jwt', { session: false }),
     async (req, res) => {
         let todos = await db.queryAll();
         res.send(todos);
