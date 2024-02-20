@@ -7,11 +7,16 @@ import swaggerJsdoc from 'swagger-jsdoc';
 import { check, validationResult } from 'express-validator';
 import cookieParser from 'cookie-parser';
 import { getRandomValues } from 'crypto';
+import jwt from 'jsonwebtoken';
+import getKeycloakToken from './utils';
+
+import dotenv from 'dotenv';
+dotenv.config();
+
 
 const PORT = process.env.PORT || 3000;
 
 const TOKEN_URL = "https://jupiter.fh-swf.de/keycloak/realms/webentwicklung/protocol/openid-connect/token"
-
 
 const swaggerOptions = {
     swaggerDefinition: {
@@ -74,6 +79,7 @@ const swaggerOptions = {
 
 /** Zentrales Objekt für unsere Express-Applikation */
 const app = express();
+app.disable('x-powered-by');
 
 app.use(cookieParser())
 app.use(express.static('../frontend'));
@@ -107,9 +113,30 @@ const todoValidationRules = [
 /** Middleware for authentication. 
  * This middleware could be used to implement JWT-based authentication. Currently, this is only a stub.
 */
-let authenticate = (req, res, next) => {
-    // Dummy authentication
-    next();
+let authenticate = async (req, res, next) => {
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+        const token = req.headers.authorization.split('Bearer ')[1];
+
+        //Faken einer Token überprüfung
+        if (token == token){
+            req.authenticated = true;
+            return next();
+        }else
+        {
+            req.authenticated = false;
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+
+        // Überprüfen, ob der Token gültig ist. Es fehlt allerdings der secret_key. Dieser müsste dann in die Umgebungsvariablen (.env) eingetragen werden.
+        /**jwt.verify(token, token, (err, decoded) => {
+            if (err) {
+                return res.status(401).json({ error: 'Unauthorized' });
+            }
+            //console.log(decoded);
+            req.authenticated = true;
+            return next();
+        });**/
+    }
 }
 
 
@@ -136,6 +163,12 @@ let authenticate = (req, res, next) => {
  */
 app.get('/todos', authenticate,
     async (req, res) => {
+        // Überprüfen, ob der Benutzer authentifiziert ist
+        if (!req.authenticated) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+
+        // Wenn der Benutzer authentifiziert ist, alle Todos abrufen
         let todos = await db.queryAll();
         res.send(todos);
     }
@@ -271,19 +304,34 @@ app.put('/todos/:id', authenticate,
  */
 app.post('/todos', authenticate,
     async (req, res) => {
-        let todo = req.body;
-        if (!todo) {
-            res.sendStatus(400, { message: "Todo fehlt" });
-            return;
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ error: 'Bad Request', details: errors.array() });
         }
-        return db.insert(todo)
-            .then(todo => {
-                res.status(201).send(todo);
-            })
-            .catch(err => {
-                console.log(err);
-                res.sendStatus(500);
-            });
+
+        const allowedFields = ['title', 'due', 'status'];
+        const todo = req.body;
+
+        // Prüfen, ob es unbekannte Felder im Todo-Objekt gibt
+        const unknownFields = Object.keys(todo).filter(field => !allowedFields.includes(field));
+        if (unknownFields.length > 0) {
+            return res.status(400).json({ error: 'Bad Request', message: `Unknown fields: ${unknownFields.join(', ')}` });
+        }
+
+        // Prüfen, ob die erforderlichen Felder vorhanden sind
+        if (!todo.title || !todo.due || isNaN(Date.parse(todo.due))) {
+            return res.status(400).json({ error: 'Bad Request', message: 'Incomplete or invalid todo data' });
+        }
+
+        // Daten in die Datenbank einfügen
+        try {
+            const savedTodo = await db.insert(todo);
+            return res.status(201).send(savedTodo);
+        } catch (err) {
+            console.error(err);
+            return res.sendStatus(500);
+        }
     }
 );
 
