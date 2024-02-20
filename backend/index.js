@@ -8,12 +8,16 @@ import { check, checkExact, validationResult } from 'express-validator';
 import cookieParser from 'cookie-parser';
 import { getRandomValues } from 'crypto';
 import passport from 'passport';
+import passportJWT from 'passport-jwt';
 
 const PORT = process.env.PORT || 3000;
 
 const TOKEN_URL = "https://jupiter.fh-swf.de/keycloak/realms/webentwicklung/protocol/openid-connect/token"
 
 //Passport-Strategy einrichten
+const JwtStrategy   = passportJWT.Strategy;
+const ExtractJwt = passportJWT.ExtractJwt;
+
 const opts ={
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     secretOrKey: `MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyn2vP592Ju/iKXQW1DCrSTXyQXyo11Qed1SdzFWC+mRtdgioKibzYMBt2MfAJa6YoyrVNgOtGvK659MjHALtotPQGmis1VVvBeMFdfh+zyFJi8NPqgBTXz6bQfnu85dbxVAg95J+1Ud0m4IUXME1ElOyp1pi88+w0C6ErVcFCyEDS3uAajBY6vBIuPrlokbl6RDcvR9zX85s+R/s7JeP1XV/e8gbnYgZwxcn/6+7moHPDl4LqvVDKnDq9n4W6561s8zzw8EoAwwYXUC3ZPe2/3DcUCh+zTF2nOy8HiN808CzqLq1VeD13q9DgkAmBWFNSaXb6vK6RIQ9+zr2cwdXiwIDAQAB`
