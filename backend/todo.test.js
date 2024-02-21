@@ -256,7 +256,7 @@ describe('PUT /todos/:id', () => {
         expect(updateResponse.statusCode).toBe(401);
     })
 
-    /t('sollte einen 400-Fehler zurückgeben, todoID im Body anders', async () => {
+    it('sollte einen 400-Fehler zurückgeben, todoID im Body anders', async () => {
         const newTodo = {
             "_id": '123456789012345678901234',
             "title": "Übung 4 machen",
@@ -276,7 +276,7 @@ describe('PUT /todos/:id', () => {
             .set('Authorization', `Bearer ${token}`)
             .send(newTodo);
         expect(updateResponse.statusCode).toBe(400);
-    })
+    });
 
     it('sollte ein Todo aktualisieren', async () => {
         const newTodo = {
