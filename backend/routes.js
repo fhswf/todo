@@ -134,9 +134,7 @@ router.put('/todos/:id', authenticate,todoValidationRules,
 
         let id = req.params.id;
         let todo = req.body;
-        if(typeof(todo._id) == ObjectId){
-            todo._id=todo._id.toString();
-        }
+        todo._id=todo._id.toString();
         if (todo._id !== id) {
             console.log("id in body does not match id in path: %s != %s", todo._id, id);
             res.sendStatus(400, "{ message: id in body does not match id in path}");
