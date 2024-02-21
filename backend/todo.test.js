@@ -271,7 +271,7 @@ describe('PUT /todos/:id', () => {
             .send(newTodo);
         
         const id = response.body._id;
-
+        
         const updateResponse = await request(app)
             .put(`/todos/${id}`)
             .set('Authorization', `Bearer ${token}`)
