@@ -69,12 +69,15 @@ router.get('/todos', authenticate,
 router.get('/todos/:id', authenticate,
     async (req, res) => {
         let id = req.params.id;
+
         return db.queryById(id)
             .then(todo => {
                 if (todo) {
                     res.send(todo);
                 } else {
-                    res.status(404).send({ error: `Todo with id ${id} not found` });
+
+                    res.status(404).
+                    send({ error: `Todo with id ${id} not found` });
                 }
             })
             .catch(err => {
@@ -127,7 +130,7 @@ router.put('/todos/:id', authenticate,todoValidationRules,
         if(!errors.isEmpty()){
             return res.status(400).json({errors: errors.array()})
         }
-        
+
         let id = req.params.id;
         let todo = req.body;
         if (todo._id !== id) {
@@ -135,11 +138,13 @@ router.put('/todos/:id', authenticate,todoValidationRules,
             res.sendStatus(400, "{ message: id in body does not match id in path}");
             return;
         }
+
         return db.update(id, todo)
             .then(todo => {
                 if (todo) {
                     res.send(todo);
                 } else {
+                    console.log(todo);
                     res.sendStatus(404);
                 }
             })

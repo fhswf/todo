@@ -1,6 +1,7 @@
 import request from 'supertest';
 import { app, server, db } from './index';
 import getKeycloakToken from './utils';
+import { body } from 'express-validator';
 
 let token; // Speichert den abgerufenen JWT-Token
 
@@ -63,6 +64,16 @@ describe('POST /todos', () => {
             "due": "2022-11-12T00:00:00.000Z",
             "status": 0,
         };
+
+        const response = await request(app)
+            .post('/todos')
+            .set('Authorization', `Bearer ${token}`)
+            .send(newTodo);
+        expect(response.statusCode).toBe(400);
+    });
+
+    it('sollte einen 400-Fehler zurückgeben, wenn ToDo fehlt', async () => {
+        const newTodo = {};
 
         const response = await request(app)
             .post('/todos')
@@ -173,12 +184,19 @@ describe('GET /todos/id', () => {
             .send(newTodo);
         
         const id = response.body._id;
-
         const getResponse=await request(app)
             .get(`/todos/${id}`)
 
         expect(getResponse.statusCode).toBe(401);
         expect(getResponse.body.error).toBe('Unauthorized');
+    });
+
+    it('sollte einen 404-Fehler zurückgeben, wenn kein ToDo gefunden wird', async () => {  
+        const getResponse = await request(app)
+            .get(`/todos/1234`)
+            .set('Authorization', `Bearer ${token}`);
+
+        expect(getResponse.statusCode).toBe(404);
     });
 
     it('sollte ein Todo abrufen', async () => {
@@ -236,6 +254,28 @@ describe('PUT /todos/:id', () => {
             .send(newTodo);
         
         expect(updateResponse.statusCode).toBe(401);
+    })
+
+    it('sollte einen 400-Fehler zurückgeben, todoID im Body anders', async () => {
+        const newTodo = {
+            "_id": '123456789012345678901234',
+            "title": "Übung 4 machen",
+            "due": "2022-11-12T00:00:00.000Z",
+            "status": 0
+        };
+
+        const response = await request(app)
+            .post('/todos')
+            .set('Authorization', `Bearer ${token}`)
+            .send(newTodo);
+        
+        const id = response.body._id;
+
+        const updateResponse = await request(app)
+            .put(`/todos/${id}`)
+            .set('Authorization', `Bearer ${token}`)
+            .send(newTodo);
+        expect(updateResponse.statusCode).toBe(400);
     })
 
     it('sollte ein Todo aktualisieren', async () => {
@@ -340,6 +380,15 @@ describe('DELETE /todos/:id', () => {
 
         expect(deleteResponse.statusCode).toBe(401);
         expect(deleteResponse.body.error).toBe('Unauthorized');
+    });
+
+    it('sollte einen 404-Fehler zurückgeben, wenn kein ToDo zu löschen gefunden', async () => {
+        const deleteResponse = await request(app)
+            .delete(`/todos/1234`)
+            .set('Authorization', `Bearer ${token}`);
+
+
+        expect(deleteResponse.statusCode).toBe(404);
     });
 
     it('sollte ein Todo löschen', async () => {
