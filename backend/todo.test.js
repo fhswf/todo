@@ -58,10 +58,36 @@ describe('POST /todos', () => {
         expect(response.body.due).toBe(newTodo.due);
     });
 
-    it('sollte einen 400-Fehler zurückgeben, wenn das Todo unvollständig ist', async () => {
+    it('sollte einen 400-Fehler zurückgeben, wenn der Titel fehlt', async () => {
         const newTodo = {
             "due": "2022-11-12T00:00:00.000Z",
             "status": 0,
+        };
+
+        const response = await request(app)
+            .post('/todos')
+            .set('Authorization', `Bearer ${token}`)
+            .send(newTodo);
+        expect(response.statusCode).toBe(400);
+    });
+
+    it('sollte einen 400-Fehler zurückgeben, wenn das Datum fehlt', async () => {
+        const newTodo = {
+            "title": "Übung 4 machen",
+            "status": 0
+        };
+
+        const response = await request(app)
+            .post('/todos')
+            .set('Authorization', `Bearer ${token}`)
+            .send(newTodo);
+        expect(response.statusCode).toBe(400);
+    });
+
+    it('sollte einen 400-Fehler zurückgeben, wenn der Status fehlt', async () => {
+        const newTodo = {
+            "title": "Übung 4 machen",
+            "due": "2022-11-12T00:00:00.000Z"
         };
 
         const response = await request(app)
@@ -75,6 +101,21 @@ describe('POST /todos', () => {
         const newTodo = {
             "title": "Übung 4 machen",
             "due": "invalid",
+            "status": 0
+        };
+
+        const response = await request(app)
+            .post('/todos')
+            .set('Authorization', `Bearer ${token}`)
+            .send(newTodo);
+
+        expect(response.statusCode).toBe(400);
+    });
+
+    it('sollte einen 400-Fehler zurückgeben, wenn das Datum leer ist', async () => {
+        const newTodo = {
+            "title": "Übung 4 machen",
+            "due": "",
             "status": 0
         };
 
@@ -100,6 +141,20 @@ describe('POST /todos', () => {
 
         expect(response.statusCode).toBe(400);
     })
+
+    it('sollte einen 400-Fehler zurückgegen, wenn Status ungültig ist', async () => {
+        const newTodo = {
+            "title": "Übung 4 machen",
+            "due": "2022-11-12T00:00:00.000Z",
+            "status": 756
+        };
+
+        const response = await request(app)
+            .post('/todos')
+            .set('Authorization', `Bearer ${token}`)
+            .send(newTodo);
+        expect(response.statusCode).toBe(400);
+    });
 
 });
 

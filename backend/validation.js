@@ -16,7 +16,9 @@ const todoValidationRules = [
         status:{
             exists: {errorMessage: 'Status muss vorhanden sein'},
             notEmpty: {errorMessage: 'Status darf nicht leer sein'},
-            isInt: {min: 0, max: 2, errorMessage: 'Status muss zwischen 0 und 2 liegen'},
+            isInt: {
+                options:{min:0, max:2}, 
+                errorMessage: 'Status muss zwischen 0 und 2 liegen'}
         }
     })
 ];
