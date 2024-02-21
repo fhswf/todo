@@ -259,7 +259,7 @@ describe('PUT /todos/:id', () => {
     //test
     it('sollte einen 400-Fehler zurückgeben, todoID im Body anders', async () => {
         const newTodo = {
-            "_id": '123456789012345678901234',
+            "_id": "123456789012345678901234",
             "title": "Übung 4 machen",
             "due": "2022-11-12T00:00:00.000Z",
             "status": 0
@@ -276,6 +276,7 @@ describe('PUT /todos/:id', () => {
             .put(`/todos/${id}`)
             .set('Authorization', `Bearer ${token}`)
             .send(newTodo);
+        console.log(updateResponse.body);
         expect(updateResponse.statusCode).toBe(400);
     });
 
