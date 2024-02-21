@@ -1,0 +1,13 @@
+{
+  "name": "todo",
+    "version": "1.0.0",
+    "description": "ToDo",
+    "main": "cypress.config.js",
+    "type": "module",
+    "scripts": {
+        "test": "cypress run --headless"
+    },
+  "dependencies": {
+    "cypress": "^13.6.5"
+  }
+}
