@@ -2,6 +2,7 @@ import request from 'supertest';
 import { app, server, db } from './index';
 import getKeycloakToken from './utils';
 import { body } from 'express-validator';
+import { response } from 'express';
 
 let token; // Speichert den abgerufenen JWT-Token
 
@@ -271,7 +272,7 @@ describe('PUT /todos/:id', () => {
         
         const newTodo122= {
             "_id": "123456789012345678901234",
-           "title": "Übung 4 machen",
+            "title": "Übung 4 machen",
             "due": "2022-11-12T00:00:00.000Z",
             "status": 0
         };
@@ -281,8 +282,23 @@ describe('PUT /todos/:id', () => {
             .put(`/todos/${id}`)
             .set('Authorization', `Bearer ${token}`)
             .send(newTodo122);
-        console.log(updateResponse.body);
         expect(updateResponse.statusCode).toBe(400);
+    });
+
+    it('sollte einen 400-Fehler zurückgeben, todoID nicht existiert', async () => {
+        const Todo = {
+            "_id": '123456',
+            "title": "Übung 4 machen",
+            "due": "2022-11-12T00:00:00.000Z",
+            "status": 0
+        };
+        
+        const Response = await request(app)
+            .put(`/todos/123456`)
+            .set('Authorization', `Bearer ${token}`)
+            .send(Todo);
+
+        expect(Response.statusCode).toBe(404);
     });
 
     it('sollte ein Todo aktualisieren', async () => {
