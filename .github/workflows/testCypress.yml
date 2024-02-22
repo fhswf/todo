@@ -27,12 +27,13 @@ jobs:
       - name: npm install frontend
         working-directory: ./frontend
         run: npm install
-      - name: start Server
+      - name: start Tests
         working-directory: ./backend
-        run: npm run start
-      - name: start cypress tests
-        working-directory: ./frontend
-        run: npm run test
+        uses: cypress-io/github-action@v6
+        with:
+          start: npm run test
+          wait-on: 'http://localhost:3000' # Adjust if your app runs on a different port
+          working-directory: ./frontend
 
 
   
