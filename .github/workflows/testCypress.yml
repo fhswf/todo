@@ -32,7 +32,7 @@ jobs:
         with:
           start: npm run test
           wait-on: 'http://localhost:3000' # Adjust if your app runs on a different port
-          working-directory: ./frontend
+          working-directory: ./
 
 
   
