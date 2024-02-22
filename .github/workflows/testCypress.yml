@@ -1,0 +1,38 @@
+name: testCypress
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      mongodb:
+        image: mongo
+        ports: 
+        - 27017:27017
+    
+    steps:
+      - name: Git Checkout
+        uses: actions/checkout@v4
+      - name: npm install backend
+        working-directory: ./backend
+        run: npm install
+      - name: npm install frontend
+        working-directory: ./frontend
+        run: npm install
+      - name: start Server
+        working-directory: ./backend
+        run: npm run start
+      - name: start cypress tests
+        working-directory: ./frontend
+        run: npm run test
+
+
+  
