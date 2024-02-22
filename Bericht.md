@@ -18,7 +18,7 @@ Prathees Kumaravel          -Matrikel Nr. 30248993
 - Die benöitgten Keys, Root Cert und Variables als Secrets und Variables in GitHub hinterlegt
 - [sonarqube.yml](./github/workflows/sonarqube.yml) und [build.yml](./github/workflows/build.yml) erstellt und in /.github/workflows in Repo eingebunden
 - Init build.yml wurde aus SonarQube entnommen und mit Internetrecherche weiter ausgebaut
-- die sonarqube.yml führt nach jedem push und pull request auf dem main branch die steps: npm install und npm test durch
+- die sonarqube.yml führt nach jedem push und pull request auf dem main branch die steps: npm install, npm coverage und npm test durch
 - Coderefacotring aus dem SonarQube Report umgesetzt (Bugs und Security Review)
 - Testcase ergänzt
 - Bericht.md und ReadMe.md erstellt
