@@ -74,12 +74,10 @@ describe('POST /todos', () => {
     });
 
     it('sollte einen 400-Fehler zurückgeben, wenn ToDo fehlt', async () => {
-        const newTodo = {};
 
         const response = await request(app)
             .post('/todos')
             .set('Authorization', `Bearer ${token}`)
-            .send(newTodo);
         expect(response.statusCode).toBe(400);
     });
 

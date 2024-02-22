@@ -134,12 +134,8 @@ router.put('/todos/:id', authenticate,todoValidationRules,
 
         let id = req.params.id;
         let todo = req.body;
-        try{
-            todo._id=todo._id.toString();
-        }
-        catch(err){
-            todo._id=todo._id;
-        }
+
+        todo._id=todo._id.toString();
        
         if (todo._id !== id) {
             console.log("id in body does not match id in path: %s != %s", todo._id, id);
