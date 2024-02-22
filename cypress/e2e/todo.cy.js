@@ -20,16 +20,15 @@ describe('ToDo', function () {
     it('Kann den Status des neuen ToDos ändern', () => {
         cy.visit(`localhost:${PORT}`)
         //Status des neuen ToDos ändern
-        cy.get('.todo .actions .status').click()
+        cy.contains('.todo .title', 'Neues ToDo').siblings('.actions').get('.status').click()
         //Prüfen, ob das neue ToDo jetzt einen geänderten Status hat
-        cy.contains('.todo .title', 'Neues ToDo')
-        cy.contains('.todo .actions .status', 'in Bearbeitung')
+        cy.contains('.todo .title', 'Neues ToDo').siblings('.actions').contains('.status', 'in Bearbeitung')
     })
 
     it('Kann das neue ToDo anpassen', () => {
         cy.visit(`localhost:${PORT}`)
         //Status des neuen ToDos ändern
-        cy.get('.todo .actions .edit').click()
+        cy.contains('.todo .title', 'Neues ToDo').siblings('.actions').get('.edit').click()
         cy.get('#todo').clear().type('Geändertes ToDo')
         cy.get('form').submit()
         //Das ToDo sollte jetzt eine neue Bezeichnung haben
@@ -39,7 +38,7 @@ describe('ToDo', function () {
     it('Kann das ToDo wieder löschen', () => {
         cy.visit(`localhost:${PORT}`)
         //ToDo über die entsprechende Schaltfläche löschen
-        cy.get('.todo .actions .delete').click()
+        cy.contains('.todo .title', 'Geändertes ToDo').siblings('.actions').get('.delete').click()
         //Das ToDo sollte jetzt nicht mehr existieren
         cy.contains('.todo .title', 'Geändertes ToDo').should('not.exist')
     })
