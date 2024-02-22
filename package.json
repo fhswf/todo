@@ -5,8 +5,7 @@
   "main": "cypress.config.js",
   "type": "module",
   "scripts": {
-    "test": "cypress run --headless",
-    "start": "nodemon ./backend/index.js"
+    "test": "cypress run --headless"
   },
   "dependencies": {
     "cypress": "^13.6.5",

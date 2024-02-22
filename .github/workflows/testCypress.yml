@@ -24,13 +24,12 @@ jobs:
       - name: npm install backend
         working-directory: ./backend
         run: npm install
-      - name: npm install frontend
-        working-directory: ./frontend
-        run: npm install
+      - name: Start Backend
+        working-directory: ./backend
+        run: npm start &
       - name: start Tests
         uses: cypress-io/github-action@v6
         with:
-          start: npm run start
           working-directory: ./
           wait-on: 'http://localhost:3000' # Adjust if your app runs on a different port
           
