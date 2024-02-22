@@ -13,7 +13,7 @@ function createTodoElement(todo) {
            <div class="title">${todo.title}</div> 
            <div class="due">${due.toLocaleDateString()}</div>
            <div class="actions">
-              <button class="status" onclick="changeStatus(${todo._id})">${status[todo.status || 0]}</button>
+              <button class="status" onclick="changeStatus(${todo._id})">${[todo.status || 0]}</button>
               <button class="edit" onclick="editTodo(${todo._id})">Bearbeiten</button>
               <button class="delete" onclick="deleteTodo(${todo._id})">Löschen</button>
            </div>
@@ -149,7 +149,7 @@ function changeStatus(id) {
     let todo = todos.find(t => t._id === id);
     console.log("Changing status of todo: %o", todo);
     if (todo) {
-        todo.status = (todo.status + 1) % status.length;
+        todo.status = (todo.status + 1) % length;
         fetch(API + "/" + id, {
             method: "PUT",
             headers: {
@@ -209,7 +209,7 @@ function checkLogin(response) {
 
         // redirect to login URL with proper parameters
         window.location = LOGIN_URL + "?" + params.toString()
-        throw ("Need to log in")
+        throw new Error ("Need to log in");
     }
     else return response
 }
