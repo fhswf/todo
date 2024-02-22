@@ -1,13 +1,14 @@
 {
   "name": "todo",
-    "version": "1.0.0",
-    "description": "ToDo",
-    "main": "cypress.config.js",
-    "type": "module",
-    "scripts": {
-        "test": "cypress run --headless"
-    },
+  "version": "1.0.0",
+  "description": "ToDo",
+  "main": "cypress.config.js",
+  "type": "module",
+  "scripts": {
+    "test": "cypress run --headless"
+  },
   "dependencies": {
-    "cypress": "^13.6.5"
+    "cypress": "^13.6.5",
+    "cypress-localstorage-commands": "^2.2.5"
   }
 }

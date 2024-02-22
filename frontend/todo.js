@@ -79,7 +79,8 @@ function saveTodo(evt) {
         fetch(API + "/" + idAsString, {
             method: "PUT",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem("jwt")}`
             },
             body: JSON.stringify(todo)
         })
@@ -101,7 +102,8 @@ function saveTodo(evt) {
         fetch(API, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem("jwt")}`
             },
             body: JSON.stringify(todo)
         })
@@ -138,7 +140,8 @@ function deleteTodo(id) {
         fetch(API + "/" + id, {
             method: "DELETE",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem("jwt")}`
             }
         })
             .then(checkLogin)
@@ -158,7 +161,8 @@ function changeStatus(id) {
         fetch(API + "/" + id, {
             method: "PUT",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${localStorage.getItem("jwt")}`
             },
             body: JSON.stringify(todo)
         })
@@ -174,7 +178,11 @@ function changeStatus(id) {
 }
 
 function loadTodos() {
-    return fetch(API)
+    return fetch(API,{
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem("jwt")}`
+        },
+    })  
         .then(checkLogin)
         .then(response => response.json())
         .then(response => {
