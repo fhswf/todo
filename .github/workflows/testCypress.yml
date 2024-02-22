@@ -31,7 +31,7 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           working-directory: ./
-          wait-on: 'http://localhost:3000' # Adjust if your app runs on a different port
+          wait-on: 'http://localhost:3000'
           
 
 
