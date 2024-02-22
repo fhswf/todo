@@ -30,8 +30,9 @@ jobs:
       - name: start Tests
         uses: cypress-io/github-action@v6
         with:
-          start: npm run start
           working-directory: ./backend
+          start: npm run start
+          working-directory: ./frontend
           wait-on: 'http://localhost:3000' # Adjust if your app runs on a different port
           
 
