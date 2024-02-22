@@ -28,7 +28,6 @@ jobs:
         working-directory: ./frontend
         run: npm install
       - name: start Tests
-        working-directory: ./backend
         uses: cypress-io/github-action@v6
         with:
           start: npm run test
