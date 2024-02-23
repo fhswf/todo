@@ -222,7 +222,6 @@ function checkLogin(response) {
 
         // redirect to login URL with proper parameters
         window.location = LOGIN_URL + "?" + params.toString()
-        throw ("Need to log in")
     }
     else return response
 }

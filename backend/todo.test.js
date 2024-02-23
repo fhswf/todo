@@ -285,7 +285,7 @@ describe('POST /todos', () => {
         expect(response.body.error).toBe('Der Status des ToDos muss ein Int mit einem Wert von 0, 1 oder 2 sein');
     });
 
-}); 0
+});
 
 describe('GET /todos/:id', () => {
     it('sollte ein Todo abrufen', async () => {

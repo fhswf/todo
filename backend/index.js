@@ -6,10 +6,8 @@ import swaggerJsdoc from 'swagger-jsdoc';
 
 import { check, checkExact, validationResult } from 'express-validator';
 import cookieParser from 'cookie-parser';
-import { getRandomValues } from 'crypto';
 import passport from 'passport';
 import {Strategy as JwtStrategy, ExtractJwt} from 'passport-jwt';
-import path from 'path';
 
 const PORT = process.env.PORT || 3000;
 
