@@ -50,19 +50,19 @@ Dann habe ich den Server im Github Codespace gestartet und das Frontend erst ein
 Die Authentifizierung im BAckend habe ich für diese Tests erst einmal wieder abgeschaltet um die möglichen Fehlerquellen möglichst gering zu halten.
 
 Hierbei einmal die Probleme mit den entsprechenden Lösungen:
--Das Anlegen von Objekten scheitert, da die ans Backend übergebene ID eine Zahl und kein String ist. Der Datensatz erfüllt damit nicht die Anforderungen der Validate-Middleware.
--> saveTodo()-Funktion angepasst, so dass die Id als String übermittelt wird
--Die Id der Objekte wird beim Klick auf Ändern nicht richtig erkannt, das Frontend sendet immer nur POST-Befehle und nie PUT-Befehle.
--> Die Erkennung der ID scheiterte daran, dass in saveTodo() auf evt.target.dataset.id zugegriffen wurde, im dataset ist die id aber als _id hinterlegt.
+- Das Anlegen von Objekten scheitert, da die ans Backend übergebene ID eine Zahl und kein String ist. Der Datensatz erfüllt damit nicht die Anforderungen der Validate-Middleware.
+&rarr; saveTodo()-Funktion angepasst, so dass die Id als String übermittelt wird
+- Die Id der Objekte wird beim Klick auf Ändern nicht richtig erkannt, das Frontend sendet immer nur POST-Befehle und nie PUT-Befehle.
+&rarr; Die Erkennung der ID scheiterte daran, dass in saveTodo() auf evt.target.dataset.id zugegriffen wurde, im dataset ist die id aber als _id hinterlegt.
    Bestehende Objekte wurden daher nicht als solche erkannt, wodurch das Frontend immer davon ausgegangen ist, dass ein neues Objekt per POST-Befehl erstellt werden muss
    Nach der Anpassung des Variablennamens von id zu _id ist das Problem nicht mehr aufgetreten.
--Erstmaliges Anlegen von Objekten ist jetzt zwar möglich, beim Ändern oder Löschen fordert die Datenbank dann aber eine gültige 24 stellige ID, über die die Objekte nicht verfügen
+- Erstmaliges Anlegen von Objekten ist jetzt zwar möglich, beim Ändern oder Löschen fordert die Datenbank dann aber eine gültige 24 stellige ID, über die die Objekte nicht verfügen
  Neue Ids werden im Frontend über die date()-Funktion erzeugt und haben damit nicht die von MongoDB geforderte Länge von 24 Zeichen
--> Statt mit date() eine eigene ID im Frontend zu erzeugen, habe ich das Frontend so umgebaut, dass beim Anlegen eines neuen Objekts einfach keine id ans Backend übermittelt wird.
+&rarr; Statt mit date() eine eigene ID im Frontend zu erzeugen, habe ich das Frontend so umgebaut, dass beim Anlegen eines neuen Objekts einfach keine id ans Backend übermittelt wird.
    MongoDB vergibt so selbst eine Id,die in der Antwort auf den POST-Request mitgeteilt wird und dann im todos-Array gespeichert werden kann.
--Neue Objekte werden jetzt mit gültigen Ids angelegt, beim Klick auf Bearbeiten wird jetzt aber der Fehler ausgegeben, dass eine Variable mit einer Zahl beginnt. Die neu
+- Neue Objekte werden jetzt mit gültigen Ids angelegt, beim Klick auf Bearbeiten wird jetzt aber der Fehler ausgegeben, dass eine Variable mit einer Zahl beginnt. Die neu
  erstellten Obekte lassen sich daher nicht ändern, da sie beim Klick auf den Button nicht in die Eingabefelder übernommen werden
--> Die Buttons enthielten den Befehl onclick="editTodo(${todo._id}). Hier fehlten dem Programm Anführungszeichen um den Variablennamen. Solange die Id noch im Frontend
+&rarr; Die Buttons enthielten den Befehl ```onclick="editTodo(${todo._id}).``` Hier fehlten dem Programm Anführungszeichen um den Variablennamen. Solange die Id noch im Frontend
    selbst erstellt wurde und nur aus einer Zahl bestand, konnte die Id bei der Erstellung des Buttons ohne Anführungszeichen angegeben werden. 
    Da MongoDB jedoch Strings aus Zahlen und Buchstaben als Id verwendet, wurde die Id vom Programm jetzt offenbar als Variablenbezeichnung interpretiert.
    Nach einer Änderung in onclick="editTodo('${todo._id}') trat der Fehler nicht mehr auf. Die Buttons für das Ändern des Status und fürs Löschen des ToDos wurden entsprechend angepasst.
@@ -101,25 +101,24 @@ Das Projekt in SonarQube hat die Bezeichnung: toDo_SaBo
 
 Das erste SonarQube-Ergebnis hat 2 Bugs, 3 Security Hotspots und 53 Code Smells ausfindig gemacht. 
 Bugs: 
--Hinter einem der Jest-Testfälle stand eine 0 mit der SonarQube verständlicherweise nicht viel anfangen konnte. 
--Zudem hat SonarQube darauf hingewiesen, dass im <html>-Tag in der todo.html die Angabe der Sprache fehlt.
-Diese beiden Fehler waren wenig gravierend und ließen sich entsprechend schnell beheben.
+- Hinter einem der Jest-Testfälle stand eine 0 mit der SonarQube verständlicherweise nicht viel anfangen konnte. 
+- Zudem hat SonarQube darauf hingewiesen, dass im <html>-Tag in der todo.html die Angabe der Sprache fehlt.
+&rarr; Diese beiden Fehler waren wenig gravierend und ließen sich entsprechend schnell beheben.
 Security Hotspots:
--Das Passwort für den Zugriff auf das Keycloak-Token stand sowohl in der utils.js und der e2e.js im Klartext und stellte somit ein Sicherheitsrisiko dar.
+- Das Passwort für den Zugriff auf das Keycloak-Token stand sowohl in der utils.js und der e2e.js im Klartext und stellte somit ein Sicherheitsrisiko dar.
 Diesen Fehler habe ich behoben, indem ich Nutzernamen und Passwort für den Zugriff auf den Keycloak-Server in eine eigene keycloak-json-Datei augelagert habe, die von der
 utils.js und der e2e.js ausgelesen wird. Im Quellcode ist jetzt nur noch der Name der .json_Datei statt der Zugangsdaten im Klartext zu finden.
--Weiterhin hat SonarQube vorgeschlagen, den Befehl app.disable("x-powered-by"); in die index.js aufzunehmen, um weniger Einzelheiten über die Implementierung der App preiszugeben.
-Den Befehl habe ich entsprechend in den Code aufgenommen und damit dann auch das letzte der drei festgestellten Sicherheitsrisiken behoben.
+- Weiterhin hat SonarQube vorgeschlagen, den Befehl app.disable("x-powered-by"); in die index.js aufzunehmen, um weniger Einzelheiten über die Implementierung der App preiszugeben.
+&rarr; Den Befehl habe ich entsprechend in den Code aufgenommen und damit dann auch das letzte der drei festgestellten Sicherheitsrisiken behoben.
 Code Smells:
--SonarQube hat an mehreren Stellen festgetsellt, dass importierte Module nicht genutzt werden und der import-Befehl somit entfernt werden kann. 
--Zudem gab es in der todo.js des Frontends eine Stelle, an der aufgrund eines throw-Befehls ein Fehler erwartet wurde, der aber tatsächlich nie geworfen wurde. 
-Diese Probleme ließen sich leicht durch Entfernen der entsprechenden Zeilen beheben.
--Weiterhin hat SonarQube zwei Hinweise dazu ausgegeben, dass in der todo.js das Attribut status verwendet wird, welches seit einer Weile deprecated ist.
-Hierbei handelte es sich um ein falsch erkanntes Problem, da in der todo.js einfach nur ein Array die Bezeichnung status hat. 
+- SonarQube hat an mehreren Stellen festgetsellt, dass importierte Module nicht genutzt werden und der import-Befehl somit entfernt werden kann. 
+- Zudem gab es in der todo.js des Frontends eine Stelle, an der aufgrund eines throw-Befehls ein Fehler erwartet wurde, der aber tatsächlich nie geworfen wurde. 
+&rarr; Diese Probleme ließen sich leicht durch Entfernen der entsprechenden Zeilen beheben.
+- Weiterhin hat SonarQube zwei Hinweise dazu ausgegeben, dass in der todo.js das Attribut status verwendet wird, welches seit einer Weile deprecated ist.
+&rarr; Hierbei handelte es sich um ein falsch erkanntes Problem, da in der todo.js einfach nur ein Array die Bezeichnung status hat. 
 Es handelt sich somit nicht um das deprecated status-Attribut der Windows-Klasse von dem SonarQube ausgegangen ist. 
 Ich habe die beiden Hinweise daher in SonarQube mit einer entsprechenden Begründung als false Positive markiert. 
--Die weiteren Code-Smells bezogen sich auf Kommentare, die das Wort ToDo enthalten, da SonarQube hier davon ausgeht, dass es sich um Platzhalter für noch
- nicht implementierte Funktionen handelt. In diesem Fall handelte es sich aber durchgehend um Kommentare, die einfach nur die Funktionsweise der ToDo-Anwendung beschreiben.
+- Die weiteren Code-Smells bezogen sich auf Kommentare, die das Wort ToDo enthalten, da SonarQube hier davon ausgeht, dass es sich um Platzhalter für noch nicht implementierte Funktionen handelt. In diesem Fall handelte es sich aber durchgehend um Kommentare, die einfach nur die Funktionsweise der ToDo-Anwendung beschreiben.
 Ich habe diese Hinweise entsprechend alle markiert und mit passender Begründung ebenfalls al False Positive markiert.
 
 Nach diesen Schritten zeigt SonarQube nun keine größeren Probleme mehr an. Das Einzige was jetzt noch angezeigt wird, sind Duplications. 
