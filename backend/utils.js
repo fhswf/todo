@@ -1,4 +1,5 @@
 import axios from 'axios';
+import keycloak from '../keycloak.json'
 
 
 async function getKeycloakToken() {
@@ -15,8 +16,8 @@ async function getKeycloakToken() {
             {
                 'grant_type': 'password',
                 'client_id': keycloakConfig.clientId,
-                'username': 'public',
-                'password': 'todo',
+                'username': keycloak.username,
+                'password': keycloak.password,
             },
             {
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },

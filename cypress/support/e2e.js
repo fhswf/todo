@@ -1,4 +1,5 @@
 import "cypress-localstorage-commands";
+import keycloak from '../../keycloak.json';
 
 beforeEach(() => {
     cy.log('I run before every test in every spec file!!!!!!')
@@ -20,8 +21,8 @@ Cypress.Commands.add('login', () => {
       body: {
         'grant_type': 'password',
         'client_id': keycloakConfig.clientId,
-        'username': 'public',
-        'password': 'todo',
+        'username': keycloak.username,
+        'password': keycloak.password,
         },
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },  
     })
