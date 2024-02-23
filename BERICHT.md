@@ -20,11 +20,11 @@ Ein paar der anderen Testfälle sind aufgrund von Fehlern in den Backend-Funktio
 Da ich nicht schon zu Beginn zusätzliche Fehlerquellen durch fehlerhafte Authentifizierung einbauen wollte, habe ich im nächsten Schritt erst einmal
 die Fehler in den POST- und PUT-Methoden behoben, eine Middleware zur Validierung eingebaut und die Regeln zur Eingabevalidierung erweitert. 
 Die index.js enthielt bereits ein Swagger-Schema für die Eingabewerte, an dem ich mich für die Validierunsgregeln orientiert habe.
-Da einer der Tests vorsieht, dass die übermittelten Objekte keine überschüssigen Attribute beinhalten, habe ich für die ValidatioNRules die checkExact()-Funktion
+Da einer der Tests vorsieht, dass die übermittelten Objekte keine überschüssigen Attribute beinhalten, habe ich für die ValidatioNRules die ```checkExact()```-Funktion
 verwendet, die immer dann einen Fehler ausgibt wenn Attribute übermittelt werden, die nicht in den ValidationRules enthalten sind. Das funktioniert soweit gut, hat
-bei mir aber erst zu ein bisschen Verwirrung geführt, als plötzlich alle Tests für die PUT-Befehle fehlgeschlagen sind. Die checkExact()-Funktion prüft offenbar nicht nur den
+bei mir aber erst zu ein bisschen Verwirrung geführt, als plötzlich alle Tests für die PUT-Befehle fehlgeschlagen sind. Die ```checkExact()```-Funktion prüft offenbar nicht nur den
 Request-Body sondern auch die Parameter des Requests, die bei PUT-Befehlen eine Id enthalten. Da dies in den ValidationRules nicht geprüft wurde,
-wurden alle PUT-Befehle als fehlerhaft erkannt. Mit einer Anpassung des checkExact-Befehls in checkExact([], { locations: ['body'] }) ließ sich das Problem
+wurden alle PUT-Befehle als fehlerhaft erkannt. Mit einer Anpassung des ```checkExact()```-Befehls in ```checkExact([], { locations: ['body'] })``` ließ sich das Problem
 aber beheben.
 
 Nach der Erweiterung der Validierungsregeln habe ich zusätzliche Tests für das Backend erstellt, um sicherzustellen, dass die Validierung jetzt wie gewünscht
@@ -51,21 +51,21 @@ Die Authentifizierung im BAckend habe ich für diese Tests erst einmal wieder ab
 
 Hierbei einmal die Probleme mit den entsprechenden Lösungen:
 - Das Anlegen von Objekten scheitert, da die ans Backend übergebene ID eine Zahl und kein String ist. Der Datensatz erfüllt damit nicht die Anforderungen der Validate-Middleware.
-&rarr; saveTodo()-Funktion angepasst, so dass die Id als String übermittelt wird
+&rarr; ```saveTodo()```-Funktion angepasst, so dass die Id als String übermittelt wird
 - Die Id der Objekte wird beim Klick auf Ändern nicht richtig erkannt, das Frontend sendet immer nur POST-Befehle und nie PUT-Befehle.
-&rarr; Die Erkennung der ID scheiterte daran, dass in saveTodo() auf evt.target.dataset.id zugegriffen wurde, im dataset ist die id aber als _id hinterlegt.
+&rarr; Die Erkennung der ID scheiterte daran, dass in ```saveTodo()``` auf ```evt.target.dataset.id``` zugegriffen wurde, im dataset ist die ```id``` aber als ```_id``` hinterlegt.
    Bestehende Objekte wurden daher nicht als solche erkannt, wodurch das Frontend immer davon ausgegangen ist, dass ein neues Objekt per POST-Befehl erstellt werden muss
-   Nach der Anpassung des Variablennamens von id zu _id ist das Problem nicht mehr aufgetreten.
+   Nach der Anpassung des Variablennamens von ```id``` zu ```_id``` ist das Problem nicht mehr aufgetreten.
 - Erstmaliges Anlegen von Objekten ist jetzt zwar möglich, beim Ändern oder Löschen fordert die Datenbank dann aber eine gültige 24 stellige ID, über die die Objekte nicht verfügen
- Neue Ids werden im Frontend über die date()-Funktion erzeugt und haben damit nicht die von MongoDB geforderte Länge von 24 Zeichen
-&rarr; Statt mit date() eine eigene ID im Frontend zu erzeugen, habe ich das Frontend so umgebaut, dass beim Anlegen eines neuen Objekts einfach keine id ans Backend übermittelt wird.
+ Neue Ids werden im Frontend über die ```date()```-Funktion erzeugt und haben damit nicht die von MongoDB geforderte Länge von 24 Zeichen
+&rarr; Statt mit ```date()``` eine eigene ID im Frontend zu erzeugen, habe ich das Frontend so umgebaut, dass beim Anlegen eines neuen Objekts einfach keine id ans Backend übermittelt wird.
    MongoDB vergibt so selbst eine Id,die in der Antwort auf den POST-Request mitgeteilt wird und dann im todos-Array gespeichert werden kann.
 - Neue Objekte werden jetzt mit gültigen Ids angelegt, beim Klick auf Bearbeiten wird jetzt aber der Fehler ausgegeben, dass eine Variable mit einer Zahl beginnt. Die neu
  erstellten Obekte lassen sich daher nicht ändern, da sie beim Klick auf den Button nicht in die Eingabefelder übernommen werden
 &rarr; Die Buttons enthielten den Befehl ```onclick="editTodo(${todo._id}).``` Hier fehlten dem Programm Anführungszeichen um den Variablennamen. Solange die Id noch im Frontend
    selbst erstellt wurde und nur aus einer Zahl bestand, konnte die Id bei der Erstellung des Buttons ohne Anführungszeichen angegeben werden. 
    Da MongoDB jedoch Strings aus Zahlen und Buchstaben als Id verwendet, wurde die Id vom Programm jetzt offenbar als Variablenbezeichnung interpretiert.
-   Nach einer Änderung in onclick="editTodo('${todo._id}') trat der Fehler nicht mehr auf. Die Buttons für das Ändern des Status und fürs Löschen des ToDos wurden entsprechend angepasst.
+   Nach einer Änderung in ```onclick="editTodo('${todo._id}')``` trat der Fehler nicht mehr auf. Die Buttons für das Ändern des Status und fürs Löschen des ToDos wurden entsprechend angepasst.
 
 Nach diesen Fehlerbehebungen konnten neu erstellte Objekte jetzt fehlerfrei von Hand geändert und gelöscht werden. Die Statusänderung funktioniert ebenfalls.
 
@@ -84,12 +84,12 @@ eingebaut habe. Das Einzige was nicht getestet wird, ist das Verhalten des Front
 Im Frontend ist für diesen Fall zwar eine Weiterleitung auf eine Loginseite vorgesehen, ich habe im Frontend aber leider keine Möglichkeit gefunden, das benötigte Token über einen Login vom Keycloak-Server abzurufen.
 Jeder Versuch aus dem Frontend heraus eine Anfrage an den Keycloak-Server zu schicken scheiterte daran, dass diese Anfragen als Verstoß gegen die Cross Origin Resource Sharing-Policy verstanden und entsprechend abgelehnt wurden. Front und Backend setzen daher voraus, dass der Nutzer der Software bereits über das passende Token verfügt oder es sich selbst 
 beim passenden Keycloak-Server anfordern kann. Möchste man das Frontend ohne Token von Hand testen, muss daher vorher die authenticate-Middleware im Backend auskommentiert werden,
-so dass diese den Request einfach direkt per next()-Befehl an die nächste Middleware weiterreicht.
+so dass diese den Request einfach direkt per ```next()```-Befehl an die nächste Middleware weiterreicht.
 
 Da ich die Tests bisher alle über "npm start test" manuell angestoßen habe, bestand der nächste Schritt darin, die Tests als Github-Action zu automatisieren.
 
-Die größte Schwierigkeit hierbei war, dass in dieser Github-Action sowohl der Server als auch die Tests gestartet werden mussten. Startet man den Server in der Github Action einfach über "npm run start" werden danach keine weiteren Schritte ausgeführt, da der Server ab dem Zeitpunkt dauerhaft läuft und der Arbeitsschritt aus Sicht der Action somit nie abgeschlossen wird. Die Dokumentation zur Cypress-Action ist aber zum Glück recht umfangreich und enthielt Beispiele, wie man hintereinander sowohl den Server als auch die Tests starten kann, selbst wenn diese in verschiedenen Ordnern liegen.
-Die Cypress-Tests laufen jetzt alle erfolgreich, wichtig ist jedoch, dass die todos-Datenbank für die Anwendung leer ist, wenn die Tests gestartet werden. Existieren mehrere ToDos kann es sonst dazu kommen, dass Cypress nicht genau feststellen kann, welches der Todos angewählt und weiter bearbeitet werden soll. Ich habe versucht, das Problem zu beheben, indem ich erst das ToDo mit dem passenden Namen suche und Cypress dann über die siblings()-Funktion nur auf dessen Ebene nach dem Button zum Ändern oder Löschen des ToDos suchen lasse, jedoch kommt es weiterhin vor, dass bei der Suche mehrere Objekte aus der ToDo-Liste angewählt werden, wodurch für die folgenden Testschritte nicht mehr klar ist, welches ToDo bearbeitet werden soll. 
+Die größte Schwierigkeit hierbei war, dass in dieser Github-Action sowohl der Server als auch die Tests gestartet werden mussten. Startet man den Server in der Github Action einfach über ```npm run start``` werden danach keine weiteren Schritte ausgeführt, da der Server ab dem Zeitpunkt dauerhaft läuft und der Arbeitsschritt aus Sicht der Action somit nie abgeschlossen wird. Die Dokumentation zur Cypress-Action ist aber zum Glück recht umfangreich und enthielt Beispiele, wie man hintereinander sowohl den Server als auch die Tests starten kann, selbst wenn diese in verschiedenen Ordnern liegen.
+Die Cypress-Tests laufen jetzt alle erfolgreich, wichtig ist jedoch, dass die todos-Datenbank für die Anwendung leer ist, wenn die Tests gestartet werden. Existieren mehrere ToDos kann es sonst dazu kommen, dass Cypress nicht genau feststellen kann, welches der Todos angewählt und weiter bearbeitet werden soll. Ich habe versucht, das Problem zu beheben, indem ich erst das ToDo mit dem passenden Namen suche und Cypress dann über die ```siblings()```-Funktion nur auf dessen Ebene nach dem Button zum Ändern oder Löschen des ToDos suchen lasse, jedoch kommt es weiterhin vor, dass bei der Suche mehrere Objekte aus der ToDo-Liste angewählt werden, wodurch für die folgenden Testschritte nicht mehr klar ist, welches ToDo bearbeitet werden soll. 
 Die Cypress-Tests sind so gestaltet, dass sie hinter sich wieder aufräumen (das ToDo wird mit den Tests nacheinander angelegt, geändert und zum Schluss wieder gelöscht), so dass die Datenbank grundsätzlich vor jedem Test leer ist, sofern nicht vorher von Hand Eintragungen in der Datenbank vorgenommen wurden. 
 
 Nach den bisherigen Schritten sind Front- und Backend jetzt funktionsfähig und werden bei jedem Commit durch automatische Github-Actions überwacht.
@@ -102,24 +102,26 @@ Das Projekt in SonarQube hat die Bezeichnung: toDo_SaBo
 Das erste SonarQube-Ergebnis hat 2 Bugs, 3 Security Hotspots und 53 Code Smells ausfindig gemacht. 
 Bugs: 
 - Hinter einem der Jest-Testfälle stand eine 0 mit der SonarQube verständlicherweise nicht viel anfangen konnte. 
-- Zudem hat SonarQube darauf hingewiesen, dass im <html>-Tag in der todo.html die Angabe der Sprache fehlt.
+- Zudem hat SonarQube darauf hingewiesen, dass im <html>-Tag in der todo.html die Angabe der Sprache fehlt.  
 &rarr; Diese beiden Fehler waren wenig gravierend und ließen sich entsprechend schnell beheben.
+
 Security Hotspots:
 - Das Passwort für den Zugriff auf das Keycloak-Token stand sowohl in der utils.js und der e2e.js im Klartext und stellte somit ein Sicherheitsrisiko dar.
 Diesen Fehler habe ich behoben, indem ich Nutzernamen und Passwort für den Zugriff auf den Keycloak-Server in eine eigene keycloak-json-Datei augelagert habe, die von der
 utils.js und der e2e.js ausgelesen wird. Im Quellcode ist jetzt nur noch der Name der .json_Datei statt der Zugangsdaten im Klartext zu finden.
 - Weiterhin hat SonarQube vorgeschlagen, den Befehl app.disable("x-powered-by"); in die index.js aufzunehmen, um weniger Einzelheiten über die Implementierung der App preiszugeben.
 &rarr; Den Befehl habe ich entsprechend in den Code aufgenommen und damit dann auch das letzte der drei festgestellten Sicherheitsrisiken behoben.
+
 Code Smells:
 - SonarQube hat an mehreren Stellen festgetsellt, dass importierte Module nicht genutzt werden und der import-Befehl somit entfernt werden kann. 
-- Zudem gab es in der todo.js des Frontends eine Stelle, an der aufgrund eines throw-Befehls ein Fehler erwartet wurde, der aber tatsächlich nie geworfen wurde. 
+- Zudem gab es in der todo.js des Frontends eine Stelle, an der aufgrund eines throw-Befehls ein Fehler erwartet wurde, der aber tatsächlich nie geworfen wurde.  
 &rarr; Diese Probleme ließen sich leicht durch Entfernen der entsprechenden Zeilen beheben.
-- Weiterhin hat SonarQube zwei Hinweise dazu ausgegeben, dass in der todo.js das Attribut status verwendet wird, welches seit einer Weile deprecated ist.
+- Weiterhin hat SonarQube zwei Hinweise dazu ausgegeben, dass in der todo.js das Attribut status verwendet wird, welches seit einer Weile deprecated ist.  
 &rarr; Hierbei handelte es sich um ein falsch erkanntes Problem, da in der todo.js einfach nur ein Array die Bezeichnung status hat. 
 Es handelt sich somit nicht um das deprecated status-Attribut der Windows-Klasse von dem SonarQube ausgegangen ist. 
 Ich habe die beiden Hinweise daher in SonarQube mit einer entsprechenden Begründung als false Positive markiert. 
-- Die weiteren Code-Smells bezogen sich auf Kommentare, die das Wort ToDo enthalten, da SonarQube hier davon ausgeht, dass es sich um Platzhalter für noch nicht implementierte Funktionen handelt. In diesem Fall handelte es sich aber durchgehend um Kommentare, die einfach nur die Funktionsweise der ToDo-Anwendung beschreiben.
-Ich habe diese Hinweise entsprechend alle markiert und mit passender Begründung ebenfalls al False Positive markiert.
+- Die weiteren Code-Smells bezogen sich auf Kommentare, die das Wort ToDo enthalten, da SonarQube hier davon ausgeht, dass es sich um Platzhalter für noch nicht implementierte Funktionen handelt. In diesem Fall handelte es sich aber durchgehend um Kommentare, die einfach nur die Funktionsweise der ToDo-Anwendung beschreiben.  
+&rarr; Ich habe diese Hinweise entsprechend alle markiert und mit passender Begründung ebenfalls als False Positive markiert.
 
 Nach diesen Schritten zeigt SonarQube nun keine größeren Probleme mehr an. Das Einzige was jetzt noch angezeigt wird, sind Duplications. 
 Hierbei handelt es sich aber einfach nur um Codeabschnitte aus der todo.test.js, die sich schlicht deswegen doppeln, weil die Testfälle oft einen ähnlichen Aufbau haben.
