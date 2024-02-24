@@ -10,10 +10,7 @@ let authenticate = (req, res, next) => {
 
     return passport.authenticate('jwt', {session: false}, (err, user, info) => {
         if (err) { 
-            responseObj.data = info.message 
-            responseObj.statusCode = 500 
-            responseObj.error = "Internal Server Error"
-            return res.status(responseObj.statusCode).json(responseObj);
+            return(next(err));
         }
         if (!user) {
             responseObj.data = info.message 

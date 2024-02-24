@@ -1,8 +1,6 @@
 import request from 'supertest';
 import { app, server, db } from './index';
 import getKeycloakToken from './utils';
-import { body } from 'express-validator';
-import { response } from 'express';
 
 let token; // Speichert den abgerufenen JWT-Token
 
