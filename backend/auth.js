@@ -9,6 +9,9 @@ let authenticate = (req, res, next) => {
     }
 
     return passport.authenticate('jwt', {session: false}, (err, user, info) => {
+        if (err) { 
+           return next(err);
+        }
         if (!user) {
             responseObj.data = info.message 
             responseObj.statusCode = 401 
