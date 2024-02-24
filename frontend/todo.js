@@ -202,12 +202,11 @@ function checkLogin(response) {
             ?.split("=")[1]
         console.log("state: %s", state)
         let params = new URLSearchParams()
-        params.append("response_type", "code")
-        params.append("redirect_uri", new URL("/oauth_callback", window.location))
         params.append("client_id", "todo-backend")
+        params.append("redirect_uri", new URL("/oauth_callback", window.location))
+        params.append("response_type", "code")        
         params.append("scope", "openid")
-        params.append("state", state)
-
+        params.append("state", "undefined")
         // redirect to login URL with proper parameters
         window.location = LOGIN_URL + "?" + params.toString()
         throw ("Need to log in")

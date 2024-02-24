@@ -191,7 +191,7 @@ router.post('/todos', authenticate,todoValidationRules,
         }
         
         let todo = req.body;
-        if (!todo) {
+        if (todo==null || todo==undefined) {
             res.sendStatus(400, { message: "Todo fehlt" });
             return;
         }
