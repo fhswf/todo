@@ -4,7 +4,7 @@ import DB from './db.js'
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 
-import { check, validationResult } from 'express-validator';
+import { check, checkExact, validationResult } from 'express-validator';
 import cookieParser from 'cookie-parser';
 import { getRandomValues } from 'crypto';
 
@@ -94,21 +94,44 @@ async function initDB() {
     console.log("Connected to database");
 }
 
-
 const todoValidationRules = [
+    check('_id')
+        .optional(),
     check('title')
         .notEmpty()
         .withMessage('Titel darf nicht leer sein')
         .isLength({ min: 3 })
         .withMessage('Titel muss mindestens 3 Zeichen lang sein'),
+    check('due')
+        .notEmpty()
+        .withMessage('Fälligkeitsdatum darf nicht leer sein'),
+    check('status')
+        .notEmpty()
+        .withMessage('Status darf nicht leer sein')
+        .isInt({ min: 0, max: 2 })
+        .withMessage('Status muss 0, 1 oder 2 sein'),
+    checkExact([], { locations: ['body'] }),
 ];
 
+const validateTodo = (req, res, next) => {
+    const errors = validationResult(req);
+    if (errors.isEmpty()) {
+        return next();
+    }
+    return res.status(400).json({
+        error: "Bad Request",
+        errors: errors.array()
+    });
+}
 
 /** Middleware for authentication. 
  * This middleware could be used to implement JWT-based authentication. Currently, this is only a stub.
 */
 let authenticate = (req, res, next) => {
     // Dummy authentication
+    if (!req.headers.authorization) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
     next();
 }
 
@@ -221,7 +244,7 @@ app.get('/todos/:id', authenticate,
  *    '500':
  *      description: Serverfehler
  */
-app.put('/todos/:id', authenticate,
+app.put('/todos/:id', authenticate, todoValidationRules, validateTodo,
     async (req, res) => {
         let id = req.params.id;
         let todo = req.body;
@@ -269,7 +292,7 @@ app.put('/todos/:id', authenticate,
  *     '500':
  *       description: Serverfehler
  */
-app.post('/todos', authenticate,
+app.post('/todos', authenticate, todoValidationRules, validateTodo,
     async (req, res) => {
         let todo = req.body;
         if (!todo) {
