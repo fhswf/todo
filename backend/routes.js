@@ -8,9 +8,11 @@ import{db} from './index.js';
 import {todoValidationRules} from './validation.js';
 import {validationResult} from 'express-validator';
 import {authenticate} from './auth.js';
-import { ObjectId } from 'mongodb';
 
+const TOKEN_URL = "https://jupiter.fh-swf.de/keycloak/realms/webentwicklung/protocol/openid-connect/token"
 const router = express.Router();
+
+
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json())
 
@@ -244,5 +246,42 @@ router.delete('/todos/:id', authenticate,
             });
     }
 );
+
+router.get('/oauth_callback', async (req, res) => {
+    let code = req.query.code
+    let state = decodeURIComponent(req.query.state)
+    console.log("oauth_callback: code: %s, state: %s", code, state)
+
+    let data = new URLSearchParams()
+    data.append("client_id", "todo-backend")
+    data.append("grant_type", "authorization_code")
+    data.append("code", code)
+    data.append("redirect_uri", "http://localhost:3000/oauth_callback")
+    fetch(TOKEN_URL, {
+        method: "POST",
+        body: data
+    })
+        .then(response => {
+            if (response.status != 200) {
+                console.log("token endpoint faild with status %s, %j", response.status, response.body)
+                res.sendStatus(response.status)
+                throw (response)
+            }
+            else return response.json()
+        })
+        .then(response => {
+            console.log("token endpoint: %j", response)
+            let token = response.access_token
+            res.cookie("token", token, { maxAge: 900000, httpOnly: true })
+            res.setHeader("Location", "/todo.html")
+            res.sendStatus(301)
+        })
+        .catch(err => {
+            console.log("token endpoint failed: %j", err)
+            if (!res.headersSent)
+                res.sendStatus(500)
+        })
+
+})
 
 export {router};

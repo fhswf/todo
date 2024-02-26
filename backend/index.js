@@ -14,7 +14,6 @@ import { Strategy, ExtractJwt } from 'passport-jwt';
 
 const PORT = process.env.PORT || 3000;
 
-const TOKEN_URL = "https://jupiter.fh-swf.de/keycloak/realms/webentwicklung/protocol/openid-connect/token"
 
 
 
