@@ -7,6 +7,7 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+
 permissions:
   pull-requests: read # allows SonarQube to decorate PRs with analysis results
 
