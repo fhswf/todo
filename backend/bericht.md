@@ -32,3 +32,5 @@ Es wurde ein Security Hotspot gefunden, der allerdings nicht relevant ist, da es
 
 Anmerkung: 
 - Gihub Action Build_test.yml wurde erstellt und getestet aber funktioniert nicht immer. Obwohl keine Änderungen vorgenommen wurden, wird der Build manchmal nicht durchgeführt.
+
+- Initialer Fork hat nicht funktioniert, daher musste neu ge-forked und Code übertragen werden. 
