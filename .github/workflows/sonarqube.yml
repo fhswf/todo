@@ -31,4 +31,4 @@ jobs:
           args:
             # Unique key of your project. You can find it in SonarQube > [my project] > Project Information (top-right menu)
             # mandatory
-            -Dsonar.projectKey=todoCihan
+            -Dsonar.projectKey=todoCihan2
