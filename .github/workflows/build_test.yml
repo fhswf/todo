@@ -1,0 +1,47 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  pull-requests: read # allows SonarQube to decorate PRs with analysis results
+
+jobs:
+  Analysis:
+    runs-on: ubuntu-latest
+
+    services:
+      mongodb:
+        image: mongo:4.4
+        ports:
+          - 27017:27017
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install project dependencies
+        run: npm install
+        working-directory: ./backend
+      - name: Install project in dev mode
+        run: npm install --save-dev nyc
+        working-directory: ./backend
+      - name: Run Coverage
+        run: npm run coverage
+        working-directory: ./backend
+      - name: Run test cases
+        run: npm test
+        working-directory: ./backend
+        env:
+          CI: true
+          MONGODB_URI: mongodb://localhost:27017/test
