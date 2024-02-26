@@ -149,7 +149,7 @@ function changeStatus(id) {
     let todo = todos.find(t => t._id === id);
     console.log("Changing status of todo: %o", todo);
     if (todo) {
-        todo.status = (todo.status + 1) % status.length;
+        todo.status = (todo.status + 1) % length;
         fetch(API + "/" + id, {
             method: "PUT",
             headers: {
