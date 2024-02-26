@@ -10,12 +10,98 @@ beforeAll(async () => {
 
 describe('GET /todos (unautorisiert)', () => {
     it('sollte einen 401-Fehler zurückgeben, wenn kein Token bereitgestellt wird', async () => {
-        const response = await request(app).get('/todos'); // Kein Authorization-Header
+        const response = await request(app).get('/todos');//Ohne Token
 
         expect(response.statusCode).toBe(401);
         expect(response.body.error).toBe('Unauthorized');
     });
 });
+
+describe('POST /todos (unautorisiert)', () => {
+    it('sollte einen 401-Fehler zurückgeben, wenn kein Token bereitgestellt wird', async () => {
+        const newTodo = {
+            "title": "Übung 4 machen",
+            "due": "2022-11-12T00:00:00.000Z",
+            "status": 0
+        };
+
+        const response = await request(app)
+            .post('/todos')
+            .send(newTodo);//POST Ohne Token
+
+
+        expect(response.statusCode).toBe(401);
+        expect(response.body.error).toBe('Unauthorized');
+    });
+});
+
+describe('PUT /todos/:id (unautorisiert)', () => {
+    it('sollte einen 401-Fehler zurückgeben, wenn ein fehlerhaftes Token bereitgestellt wird', async () => {
+        const newTodo = {
+            "title": "Übung 4 machen",
+            "due": "2022-11-12T00:00:00.000Z",
+            "status": 0
+        };
+
+        const response = await request(app)
+        .post('/todos')
+        .set('Authorization', `Bearer ${token}`)//Gültiger Token zur Erstellung
+        .send(newTodo);
+
+        const id = response.body._id;
+
+        const updatedTodo = {
+        "title": "Übung 4 machen",
+        "due": "2022-11-12T00:00:00.000Z",
+        "status": 1,
+        "_id": `${id}`
+        };
+
+        const updateResponse = await request(app)
+        .put(`/todos/${id}`)
+        .set('Authorization', `Bearer 1`)//Update mit falschem Token
+        .send(updatedTodo);
+
+        expect(updateResponse.statusCode).toBe(401);
+        expect(updateResponse.body.error).toBe('Unauthorized');
+    });
+});
+
+describe('DELETE /todos/:id (unauthorisiert)', () => {
+    it('sollte ein Todo löschen', async () => {
+        const newTodo = {
+            "title": "Übung 4 machen",
+            "due": "2022-11-12T00:00:00.000Z",
+            "status": 0
+        };
+
+        const response = await request(app)
+            .post('/todos')
+            .set('Authorization', `Bearer ${token}`)
+            .send(newTodo);
+
+        const deleteResponse = await request(app)
+            .delete(`/todos/${response.body._id}`);//Löschen ohne Token
+
+
+        expect(deleteResponse.statusCode).toBe(204);
+
+        const getResponse = await request(app)
+            .get(`/todos/${response.body._id}`)
+            .set('Authorization', `Bearer ${token}`);
+
+        expect(getResponse.statusCode).toBe(404);
+    });
+});
+
+
+
+
+
+
+
+
+
 
 describe('GET /todos', () => {
     it('sollte alle Todos abrufen', async () => {
@@ -35,11 +121,11 @@ describe('POST /todos', () => {
             "due": "2022-11-12T00:00:00.000Z",
             "status": 0
         };
-
         const response = await request(app)
             .post('/todos')
             .set('Authorization', `Bearer ${token}`)
             .send(newTodo);
+
         expect(response.statusCode).toBe(201);
         expect(response.body.title).toBe(newTodo.title);
         expect(response.body.due).toBe(newTodo.due);
@@ -50,7 +136,6 @@ describe('POST /todos', () => {
             "due": "2022-11-12T00:00:00.000Z",
             "status": 0,
         };
-
         const response = await request(app)
             .post('/todos')
             .set('Authorization', `Bearer ${token}`)
@@ -67,7 +152,6 @@ describe('POST /todos', () => {
             "status": 0,
             "invalid": "invalid"
         };
-
         const response = await request(app)
             .post('/todos')
             .set('Authorization', `Bearer ${token}`)
@@ -76,7 +160,7 @@ describe('POST /todos', () => {
         expect(response.statusCode).toBe(400);
         expect(response.body.error).toBe('Bad Request');
     });
-}); 0
+}); 
 
 describe('GET /todos/:id', () => {
     it('sollte ein Todo abrufen', async () => {
@@ -85,14 +169,11 @@ describe('GET /todos/:id', () => {
             "due": "2022-11-12T00:00:00.000Z",
             "status": 0
         };
-
         const response = await request(app)
             .post('/todos')
             .set('Authorization', `Bearer ${token}`)
             .send(newTodo);
-
         const id = response.body._id;
-
         const getResponse = await request(app)
             .get(`/todos/${id}`)
             .set('Authorization', `Bearer ${token}`);
@@ -104,7 +185,6 @@ describe('GET /todos/:id', () => {
 
     it('sollte einen 404-Fehler zurückgeben, wenn das Todo nicht gefunden wurde', async () => {
         const id = '123456789012345678901234';
-
         const getResponse = await request(app)
             .get(`/todos/${id}`)
             .set('Authorization', `Bearer ${token}`);
@@ -121,19 +201,16 @@ describe('PUT /todos/:id', () => {
             "due": "2022-11-12T00:00:00.000Z",
             "status": 0
         };
-
         const response = await request(app)
             .post('/todos')
             .set('Authorization', `Bearer ${token}`)
             .send(newTodo);
-
         const updatedTodo = {
             "title": "Übung 4 machen",
             "due": "2022-11-12T00:00:00.000Z",
             "status": 1,
             "_id": response.body._id
         };
-
         const updateResponse = await request(app)
             .put(`/todos/${response.body._id}`)
             .set('Authorization', `Bearer ${token}`)
@@ -141,6 +218,81 @@ describe('PUT /todos/:id', () => {
 
         expect(updateResponse.statusCode).toBe(200);
         expect(updateResponse.body.status).toBe(updatedTodo.status);
+    });
+    it('sollte einen 400-Fehler zurückgeben, wenn die Ids in Body und Path nicht übereinstimmen', async () => {
+        const newTodo = {
+            "title": "Übung 4 machen",
+            "due": "2022-11-12T00:00:00.000Z",
+            "status": 0
+        };
+        const response = await request(app)
+            .post('/todos')
+            .set('Authorization', `Bearer ${token}`)
+            .send(newTodo);
+        const id = response.body._id;
+        const updatedTodo = {
+            "title": "Übung 4 machen",
+            "due": "2022-11-12T00:00:00.000Z",
+            "status": 1,
+            "_id": "100000000000000000000001"
+        };
+        const updateResponse = await request(app)
+            .put(`/todos/${id}`)
+            .set('Authorization', `Bearer ${token}`)
+            .send(updatedTodo);
+
+        expect(updateResponse.statusCode).toBe(400);
+        expect(updateResponse.body.error).toBe('ID in Todo ist ungültig');
+    });
+    it('sollte den Fehler 400 zurückgeben, falls das Todo unvollständig ist', async () => {
+        const newTodo = {
+            "title": "Übung 4 machen",
+            "due": "2022-11-12T00:00:00.000Z",
+            "status": 0
+        };
+        const response = await request(app)
+            .post('/todos')
+            .set('Authorization', `Bearer ${token}`)
+            .send(newTodo);
+        const id = response.body._id;
+        const updatedTodo = {
+            "title": "Übung 4 machen",
+            "status": 1,
+            "_id": `${id}`
+        };
+        const updateResponse = await request(app)
+            .put(`/todos/${id}`)
+            .set('Authorization', `Bearer ${token}`)
+            .send(updatedTodo);
+
+        expect(updateResponse.statusCode).toBe(400);
+        expect(updateResponse.body.error).toBe('Datum darf nicht leer sein');
+    });
+    it('sollte einen 400-Fehler zurückgeben, wenn das Todo ungültig ist', async () => {
+        const newTodo = {
+            "title": "Übung 4 machen",
+            "due": "2022-11-12T00:00:00.000Z",
+            "status": 0
+        };
+        const response = await request(app)
+            .post('/todos')
+            .set('Authorization', `Bearer ${token}`)
+            .send(newTodo);
+        const id = response.body._id;
+        const updatedTodo = {
+            "title": "Übung 4 machen",
+            "due": "2022-11-12T00:00:00.000Z",
+            "status": 1,
+            "_id": `${id}`,
+            "abc": 123
+        };
+        const updateResponse = await request(app)
+            .put(`/todos/${id}`)
+            .set('Authorization', `Bearer ${token}`)
+            .send(updatedTodo);
+
+        expect(updateResponse.statusCode).toBe(400);
+        expect(updateResponse.body.error).toBe('Ungültiges Todo');
     });
 });
 
@@ -151,24 +303,21 @@ describe('DELETE /todos/:id', () => {
             "due": "2022-11-12T00:00:00.000Z",
             "status": 0
         };
-
         const response = await request(app)
             .post('/todos')
             .set('Authorization', `Bearer ${token}`)
             .send(newTodo);
-
         const deleteResponse = await request(app)
             .delete(`/todos/${response.body._id}`)
             .set('Authorization', `Bearer ${token}`);
 
-
-        expect(deleteResponse.statusCode).toBe(204);
+        expect(deleteResponse.statusCode).toBe(204);//Erfolgsrückmeldung zum Löschen
 
         const getResponse = await request(app)
             .get(`/todos/${response.body._id}`)
             .set('Authorization', `Bearer ${token}`);
 
-        expect(getResponse.statusCode).toBe(404);
+        expect(getResponse.statusCode).toBe(404);//Erfolgsrückmeldung zum nicht gefundenen Objekt
     });
 });
 

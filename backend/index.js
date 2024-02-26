@@ -148,10 +148,7 @@ const validate = (req, res, next) => {
 */
 const authenticate = (req, res, next) => {
     passport.authenticate('jwt', { session: false }, (error, payload) =>{
-        if (error){
-            return res.status(401).send({error: 'Unauthorized'})
-        }
-        if (!payload){
+        if (error || !payload){
             return res.status(401).send({error: 'Unauthorized'})
         }
         next();
