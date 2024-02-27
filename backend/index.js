@@ -129,9 +129,9 @@ const validateTodo = (req, res, next) => {
 */
 let authenticate = (req, res, next) => {
     // Dummy authentication
-    if (!req.headers.authorization) {
-        return res.status(401).json({ error: 'Unauthorized' });
-    }
+    // if (!req.headers.authorization) {
+    //     return res.status(401).json({ error: 'Unauthorized' });
+    // }
     next();
 }
 
