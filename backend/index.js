@@ -6,12 +6,26 @@ import swaggerJsdoc from 'swagger-jsdoc';
 
 import { check, validationResult } from 'express-validator';
 import cookieParser from 'cookie-parser';
-import { getRandomValues } from 'crypto';
+import passport from 'passport';
+import {Strategy as JwtStrategy, ExtractJwt} from 'passport-jwt';
 
 const PORT = process.env.PORT || 3000;
 
 const TOKEN_URL = "https://jupiter.fh-swf.de/keycloak/realms/webentwicklung/protocol/openid-connect/token"
 
+
+const opts ={
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+    secretOrKey: `-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyn2vP592Ju/iKXQW1DCrSTXyQXyo11Qed1SdzFWC+mRtdgioKibzYMBt2MfAJa6YoyrVNgOtGvK659MjHALtotPQGmis1VVvBeMFdfh+zyFJi8NPqgBTXz6bQfnu85dbxVAg95J+1Ud0m4IUXME1ElOyp1pi88+w0C6ErVcFCyEDS3uAajBY6vBIuPrlokbl6RDcvR9zX85s+R/s7JeP1XV/e8gbnYgZwxcn/6+7moHPDl4LqvVDKnDq9n4W6561s8zzw8EoAwwYXUC3ZPe2/3DcUCh+zTF2nOy8HiN808CzqLq1VeD13q9DgkAmBWFNSaXb6vK6RIQ9+zr2cwdXiwIDAQAB
+-----END PUBLIC KEY-----`,
+    issuer: "https://jupiter.fh-swf.de/keycloak/realms/webentwicklung"
+}
+
+passport.use(new JwtStrategy(opts, (payload, done) => {
+    return done(null, payload)    
+    })
+);
 
 const swaggerOptions = {
     swaggerDefinition: {
@@ -74,6 +88,7 @@ const swaggerOptions = {
 
 /** Zentrales Objekt für unsere Express-Applikation */
 const app = express();
+app.disable("x-powered-by");
 
 app.use(cookieParser())
 app.use(express.static('../frontend'));
@@ -100,16 +115,44 @@ const todoValidationRules = [
         .notEmpty()
         .withMessage('Titel darf nicht leer sein')
         .isLength({ min: 3 })
-        .withMessage('Titel muss mindestens 3 Zeichen lang sein'),
+        .withMessage('Titel muss mindestens 3 Zeichen lang sein')
+        .isString()
+        .withMessage('Der Titel muss vom Typ String sein'),
+    check('due')
+        .notEmpty()
+        .withMessage('Das Datum darf nicht leer sein')
+        .isString()
+        .withMessage('Das Datum muss vom Typ String sein'),
+    check('status')
+        .notEmpty()
+        .withMessage('Der Status darf nicht leer sein')
+        .isInt({min: 0, max: 2})
+        .withMessage('Der Status muss vom Typ Int sein und darf nur folgende Werte beinhalten: 0, 1, 2'),
+    check('_id')
+        .optional()
+        .isString()
+        .withMessage('Die ID muss vom Typ String sein'),
 ];
+
+const validate = (req, res, next) => {
+    const errors = validationResult(req);
+    if (errors.isEmpty()) {
+        return next();
+    }
+    return res.status(400).send({ error: errors.array({ onlyFirstError: true})[0].msg});
+}
 
 
 /** Middleware for authentication. 
  * This middleware could be used to implement JWT-based authentication. Currently, this is only a stub.
 */
-let authenticate = (req, res, next) => {
-    // Dummy authentication
-    next();
+const authenticate = (req, res, next) => {
+    passport.authenticate('jwt', { session: false }, (error, payload) =>{
+        if (error || !payload){
+            return res.status(401).send({error: 'Unauthorized'})
+        }
+        next();
+    })(req, res, next)
 }
 
 
@@ -221,7 +264,7 @@ app.get('/todos/:id', authenticate,
  *    '500':
  *      description: Serverfehler
  */
-app.put('/todos/:id', authenticate,
+app.put('/todos/:id', authenticate, todoValidationRules, validate,
     async (req, res) => {
         let id = req.params.id;
         let todo = req.body;
@@ -269,7 +312,7 @@ app.put('/todos/:id', authenticate,
  *     '500':
  *       description: Serverfehler
  */
-app.post('/todos', authenticate,
+app.post('/todos', authenticate, todoValidationRules, validate,
     async (req, res) => {
         let todo = req.body;
         if (!todo) {
