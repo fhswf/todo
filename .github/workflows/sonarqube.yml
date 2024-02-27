@@ -7,14 +7,33 @@ on:
 
 
 jobs:
-  build:
-    name: Build
+  test:
+    name: sonarQube
     runs-on: ubuntu-latest
     permissions: read-all
+    services:
+      mongodb:
+        image: mongo:4.4
+        ports:
+          - 27017:27017
+        options: --name mongodb
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install project dependencies
+        run: npm install
+        working-directory: ./backend
+
+      - name: Coverage
+        run: npm run coverage
+        working-directory: ./backend
 
       - uses: sonarsource/sonarqube-scan-action@master
         env:
