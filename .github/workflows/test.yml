@@ -30,6 +30,10 @@ jobs:
         working-directory: ./backend
         run: npm test
 
+      - name: npm start
+        working-directory: ./backend
+        run: npm start &
+
       - name: npm install cypress
         working-directory: ./frontend
         run: npm install cypress
