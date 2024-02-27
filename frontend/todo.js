@@ -26,7 +26,7 @@ function createTodoElement(todo) {
 function showTodos() {
     let todoList = document.getElementById("todo-list");
 
-    // Clear the todo list
+    // Clear the todo list!
     todoList.innerHTML = "";
 
     // Add all todos to the list
