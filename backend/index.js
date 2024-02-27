@@ -6,11 +6,39 @@ import swaggerJsdoc from 'swagger-jsdoc';
 
 import { check, validationResult } from 'express-validator';
 import cookieParser from 'cookie-parser';
-import { getRandomValues } from 'crypto';
+//import { getRandomValues } from 'crypto';
+
+
+
+
+
+const TOKEN_URL = "https://jupiter.fh-swf.de/keycloak/realms/webentwicklung/protocol/openid-connect/token"
 
 const PORT = process.env.PORT || 3000;
 
-const TOKEN_URL = "https://jupiter.fh-swf.de/keycloak/realms/webentwicklung/protocol/openid-connect/token"
+const validate = (req, res, next) => {
+    const errors = validationResult(req);
+    if (errors.isEmpty()) {
+        return next();
+    }
+    return res.status(400).json({
+        error: "Bad Request",
+        errors: errors.array()
+    });
+}
+
+const checkSwaggerSchema = (swaggerSchema) => {
+    const validatorSchema = {}
+    for(const [key] of Object.entries(swaggerSchema.properties)) {
+        if(key === "_id") continue;
+        const rule = {exists: true}
+        validatorSchema[key] = rule;
+    }
+    
+    return checkExact(checkSchema(validatorSchema))
+}
+
+
 
 
 const swaggerOptions = {
@@ -72,8 +100,9 @@ const swaggerOptions = {
 
 
 
-/** Zentrales Objekt für unsere Express-Applikation */
+/** Zentrales Objekt für unsere Expressi-Applikation */
 const app = express();
+app.disable("x-powered-by");
 
 app.use(cookieParser())
 app.use(express.static('../frontend'));
@@ -95,12 +124,22 @@ async function initDB() {
 }
 
 
+
+
 const todoValidationRules = [
     check('title')
         .notEmpty()
         .withMessage('Titel darf nicht leer sein')
         .isLength({ min: 3 })
         .withMessage('Titel muss mindestens 3 Zeichen lang sein'),
+    check().custom((value, { req }) => {
+        const invalidFields = Object.keys(req.body).filter(key => !['title', 'due', 'status'].includes(key));
+        if (invalidFields.length > 0) {
+            throw new Error(`Ungültiges Feld(er) gefunden: ${invalidFields.join(', ')}`);
+        }
+        return true;
+    })
+    
 ];
 
 
@@ -110,15 +149,25 @@ const todoValidationRules = [
 let authenticate = (req, res, next) => {
     // Dummy authentication
     next();
-}
+};
 
+/*
+let authenticate = (req, res, next) => {
+    // Dummy 
+    const token = req.headers.authorization;
+    if (!token) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }    
+    next();
+}
+*/
 
 /** Return all todos. 
  *  Be aware that the db methods return promises, so we need to use either `await` or `then` here! 
  * @swagger
  * /todos:
  *  get:
- *    summary: Gibt alle Todos zurück
+ *    summary: Gibt alle Todos  zurück
  *    tags: [Todos]
  *    responses:
  *      '401':
@@ -269,7 +318,7 @@ app.put('/todos/:id', authenticate,
  *     '500':
  *       description: Serverfehler
  */
-app.post('/todos', authenticate,
+app.post('/todos', authenticate, todoValidationRules, validate,
     async (req, res) => {
         let todo = req.body;
         if (!todo) {

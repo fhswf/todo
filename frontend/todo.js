@@ -15,7 +15,7 @@ function createTodoElement(todo) {
            <div class="actions">
               <button class="status" onclick="changeStatus(${todo._id})">${status[todo.status || 0]}</button>
               <button class="edit" onclick="editTodo(${todo._id})">Bearbeiten</button>
-              <button class="delete" onclick="deleteTodo(${todo._id})">Löschen</button>
+              <button class="delete" onclick="deleteTodo('${todo._id}')">Löschen</button>
            </div>
          </div>`);
 
@@ -93,6 +93,8 @@ function saveTodo(evt) {
             })
     } else {
         console.log("Saving new todo: %o", todo);
+        //ID darf bei Neuanlage nicht existieren
+        delete todo._id;
         fetch(API, {
             method: "POST",
             headers: {
