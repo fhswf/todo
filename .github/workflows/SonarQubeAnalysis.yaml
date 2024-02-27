@@ -2,12 +2,12 @@ name: SonarQube analysis
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main", "sophie"]
   pull_request:
-    branches: ["main"]
+    branches: ["main", "sophie"]
   workflow_dispatch:
-permissions:
-  pull-requests: read # allows SonarQube to decorate PRs with analysis results
+    branches: ["main", "sophie"]
+
 
 jobs:
   Analysis:
