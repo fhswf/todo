@@ -206,7 +206,7 @@ function checkLogin(response) {
         params.append("redirect_uri", new URL("/oauth_callback", window.location))
         params.append("response_type", "code")        
         params.append("scope", "openid")
-        params.append("state", "undefined")
+        params.append("state", state)
         // redirect to login URL with proper parameters
         window.location = LOGIN_URL + "?" + params.toString()
         throw ("Need to log in")

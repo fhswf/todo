@@ -1,26 +1,28 @@
 
 import passport from 'passport';
+import { getRandomValues } from 'crypto';
 
-let authenticate = (req, res, next) => {
-    let responseObj = {
-        statusCode: 0, 
-        errorMsg: "",
-        data: {}
-    }
+let state_dict={};
 
-    return passport.authenticate('jwt', {session: false}, (err, user, info) => {
-        if (err) { 
-            return(next(err));
-        }
+let authenticate = (req, res, next) => passport.authenticate('jwt',
+    { session: false },
+    (err, user, info) => {
+        
+        //console.log("authenticate: %j %j %j", err, user, info)
         if (!user) {
-            responseObj.data = info.message 
-            responseObj.statusCode = 401 
-            responseObj.error = "Unauthorized"
-            return res.status(responseObj.statusCode).json(responseObj)
+            let data = new Uint8Array(16);
+            getRandomValues(data);
+            let state = Buffer.from(data).toString('base64');
+            state_dict[state] = Date.now()
+            console.log(state_dict[state])
+            res.cookie("state", state, { maxAge: 900000, httpOnly: false })
+            res.status(401)
+            res.send({ error: "Unauthorized" })
+            return
         }
-        req.user = user;
-        next();
-     })(req, res, next);
-}
 
-export {authenticate}
+        next()
+    })(req, res, next)
+
+
+export {authenticate, state_dict}

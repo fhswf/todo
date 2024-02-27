@@ -7,7 +7,7 @@ import bodyParser from 'body-parser';
 import{db} from './index.js';
 import {todoValidationRules} from './validation.js';
 import {validationResult} from 'express-validator';
-import {authenticate} from './auth.js';
+import {authenticate, state_dict} from './auth.js';
 
 const TOKEN_URL = "https://jupiter.fh-swf.de/keycloak/realms/webentwicklung/protocol/openid-connect/token"
 const router = express.Router();
@@ -141,6 +141,7 @@ router.put('/todos/:id', authenticate,todoValidationRules,
        
         if (todo._id !== id) {
             console.log("id in body does not match id in path: %s != %s", todo._id, id);
+            
             res.sendStatus(400, "{ message: id in body does not match id in path}");
             return;
         }
@@ -251,7 +252,14 @@ router.get('/oauth_callback', async (req, res) => {
     let code = req.query.code
     let state = decodeURIComponent(req.query.state)
     console.log("oauth_callback: code: %s, state: %s", code, state)
-
+    if (state in state_dict) {
+        delete state_dict[state]
+    }
+    else {
+        console.log("state %s not in state_dict %j, XSRF?", state, state_dict)
+        res.sendStatus(400, { error: `state ${state} not in state_dict, XSRF?` })
+        return
+    }
     let data = new URLSearchParams()
     data.append("client_id", "todo-backend")
     data.append("grant_type", "authorization_code")
