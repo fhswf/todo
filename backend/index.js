@@ -1,34 +1,75 @@
-import express from 'express';
-import DB from './db.js'
-
-import swaggerUi from 'swagger-ui-express';
-import swaggerJsdoc from 'swagger-jsdoc';
-
-import { check, validationResult } from 'express-validator';
-import cookieParser from 'cookie-parser';
-import { getRandomValues } from 'crypto';
-
-const PORT = process.env.PORT || 3000;
-
-const TOKEN_URL = "https://jupiter.fh-swf.de/keycloak/realms/webentwicklung/protocol/openid-connect/token"
+import express from 'express'; // Express-Framework für das Erstellen von RESTful APIs
+import DB from './db.js'; // Unsere Datenbank-Verbindungsklasse
+import swaggerUi from 'swagger-ui-express'; // Middleware für das Anzeigen von Swagger-Dokumentation
+import swaggerJsdoc from 'swagger-jsdoc'; // Middleware für das Generieren von Swagger-Dokumentation
+import { check, validationResult } from 'express-validator'; // Middleware für die Validierung von Anfragen
+import cookieParser from 'cookie-parser'; // Middleware für das Verarbeiten von Cookies
 
 
+// Definiere die URL für den Token
+const TOKEN_URL = "https://jupiter.fh-swf.de/keycloak/realms/webentwicklung/protocol/openid-connect/token";
+const PORT = process.env.PORT || 3000; // Definiere den Port, auf dem der Server lauscht
+
+// Middleware zur Validierung von Anfragen
+const validate = (req, res, next) => {
+    // Überprüfe die Validierungsergebnisse und handle entsprechend
+    const errors = validationResult(req);
+    if (errors.isEmpty()) {
+        return next(); // Führe die nächste Middleware aus, wenn keine Fehler vorliegen
+    }
+    // Bei Validierungsfehlern sende eine fehlerhafte Anfrage zurück
+    return res.status(400).json({
+        error: "Bad Request",
+        errors: errors.array()
+    });
+};
+
+// Validierungsregeln für Todo-Anfragen
+const todoValidationRules = [
+    check('title')
+        .notEmpty()
+        .withMessage('Titel darf nicht leer sein')
+        .isLength({ min: 3 })
+        .withMessage('Titel muss mindestens 3 Zeichen lang sein'),
+    check().custom((value, { req }) => {
+        const invalidFields = Object.keys(req.body).filter(key => !['title', 'due', 'status'].includes(key));
+        if (invalidFields.length > 0) {
+            throw new Error(`Ungültiges Feld(er) gefunden: ${invalidFields.join(', ')}`);
+        }
+        return true;
+    }) 
+];
+
+// Middleware für die Validierung der Todo-Anfragen
+const validateTodo = (req, res, next) => {
+    // Führe die Validierung der Todo-Anfragen durch
+    const validations = todoValidationRules.map(rules => rules.map(rule => rule(req)));
+    Promise.all(validations.flat())
+        .then(() => next()) // Führe die nächste Middleware aus, wenn die Validierung erfolgreich ist
+        .catch(errors => res.status(400).json({ error: 'Bad Request', errors }));
+};
+// Middleware für die Authentifizierung
+let authenticate = (req, res, next) => {
+    const token = req.headers.authorization; // Hole den Autorisierungs-Header aus der Anfrage
+    if (!token) {
+        return res.status(401).json({ error: 'Unauthorized' }); // Bei fehlendem Token sende eine 401-Fehlermeldung zurück
+    }
+    next(); // Führe die nächste Middleware aus, wenn die Authentifizierung erfolgreich ist
+};
+
+// Swagger-Optionen
 const swaggerOptions = {
     swaggerDefinition: {
-        openapi: '3.0.0',
+        openapi: '3.0.0', // OpenAPI version
         info: {
-            title: 'Todo API',
-            version: '1.0.0',
-            description: 'Todo API Dokumentation',
+            title: 'Todo API', // Title of the API
+            version: '1.0.0', // Version of the API
+            description: 'API-Dokumentation für Todo-Verwaltung', // Description of the API
         },
-        servers: [
-            {
-                url: `http://localhost:${PORT}`,
-            },
-        ],
+        servers: [{ url: `http://localhost:${PORT}` }], // Server URL for the API
         components: {
             schemas: {
-                Todo: {
+                Todo: { // Schema for Todo object
                     type: 'object',
                     properties: {
                         _id: {
@@ -55,70 +96,46 @@ const swaggerOptions = {
                 },
             },
             securitySchemes: {
-                bearerAuth: {
+                bearerAuth: { // Security scheme for bearer token authentication
                     type: 'http',
                     scheme: 'bearer',
                     bearerFormat: 'JWT',
                 }
             },
+            
         },
-        security: [{
-            bearerAuth: []
-        }],
-
+        security: [{ bearerAuth: [] }], // Security definition for the API
     },
-    apis: ['./index.js'],
+    apis: ['./index.js'], // Paths to files containing API documentation
 };
 
 
-
-/** Zentrales Objekt für unsere Express-Applikation */
+// Express-App initialisieren
 const app = express();
+app.disable("x-powered-by"); // Deaktiviere die X-Powered-By-Header, um die Sicherheit zu erhöhen
+app.use(cookieParser()); // Middleware für das Verarbeiten von Cookies
+app.use(express.static('frontend')); // Middleware für das Servieren von statischen Dateien (z. B. HTML, CSS, JavaScript)
+app.use(express.json()); // Middleware für das Parsen von JSON-Daten
 
-app.use(cookieParser())
-app.use(express.static('../frontend'));
-app.use(express.json());
-
-/** Middleware für Swagger */
+// Middleware für die Swagger-Dokumentation
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-
-
-/** global instance of our database */
+// Globale Datenbankinstanz initialisieren
 let db = new DB();
 
-/** Initialize database connection */
+// Datenbankverbindung initialisieren
 async function initDB() {
-    await db.connect();
-    console.log("Connected to database");
+    await db.connect(); // Verbinde mit der Datenbank
+    console.log("Connected to database"); // Gib eine Meldung aus, wenn die Verbindung hergestellt wurde
 }
-
-
-const todoValidationRules = [
-    check('title')
-        .notEmpty()
-        .withMessage('Titel darf nicht leer sein')
-        .isLength({ min: 3 })
-        .withMessage('Titel muss mindestens 3 Zeichen lang sein'),
-];
-
-
-/** Middleware for authentication. 
- * This middleware could be used to implement JWT-based authentication. Currently, this is only a stub.
-*/
-let authenticate = (req, res, next) => {
-    // Dummy authentication
-    next();
-}
-
 
 /** Return all todos. 
  *  Be aware that the db methods return promises, so we need to use either `await` or `then` here! 
  * @swagger
  * /todos:
  *  get:
- *    summary: Gibt alle Todos zurück
+ *    summary: Gibt alle Todos  zurück
  *    tags: [Todos]
  *    responses:
  *      '401':
@@ -269,7 +286,7 @@ app.put('/todos/:id', authenticate,
  *     '500':
  *       description: Serverfehler
  */
-app.post('/todos', authenticate,
+app.post('/todos', authenticate, todoValidationRules, validate,
     async (req, res) => {
         let todo = req.body;
         if (!todo) {
@@ -326,8 +343,7 @@ app.delete('/todos/:id', authenticate,
     }
 );
 
-
-
+// Server initialisieren
 let server;
 await initDB()
     .then(() => {
