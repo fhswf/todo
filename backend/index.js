@@ -76,7 +76,7 @@ const swaggerOptions = {
 const app = express();
 
 app.use(cookieParser())
-app.use(express.static('../frontend'));
+app.use('/', express.static('../frontend', {index: 'todo.html'}));
 app.use(express.json());
 
 /** Middleware für Swagger */
