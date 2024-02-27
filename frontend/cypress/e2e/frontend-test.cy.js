@@ -1,7 +1,9 @@
 
+const PORT = process.env.PORT || 3000;
+
 describe('Todo App', () => {
     beforeEach(() => {
-        cy.visit('localhost:3000/');
+        cy.visit(`localhost:${PORT}/`);
     });
 
     it('Seite laden', () => {
