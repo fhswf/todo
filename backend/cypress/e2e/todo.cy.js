@@ -1,9 +1,11 @@
+import getKeycloakToken from './../../utils';
 const PORT = process.env.PORT || 3000;
 
 const headers = {
     'Accept': 'application/json',
     'Content-Type': 'application/json',
 };
+
 
 describe('Authentifizierung', function(){
     it('redirect auf Keycloak erfolgreich', function(){
@@ -99,57 +101,97 @@ describe('ToDo Anwendung', function () {
 
 //test delete todo
 describe('ToDo Anwendung', function () {
-    it('Lösche ToDo', function () {
-        cy.request({
-            method: 'POST', 
-            url: 'http://localhost:3000/todos',
-            headers: headers,
-            body: {
-                "title": "1234566666666666",
-                "due": "2023-11-14T00:00:00.000Z",
-                "status": 0
-            }  
-        }).then((response) => {
-            //get todo id
-            const id = response.body._id
-            cy.visit(`http://localhost:${PORT}/todo.html`)
-
-            //click delete button within div with id todo-id
-            cy.get(`#todo-${id}`).within(()=>{
-                cy.contains('Button','Löschen').click()
-            });
-            cy.contains(`#todo-${id}`).should('not.exist');
+    it('Lösche ToDo', function () 
+    {
+        getKeycloakToken().then((token) =>
+        {
+            cy.request(
+                {
+                    method: 'POST', 
+                    url: 'http://localhost:3000/todos',
+                    headers:{
+                        'Authorization': `Bearer ${token}`, 
+                    },
+                    body: {
+                        "title": "1234566666666666",
+                        "due": "2023-11-14T00:00:00.000Z",
+                        "status": 0
+                    }  
+                }).then((response) => 
+                {
+                    //get todo id
+                    const id = response.body._id
+        
+                    cy.visit(`http://localhost:${PORT}/todo.html`)
+                    cy.url().then(url=>
+                    {
+                        if(!url.includes('localhost'))
+                        {
+                            cy.get('[name="username"]').type('todo')
+                            cy.get('input#password').type('todo')
+                            cy.get('button#kc-login').click().then(()=>
+                            {
+                                cy.wait(300)
+                                cy.url().should('include', 'localhost')
+        
+                                //click delete button within div with id todo-id
+                                cy.get(`#todo-${id}`).within(()=>{
+                                    cy.contains('Button','Löschen').click()
+                                });
+                                cy.contains(`#todo-${id}`).should('not.exist');
+                            })
+                        }
+                    })
+                })
+            
         })
+        
     })
 })
 
 //test edit todo
 describe('ToDo Anwendung', function () {
     it('Bearbeite ToDo', function () {
-        cy.request({
-            method: 'POST', 
-            url: 'http://localhost:3000/todos',
-            headers: headers,
-            body: {
-                "title": "1234566666666666",
-                "due": "2023-11-14T00:00:00.000Z",
-                "status": 0
-            }  
-        }).then((response) => {
-            //get todo id
-            const id = response.body._id
-            cy.visit(`http://localhost:${PORT}/todo.html`)
-            cy.get(`#todo-${id}`)
-                .first()
-                .within(()=>{
-                    cy.get('.edit').click()
-                });
+        getKeycloakToken().then((token) => {
+            cy.request({
+                method: 'POST', 
+                url: 'http://localhost:3000/todos',
+                headers:{
+                    'Authorization': `Bearer ${token}`, 
+                },
+                body: {
+                    "title": "1234566666666666",
+                    "due": "2023-11-14T00:00:00.000Z",
+                    "status": 0
+                }  
+            }).then((response) => {
+                //get todo id
+                const id = response.body._id
+                cy.visit(`http://localhost:${PORT}/todo.html`)
+                cy.url().then(url=>{
+                    if(!url.includes('localhost')){
+                        cy.get('[name="username"]').type('todo')
+                        cy.get('input#password').type('todo')
+                        cy.get('button#kc-login').click().then(()=>
+                        {
+                            cy.wait(300)
+                            cy.url().should('include', 'localhost')
+                            cy.get(`#todo-${id}`)
+                                .first()
+                                .within(()=>{
+                                    cy.get('.edit').click()
+                                });
 
-            cy.get('#todo').clear().type('test todo edited')
-            cy.get('#due').clear().type('2023-11-14')
-            cy.get('#status').select('1')
-            cy.get('#add').click()
-            cy.get(`#todo-${id}`).contains('test todo edited')
+                            cy.get('#todo').clear().type('test todo edited')
+                            cy.get('#due').clear().type('2023-11-14')
+                            cy.get('#status').select('1')
+                            cy.get('#add').click()
+                            cy.get(`#todo-${id}`).contains('test todo edited')
+                        })
+                    }
+                
+                })
+            })
         })
     })
 })
@@ -157,29 +199,45 @@ describe('ToDo Anwendung', function () {
 //test change status of todo
 describe('ToDo Anwendung', function () {
     it('Update Status', function () {
-        cy.request({
-            method: 'POST', 
-            url: 'http://localhost:3000/todos',
-            headers: headers,
-            body: {
-                "title": "1234566666666666",
-                "due": "2023-11-14T00:00:00.000Z",
-                "status": 0
-            }  
-        }).then((response) => {
-            //get todo id
-            const id = response.body._id
-            cy.visit(`http://localhost:${PORT}/todo.html`)
-            cy.get(`#todo-${id}`)
-                .first()
-                .within(()=>{
-                    cy.get('.edit').click()
-                    cy.get.contains('In Bearbeitung')
-                    cy.get('.edit').click()
-                    cy.get.contains('Erledigt')
-                    cy.get('.edit').click()
-                    cy.get.contains('Offen')
-                });
+        getKeycloakToken().then((token) => {
+            cy.request({
+                method: 'POST', 
+                url: 'http://localhost:3000/todos',
+                headers:{
+                    'Authorization': `Bearer ${token}`, 
+                },
+                body: {
+                    "title": "1234566666666666",
+                    "due": "2023-11-14T00:00:00.000Z",
+                    "status": 0
+                }  
+            }).then((response) => {
+                //get todo id
+                const id = response.body._id
+                cy.visit(`http://localhost:${PORT}/todo.html`)
+                cy.url().then(url=>{
+                    if(!url.includes('localhost')){
+                        cy.get('[name="username"]').type('todo')
+                        cy.get('input#password').type('todo')
+                        cy.get('button#kc-login').click().then(()=>
+                        {
+                            cy.wait(300)
+                            cy.url().should('include', 'localhost')
+                            cy.get(`#todo-${id}`)
+                                .first()
+                                .within(()=>{
+                                    cy.get('.edit').click()
+                                    cy.get.contains('In Bearbeitung')
+                                    cy.get('.edit').click()
+                                    cy.get.contains('Erledigt')
+                                    cy.get('.edit').click()
+                                    cy.get.contains('Offen')
+                                });
+                        })
+                    }
+                })
+                
+            })
         })
     })
 })
