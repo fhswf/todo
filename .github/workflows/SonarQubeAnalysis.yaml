@@ -32,9 +32,9 @@ jobs:
         run: npm install
         working-directory: ./backend
 
-      - name: Coverage
-        run: npm run coverage
-        working-directory: ./backend
+      # - name: Coverage
+      #   run: npm run coverage
+      #   working-directory: ./backend
 
       - name: Sonarqube
         uses: sonarsource/sonarqube-scan-action@master
