@@ -26,9 +26,7 @@ Nach Erstellung dieser Liste der Testfälle, erfolgte die anschließende Umsetzu
 
 Die automatisierten Tests zu erstellen schien vorübergehend als Herausforderung. In der Datei waren bereits einige vorgefertigten Testfälle enthalten, von denen jedoch die meisten nicht wie gewünscht funktionierten. Beim Hinzufügen unserer eigenen definierten Testfälle, mussten daher auch die bestehenden überarbeitet und repariert werden. 
 
-Auch die Integration von SonarQube erwies sich schwieriger als erwartet. Ursprünglich erstellten wir SonarQube außerhalb des FH-Repositories, wodurch unser Repository dort nicht als Projekt angelegt werden konnte. Die Lösung dessen bestand darin, das Projekt auf die Organisation fhswf zu übertragen. Diese 
+Auch die Integration von SonarQube erwies sich schwieriger als erwartet. Ursprünglich erstellten wir SonarQube außerhalb des FH-Repositories, wodurch unser Repository dort nicht als Projekt angelegt werden konnte. Die Lösung dessen bestand darin, das Projekt auf die Organisation fhswf zu übertragen. Diese Änderung führte jedoch dazu, dass Secret und Variablen nicht mehr ordnungsgemäß funktionierten, was ein neues Problem bildete.
 
-- Nicht im FH Repository gewesen, dadurch in SonarQube Projekt nicht anlegbar
-Lösung dafür war das bestehende Projekt zunächst auf die Organisation fhswf zu übertragen - folge daraus war dass wir das Secret und die Variablen nicht eintragen konnten. Nach einem Fork funktioniert des jedoch.
 
 ## Ergebnisse der automatisierten Tests und SonarQube-Analysen
