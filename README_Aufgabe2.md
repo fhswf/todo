@@ -1,6 +1,6 @@
 # ToDo-Anwendung
 
-Gruppenmitglieder:
+## Gruppenmitglieder
 - Roman Knjaskow
 - Mike Görzen
 - Florian Hees
@@ -26,7 +26,9 @@ Nach Erstellung dieser Liste der Testfälle, erfolgte die anschließende Umsetzu
 
 Die automatisierten Tests zu erstellen schien vorübergehend als Herausforderung. In der Datei waren bereits einige vorgefertigten Testfälle enthalten, von denen jedoch die meisten nicht wie gewünscht funktionierten. Beim Hinzufügen unserer eigenen definierten Testfälle, mussten daher auch die bestehenden überarbeitet und repariert werden. 
 
-Auch die Integration von SonarQube erwies sich schwieriger als erwartet. Ursprünglich erstellten wir SonarQube außerhalb des FH-Repositories, wodurch unser Repository dort nicht als Projekt angelegt werden konnte. Die Lösung dessen bestand darin, das Projekt auf die Organisation fhswf zu übertragen. Diese Änderung führte jedoch dazu, dass Secret und Variablen nicht mehr ordnungsgemäß funktionierten, was ein neues Problem bildete.
+Auch die Integration von SonarQube erwies sich schwieriger als erwartet. Ursprünglich erstellten wir SonarQube außerhalb des FH-Repositories, wodurch unser Repository dort nicht als Projekt angelegt werden konnte. Die Lösung dessen bestand darin, das Projekt auf die Organisation fhswf zu übertragen. Diese Änderung führte jedoch dazu, dass Secret und Variablen nicht mehr eingetragen werden konnten, was ein neues Problem bildete. 
+
+Lösung dafür ist das Forken das Original repositories fhswf/todo und das mergen des fehlerhaften repositories in das neue. Auch in SonarQube musste erneut ein neues Projekt angelegt werden. Anlegen von Secrets und Variable dadurch möglich.
 
 
 ## Ergebnisse der automatisierten Tests und SonarQube-Analysen
