@@ -18,5 +18,9 @@ export default defineConfig({
             url: `http://localhost:${PORT}/__coverage__`,
           },
     },
+
+    "env":{
+        "BABEL_ENV":"e2e",
+    }
 })
 

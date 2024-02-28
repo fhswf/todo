@@ -4,7 +4,7 @@
   "description": "Backend für ToDo-Anwendung",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js",
+    "start": "nodemon --exec babel-node index.js",
     "test": "NODE_OPTIONS=--experimental-vm-modules npx jest --detectOpenHandles",
     "coverage": "NODE_OPTIONS=--experimental-vm-modules npx jest --coverage --coverageDirectory=coverage-jest"
   },
@@ -12,6 +12,9 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@babel/cli": "^7.23.9",
+    "@babel/core": "^7.24.0",
+    "@babel/preset-env": "^7.24.0",
     "@cypress/code-coverage": "^3.12.26",
     "axios": "^1.6.0",
     "babel-plugin-istanbul": "^6.1.1",
@@ -35,7 +38,7 @@
     "swagger-ui-express": "^4.6.2"
   },
   "nyc": {
-    "report-dir": "coverage-cypress",
+    "report-dir": "./coverage-cypress",
     "reporter": [
       "lcov",
       "json"
