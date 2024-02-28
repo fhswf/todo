@@ -1,10 +1,10 @@
-# Bericht zur Praktikumsaufgabe: Continuous Integration zur Verbesserung von Softwarequalität
+# Bericht zur Aufgabe: Continuous Integration zur Verbesserung von Softwarequalität
 ---
 ## Teammitglieder 
 
 - Sophie Ischenko 
 ## Einleitung 
-Die Praktikumsaufgabe befasst sich mit dem Thema Continuous Integration ( CI) im Kontext der Verbesserung von Softwarequalität. Ziel ist es, eine GitHub-Action zu erstellen, die automatisierte Tests und eine Qualitätsprüfung mit SonarQube für eine einfache 'ToDo'-Anwendung durchführt. Das Team wird den Prozess der Continuous Integration und die Integration von SonarQube durchführen, um die Softwarequalität zu verbessern. Durch die Implementierung automatisierter Tests und die Integration von SonarQube wird sichergestellt, dass die Software nicht nur fehlerfrei und wartbar ist, sondern auch höchsten Qualitätsstandards entspricht. 
+Die Aufgabe befasst sich mit dem Thema Continuous Integration ( CI) im Kontext der Verbesserung von Softwarequalität. Ziel ist es, eine GitHub-Action zu erstellen, die automatisierte Tests und eine Qualitätsprüfung mit SonarQube für eine einfache 'ToDo'-Anwendung durchführt. Das Team wird den Prozess der Continuous Integration und die Integration von SonarQube durchführen, um die Softwarequalität zu verbessern. Durch die Implementierung automatisierter Tests und die Integration von SonarQube wird sichergestellt, dass die Software nicht nur fehlerfrei und wartbar ist, sondern auch höchsten Qualitätsstandards entspricht. 
 
 ---
 ## Vorbereitung 
@@ -13,7 +13,7 @@ erledigt
 ### Verstehen der Anwendung 
 Es handelt sich um die Anwendung aus dem Modul Webentwicklung - Backend  
 ### Erstellen automatisierter Tests 
-Sind bereits vorhanden, schlagen aber teilweise fehl.
+Sind bereits vorhanden, schlugen aber teilweise fehl.
 Die wichtigsten Funktionen der Anwendung wurden getestet, einschließlich der Endpunkte zum Abrufen, Erstellen, Aktualisieren und Löschen von Todos. Die Testabdeckung wurde gewährleistet, indem automatisierte Tests für jeden dieser Endpunkte geschrieben wurden. Darüber hinaus wurden Randfälle und Fehlerzustände in den Tests berücksichtigt, um sicherzustellen, dass die Anwendung robust gegenüber ungültigen Eingaben und unerwarteten Zuständen ist. 
 ## Einrichten eines GitHub-Action Workflows
 
