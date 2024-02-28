@@ -14,26 +14,21 @@ Zu Beginn haben wir eine Kopie des ursprünglichen GitHub-Repositories erstellt.
 
 Nach Erstellung dieser Liste der Testfälle, erfolgte die anschließende Umsetzung jener zu Code. Es ist anzumerken, dass einige dieser Testfälle bereits in Datei vorhanden waren.
 
-
-
 ## Die gewählten Lösungen
 - Konzeptionelle Erstellung einer Auflistung für Testfälle
 - Umwandlung der konzeptionellen Auflistung der Testfälle zu Code, inklusive Überarbeitung und Reparatur der bereits bestehenden Testfälle
 - Einrichtung einer GitHub-Action zur automatischen Durchführung der Testfälle
 - Erstellung eines SonarQube Accounts für die anschließende Integration des SonarQube
-- Hinzufügen der 
 - Auswertung der Ergebnisse
 - Erstellung der Dokumentation
-
 
 ## Probleme und wie sie gelöst wurden
 
 Die automatisierten Tests zu erstellen schien vorübergehend als Herausforderung. In der Datei waren bereits einige vorgefertigten Testfälle enthalten, von denen jedoch die meisten nicht wie gewünscht funktionierten. Beim Hinzufügen unserer eigenen definierten Testfälle, mussten daher auch die bestehenden überarbeitet und repariert werden. 
 
-Auch die Integration von SonarQube sollte sich anfangs schwieriger gestaltet als geplant. 
+Auch die Integration von SonarQube erwies sich schwieriger als erwartet. Ursprünglich erstellten wir SonarQube außerhalb des FH-Repositories, wodurch unser Repository dort nicht als Projekt angelegt werden konnte. Die Lösung dessen bestand darin, das Projekt auf die Organisation fhswf zu übertragen. Diese 
 
 - Nicht im FH Repository gewesen, dadurch in SonarQube Projekt nicht anlegbar
 Lösung dafür war das bestehende Projekt zunächst auf die Organisation fhswf zu übertragen - folge daraus war dass wir das Secret und die Variablen nicht eintragen konnten. Nach einem Fork funktioniert des jedoch.
-
 
 ## Ergebnisse der automatisierten Tests und SonarQube-Analysen
