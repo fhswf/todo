@@ -91,11 +91,6 @@ describe('DELETE /todos/:id (unauthorisiert)', () => {
 
 
 
-
-
-
-
-
 describe('GET /todos', () => {
     it('sollte alle Todos abrufen', async () => {
         const response = await request(app)
@@ -137,23 +132,6 @@ describe('POST /todos', () => {
         expect(response.statusCode).toBe(400);
         expect(response.body.error).toBe('Bad Request');
     });
-/*
-    it('sollte einen 400-Fehler zurückgeben, wenn das Todo nicht valide ist', async () => {
-        const newTodo = {
-            "title": "Übung 4 machen",
-            "due": "2022-11-12T00:00:00.000Z",
-            "status": 0,
-            "invalid": "invalid"
-        };
-        const response = await request(app)
-            .post('/todos')
-            .set('Authorization', `Bearer ${token}`)
-            .send(newTodo);
-
-        expect(response.statusCode).toBe(400);
-        expect(response.body.error).toBe('Bad Request');
-    });
-*/
 }); 
 
 describe('GET /todos/:id', () => {
