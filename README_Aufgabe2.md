@@ -28,7 +28,7 @@ Die automatisierten Tests zu erstellen schien vorübergehend als Herausforderung
 
 Auch die Integration von SonarQube erwies sich schwieriger als erwartet. Ursprünglich erstellten wir SonarQube außerhalb des FH-Repositories, wodurch unser Repository dort nicht als Projekt angelegt werden konnte. Die Lösung dessen bestand darin, das Projekt auf die Organisation fhswf zu übertragen. Diese Änderung führte jedoch dazu, dass Secret und Variablen nicht mehr eingetragen werden konnten, was ein neues Problem bildete. 
 
-Lösung dafür ist das Forken das Original repositories fhswf/todo und das mergen des fehlerhaften repositories in das neue. Auch in SonarQube musste erneut ein neues Projekt angelegt werden. Anlegen von Secrets und Variable dadurch möglich.
+Lösung dafür ist das Forken das Original repositories fhswf/todo und das mergen des fehlerhaften repositories in das neue. Auch in SonarQube musste erneut ein neues Projekt angelegt werden. Anlegen von Secrets und Variable dadurch möglich, jedoch musste ein neuer Key in die sonar-project.properties eingetragen werden.
 
 
 ## Ergebnisse der automatisierten Tests und SonarQube-Analysen
