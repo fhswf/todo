@@ -104,7 +104,9 @@ const todoValidationRules = [
         .withMessage('Titel muss mindestens 3 Zeichen lang sein'),
     check('due')
         .notEmpty()
-        .withMessage('Fälligkeitsdatum darf nicht leer sein'),
+        .withMessage('Fälligkeitsdatum darf nicht leer sein')
+        .isISO8601()
+        .withMessage('Fälligkeitsdatum muss ein ISO8601-Datum sein'),
     check('status')
         .notEmpty()
         .withMessage('Status darf nicht leer sein')
