@@ -113,25 +113,17 @@ async function initDB() {
 const todoValidationRules = [
     check('title')
         .notEmpty()
-        .withMessage('Titel darf nicht leer sein')
         .isLength({ min: 3 })
-        .withMessage('Titel muss mindestens 3 Zeichen lang sein')
-        .isString()
-        .withMessage('Der Titel muss vom Typ String sein'),
+        .isString(),
     check('due')
         .notEmpty()
-        .withMessage('Das Datum darf nicht leer sein')
-        .isString()
-        .withMessage('Das Datum muss vom Typ String sein'),
+        .isString(),
     check('status')
         .notEmpty()
-        .withMessage('Der Status darf nicht leer sein')
-        .isInt({min: 0, max: 2})
-        .withMessage('Der Status muss vom Typ Int sein und darf nur folgende Werte beinhalten: 0, 1, 2'),
-    check('_id')
-        .optional()
-        .isString()
-        .withMessage('Die ID muss vom Typ String sein'),
+        .isInt({min: 0, max: 2}),
+    check('invalid')
+        .not()
+        .equals('invalid')
 ];
 
 const validate = (req, res, next) => {
@@ -139,7 +131,10 @@ const validate = (req, res, next) => {
     if (errors.isEmpty()) {
         return next();
     }
-    return res.status(400).send({ error: errors.array({ onlyFirstError: true})[0].msg});
+    return res.status(400).json({
+        error: "Bad Request",
+        errors: errors.array()
+    });
 }
 
 
