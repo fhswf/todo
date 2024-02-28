@@ -13,9 +13,9 @@ function createTodoElement(todo) {
            <div class="title">${todo.title}</div> 
            <div class="due">${due.toLocaleDateString()}</div>
            <div class="actions">
-              <button class="status" onclick="changeStatus(${todo._id})">${status[todo.status || 0]}</button>
-              <button class="edit" onclick="editTodo(${todo._id})">Bearbeiten</button>
-              <button class="delete" onclick="deleteTodo(${todo._id})">Löschen</button>
+              <button class="status" onclick="changeStatus('${todo._id}')">${status[todo.status || 0]}</button>
+              <button class="edit" onclick="editTodo('${todo._id}')">Bearbeiten</button>
+              <button class="delete" onclick="deleteTodo('${todo._id}')">Löschen</button>
            </div>
          </div>`);
 
@@ -62,21 +62,18 @@ async function init() {
 function saveTodo(evt) {
     evt.preventDefault();
 
-    // Get the id from the form. If it is not set, we are creating a new todo.
-    let _id = Number.parseInt(evt.target.dataset.id) || Date.now();
-
     let todo = {
-        _id,
+        _id: evt.target.dataset._id,
         title: evt.target.title.value,
         due: evt.target.due.valueAsDate,
         status: Number.parseInt(evt.target.status.value) || 0
     }
 
     // Save the todo
-    let index = todos.findIndex(t => t._id === _id);
+    let index = todos.findIndex(t => t._id === todo._id);
     if (index >= 0) {
         console.log("Updating todo: %o", todo);
-        fetch(API + "/" + _id, {
+        fetch(API + "/" + todo._id, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json"
@@ -86,13 +83,14 @@ function saveTodo(evt) {
             .then(checkLogin)
             .then(response => response.json())
             .then(response => {
-                console.log("PUT %s: %o", API + "/" + _id, response)
+                console.log("PUT %s: %o", API + "/" + todo._id, response)
                 todos[index] = response
                 showTodos()
                 return todos
             })
     } else {
         console.log("Saving new todo: %o", todo);
+        delete todo._id
         fetch(API, {
             method: "POST",
             headers: {
