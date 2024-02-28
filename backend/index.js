@@ -6,7 +6,6 @@ import swaggerJsdoc from 'swagger-jsdoc';
 
 import { check, checkExact, validationResult } from 'express-validator';
 import cookieParser from 'cookie-parser';
-import { getRandomValues } from 'crypto';
 
 const PORT = process.env.PORT || 3000;
 
@@ -74,6 +73,7 @@ const swaggerOptions = {
 
 /** Zentrales Objekt für unsere Express-Applikation */
 const app = express();
+app.disable("x-powered-by");
 
 app.use(cookieParser())
 app.use('/', express.static('../frontend', {index: 'todo.html'}));
