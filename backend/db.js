@@ -8,7 +8,9 @@ let collection = null;
 let client = null;
 
 export default class DB {
-
+    getMongoUri() {
+        return process.env.MONGO_URI || 'mongodb://localhost:27017/todos';
+    }
     /** Connect to MongoDB and open client */
     connect() {
         return MongoClient.connect(MONGO_URI)

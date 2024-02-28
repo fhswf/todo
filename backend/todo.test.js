@@ -76,7 +76,7 @@ describe('POST /todos', () => {
         expect(response.statusCode).toBe(400);
         expect(response.body.error).toBe('Bad Request');
     });
-}); 0
+}); 
 
 describe('GET /todos/:id', () => {
     it('sollte ein Todo abrufen', async () => {
@@ -101,6 +101,7 @@ describe('GET /todos/:id', () => {
         expect(getResponse.body.title).toBe(newTodo.title);
         expect(getResponse.body.due).toBe(newTodo.due);
     });
+
 
     it('sollte einen 404-Fehler zurückgeben, wenn das Todo nicht gefunden wurde', async () => {
         const id = '123456789012345678901234';

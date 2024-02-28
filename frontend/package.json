@@ -1,0 +1,19 @@
+{
+    "name": "frontend",
+    "version": "1.0.0",
+    "description": "Frontend-Anwendung für die ToDo-App",
+    "main": "server.js",
+    "type": "module",
+    "scripts": {
+      "start": "nodemon backend/index.js",
+      "cypress:open": "cypress open",
+      "cypress:run": "cypress run --headless"
+    },
+    "author": "Sophie Ischenko",
+    "license": "ISC",
+    "devDependencies": {
+      "cypress": "^13.6.4",
+      "nodemon": "^3.0.1"
+    }
+  }
+  
