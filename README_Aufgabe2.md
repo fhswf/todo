@@ -20,6 +20,8 @@ Nach Erstellung dieser Liste der Testfälle, erfolgte die anschließende Umsetzu
 
 ## Einrichtung einer GitHub-Action
 
+
+
 ## Integration von SonarQube
 
 ## Auswertung der Ergebnisse
