@@ -6,6 +6,8 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 import { swaggerOptions } from './swagger.js';
 
+import require from 'requirejs'
+
 import cookieParser from 'cookie-parser';
 import { getRandomValues } from 'crypto';
 
@@ -24,7 +26,7 @@ app.use(cookieParser())
 app.use(express.static('../frontend'));
 app.use(express.json());
 app.use(ToDoRouter);
-
+require('@cypress/code-coverage/middleware/express')(app)
 app.use(passport.initialize());
 /** Middleware für Swagger */
 const swaggerDocs = swaggerJsdoc(swaggerOptions);

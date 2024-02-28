@@ -35,7 +35,7 @@
     "swagger-ui-express": "^4.6.2"
   },
   "nyc": {
-    "report-dir": "coverage",
+    "report-dir": "coverage-cypress",
     "reporter": [
       "lcov",
       "json"

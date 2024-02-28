@@ -14,6 +14,9 @@ export default defineConfig({
             return config
           },
         baseUrl: `http://localhost:${PORT}`,
+        codeCoverage: {
+            url: `http://localhost:${PORT}/__coverage__`,
+          },
     },
 })
 
