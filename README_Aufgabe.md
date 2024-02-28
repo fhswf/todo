@@ -18,12 +18,12 @@ Konstantin Jasny
         Die Überprüfung der Übergebenenen Daten musste angepasst werden um die benötigten Fehlermelduzng bei Fehlerhaften Eingaben zu erzeugen.
 
 2.3 Integration der Authentifizierung im Frontend
-        Um das Frontend in vollen Umfang testen zu können, versuchten wir die Authentifizierung pber den Keycloack Server zunächst zu implementieren. 
-        Hier gab es ein Problem, welches wir bis zum Ende nicht lösen könnten. 
+        Um das Frontend in vollen Umfang testen zu können, versuchten wir die Authentifizierung über den Keycloack Server zunächst zu implementieren. 
+        Hier gab es ein Problem, welches wir lange nicht lösen könnten. 
         Wird das Frontend aufgerufen erfolgt korrekter Weise der redirect auf den Keycloak Server, dieser
-        quittiert die Anfrage jedoch mit der Fehlermeldung "invalid redirect URI". Nach einiger Recherche und Probieren stellten wir fest das dieser Fehler bei nahezu jeder falschen Konfiguration der URI auftritt. 
-        Da wir nach mehrstündigen Probieren keine Lösung finden konnten und keinerlei Fortschritte machten, schrieben wir Ihnen eine Email mit der Bitte nach Unterstüzung. Leider erhielten wir keine Antwort, weshalb wir uns dazu entschieden
-        diese Funktion nicht zu implementieren.
+        quittiert die Anfrage jedoch mit der Fehlermeldung "invalid redirect URI". Nach einiger Recherche und Probieren stellten wir fest das dieser Fehler bei nahezu jeder falschen Konfiguration der URI auftritt und wenig Aufschluss über den eigentlichen Fehler gibt. Nach sehr langen probieren und recherchieren stellten wir fest, dass der Fehler durch einen Codespace in der redirect URI ausgelöst wurde.
+        Nachdem wir die Anwendung lokal ausführten funktionierte die Authentifizierung nahezu problemlos. 
+        Im Anschluss konnten wir die Cypress Tests für die Authentifizierung anpassen.
 
 3 - Anlegen des Sonarqube Projektes (todo_tkkg)
 
@@ -31,7 +31,12 @@ Konstantin Jasny
 
 3.2 - integration von Code Coverage mit Jest und Sonarqube
 
-3.3 - Überarbeitung der Anwendung mit Ergebnissen von Sonarqube
+
+3.3 - integration von Code Coverage mit Cypress und Sonarqube
+Hier stellte sich eine Herausforderung, welche wir nicht lösen konnten. Da Cypress keine native Unterstüzung einer Codecoverage Analyse bietet, mussten entsprechende Plugins installiert werden.
+Wir fanden heraus das Istanbul und nyc sowie babel sich hierfür eigeneten. Allerdings gelang es uns nicht mittels nyc eine Code Analyse durchzuführen.
+
+3.4 - Überarbeitung der Anwendung mit Ergebnissen von Sonarqube
 
 4 - Letzter Check und Abgabe
 
