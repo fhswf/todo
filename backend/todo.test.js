@@ -44,7 +44,20 @@ describe('POST /todos', () => {
         expect(response.body.title).toBe(newTodo.title);
         expect(response.body.due).toBe(newTodo.due);
     });
+    it('sollte einen 400-Fehler zurückgeben wenn Titel zu kurz ist', async () => {
+        const newTodo = {
+            "title": "Üb",
+            "due": "2022-11-12T00:00:00.000Z",
+            "status": 0
+        };
 
+        const response = await request(app)
+            .post('/todos')
+            .set('Authorization', `Bearer ${token}`)
+            .send(newTodo);
+        expect(response.statusCode).toBe(400);
+        expect(response.body.error).toBe('Bad Request');
+    });
     it('sollte einen 400-Fehler zurückgeben, wenn das Todo unvollständig ist', async () => {
         const newTodo = {
             "due": "2022-11-12T00:00:00.000Z",
@@ -59,7 +72,8 @@ describe('POST /todos', () => {
         expect(response.statusCode).toBe(400);
         expect(response.body.error).toBe('Bad Request');
     });
-    it('sollte einen 400-Fehler zurückgeben, wenn kein Todo übergeben wird', async () => {
+    
+    it('sollte einen 400-Fehler zurückgeben, wenn leeres Todo übergeben wird', async () => {
         const newTodo = {
             
         };
