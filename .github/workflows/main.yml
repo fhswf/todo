@@ -13,14 +13,14 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Start Server
-        uses: cypress-io/github-action@v6
+        uses: cypress-io/github-action@v3
         with:
           working-directory: backend
           start: npm start
           
 
       - name: Cypress E2E
-        uses: cypress-io/github-action@v6
+        uses: cypress-io/github-action@v3
         with:
           browser: chrome
           start: npm run cypress:run
