@@ -6,16 +6,13 @@ on: [push]
 jobs:
   install:
     runs-on: ubuntu-latest
-        
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-       
-      - name: Start & Test backend
-        uses: stefanoeb/jest-action@1.0.3
-        with:
-          working-directory: backend
-          start: npm install && npm run test
+    - uses: actions/checkout@v1
+    - name: Run Jest
+      uses: stefanoeb/jest-action@1.0.3
+      with:
+        jestArgs: backend/todo.test.js
       
     services:
       mongodb:
