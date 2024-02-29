@@ -4,11 +4,8 @@ on: [push]
   
 
 jobs:
-  test:
+  install:
     runs-on: ubuntu-latest
-    container:
-      image: cypress/included:13.6.6
-      options: --user 1001
         
     steps:
       - name: Checkout
@@ -22,8 +19,8 @@ jobs:
 
       - name: Cypress run
         uses: cypress-io/github-action@v3
-        with: 
-          working-directory: todo
+        with:
+          browser: chrome
           start: npm run cypress:run
       
     services:
