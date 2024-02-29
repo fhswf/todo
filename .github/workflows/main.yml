@@ -13,10 +13,12 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Start Server
-        uses: actions/checkout@v2
-        with: 
-          working.directory: backend
-          start: npm run start
+        uses: cypress-io/github-action@v6
+        with:
+          working-directory: backend
+          build: npm run build
+          start: npm start
+          wait-on: 'http://localhost:3000'
           
 
       - name: Cypress E2E
