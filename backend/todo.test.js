@@ -8,6 +8,7 @@ beforeAll(async () => {
      token = await getKeycloakToken();
 });
 
+
 describe('GET /todos (unautorisiert)', () => {
     it('sollte einen 401-Fehler zurückgeben, wenn kein Token bereitgestellt wird', async () => {
         const response = await request(app).get('/todos'); // Kein Authorization-Header
@@ -51,6 +52,18 @@ describe('POST /todos', () => {
             "status": 0,
         };
 
+        const response = await request(app)
+            .post('/todos')
+            .set('Authorization', `Bearer ${token}`)
+            .send(newTodo);
+
+        expect(response.statusCode).toBe(400);
+        expect(response.body.error).toBe('Bad Request');
+    });
+    it('sollte einen 400-Fehler zurückgeben, wenn kein Todo übergeben wird', async () => {
+        const newTodo = {
+            
+        };
         const response = await request(app)
             .post('/todos')
             .set('Authorization', `Bearer ${token}`)
@@ -141,6 +154,16 @@ describe('PUT /todos/:id', () => {
 
         expect(updateResponse.statusCode).toBe(200);
         expect(updateResponse.body.status).toBe(updatedTodo.status);
+    });
+    it('sollte einen 400-Fehler zurückgeben, wenn das Todo nicht gefunden wurde', async () => {
+        const id = '123456789012345678901234';
+
+        const getResponse = await request(app)
+            .put(`/todos/${id}`)
+            .set('Authorization', `Bearer ${token}`);
+
+        expect(getResponse.statusCode).toBe(400);
+       //expect(getResponse.body.error).toMatch(/id in body does not match id in path/);
     });
 });
 
