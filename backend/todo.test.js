@@ -162,8 +162,7 @@ describe('PUT /todos/:id', () => {
             .put(`/todos/${id}`)
             .set('Authorization', `Bearer ${token}`);
 
-        expect(getResponse.statusCode).toBe(400);
-       //expect(getResponse.body.error).toMatch(/id in body does not match id in path/);
+        expect(getResponse.statusCode).toBe(400);       
     });
 });
 
