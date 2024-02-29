@@ -41,8 +41,7 @@ jobs:
 
     - name: Start Express.js server
       run: |
-        cd server
-        npm install
+        cd backend
         npm start &
         sleep 5 # Give time for the server to start
 
