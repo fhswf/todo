@@ -8,16 +8,17 @@ on:
     branches:
       - main
 
-services:
-  mongodb:
-    image: mongo:4.4
-    ports:
-      - 27017:27017
-    options: --name mongodb
-
 jobs:
   test:
     runs-on: ubuntu-latest
+
+    services:
+      mongodb:
+        image: mongo:4.4
+        ports:
+          - 27017:27017
+        options: --name mongodb
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -27,29 +28,31 @@ jobs:
       with:
         node-version: 18
 
-    - name: Install backend dependencies
+    - name: Install project dependencies
       run: npm install
       working-directory: ./backend
 
-    - name: Run backend tests
+    - name: Run tests
       run: npm run test
       working-directory: ./backend
 
-  cypress-run:
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+    - name: Install dependencies
+      run: npm install
 
-      - name: Install dependencies
-        run: npm install
+    - name: Start Express.js server
+      run: |
+        cd server
+        npm install
+        npm start &
+        sleep 5 # Give time for the server to start
 
-      - name: Start Express.js server
-        run: npm start &
-        background: true
+    - name: Run Cypress tests
+      uses: cypress-io/github-action@v2
+      with:
+        browser: chrome
+        start: npm start # Command to start the server
+        wait-on: 'http://localhost:3000' # Wait for server to be available
+      env:
+        CYPRESS_BASE_URL: http://localhost:3000
 
-      - name: Wait for server to start
-        run: sleep 10
-
-      - name: Run Cypress tests
-        uses: cypress-io/github-action@v6
+    
