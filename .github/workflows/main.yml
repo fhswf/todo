@@ -17,7 +17,7 @@ jobs:
         with:
           working-directory: backend
           start: npm start
-          wait-on: "http://localhost:3000"
+          wait-on: "http://localhost:3000/todo.html"
 
       - name: Cypress run
         run: npm run cypress:run
