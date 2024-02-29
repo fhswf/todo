@@ -30,34 +30,47 @@ Auch die Integration von SonarQube erwies sich schwieriger als erwartet. Ursprü
 Sowohl die automatisierten Tests als auch die SonarQube-Analyse werden bei jedem Commit und Pull-Request durchgeführt. Die Ergebnisse fallen äußerst positiv aus. Insgesamt laufen alle 13 Tests erfolgreich durch. Folgend ist ein Beispiel eines automatisierten Durchlaufs der Tests:
 
 GET /todos (unautorisiert)
+
 ✓ sollte einen 401-Fehler zurückgeben, wenn kein Token bereitgestellt wird (12 ms)
 
 POST /todos (unautorisiert)
+
 ✓ sollte einen 401-Fehler zurückgeben, wenn kein Token bereitgestellt wird (11 ms)
   
 PUT /todos/:id (unautorisiert)
+
 ✓ sollte einen 401-Fehler zurückgeben, wenn ein fehlerhaftes Token bereitgestellt wird (24 ms)
 
 DELETE /todos/:id (unauthorisiert)
+
 ✓ sollte einen 401-Fehler zurückgeben, wenn kein Token bereitgestellt wird (3 ms)
   
 GET /todos
+
 ✓ sollte alle Todos abrufen (5 ms)
 
 GET /todos/:id
+
 ✓ sollte ein Todo abrufen (8 ms)
+
 ✓ sollte einen 404-Fehler zurückgeben, wenn das Todo nicht gefunden wurde (3 ms)
   
 POST /todos
+
 ✓ sollte ein neues Todo erstellen (4 ms)
+
 ✓ sollte einen 400-Fehler zurückgeben, wenn das Todo unvollständig ist (4 ms)
   
 PUT /todos/:id
+
 ✓ sollte ein Todo aktualisieren (8 ms)
+
 ✓ sollte einen 400-Fehler zurückgeben, falls das Todo unvollständig ist (6 ms)
+
 ✓ sollte einen 400-Fehler zurückgeben, wenn das Todo ungültig ist (6 ms)
 
 DELETE /todos/:id
+
 ✓ sollte ein Todo löschen (10 ms)
 
 Auch die SonarQube-Analyse hat positive Ergebnisse mit sich gebracht. Finden lässt sich diese unter folgendem Link:
