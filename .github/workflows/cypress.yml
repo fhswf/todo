@@ -21,10 +21,10 @@ jobs:
 
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Setup Node.js
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v4
       with:
         node-version: '18' 
 
@@ -37,7 +37,7 @@ jobs:
         CI: true
 
     - name: Run Cypress Tests
-      uses: cypress-io/github-action@v2
+      uses: cypress-io/github-action@v4
       with:
         start: npm start
         wait-on: 'http://localhost:3000' 
