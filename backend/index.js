@@ -1,6 +1,5 @@
 import express from 'express';
 import DB from './db.js'
-import cors from 'cors';
 
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
@@ -95,7 +94,7 @@ const swaggerOptions = {
 /** Zentrales Objekt für unsere Express-Applikation */
 const app = express();
 app.disable("x-powered-by"); // Sicherheitsmaßnahme https://hopper.fh-swf.de/sonarqube/security_hotspots?id=TODon-t-try-this-at-home-kids-&hotspots=AYu9_EGRGhkFKGC0cK2a
-app.use(cors());
+
 app.use(cookieParser())
 app.use(express.static('../frontend'));
 app.use(express.json());
