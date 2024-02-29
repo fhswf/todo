@@ -17,7 +17,7 @@ Nach Erstellung dieser Liste der Testfälle, erfolgte die anschließende Umsetzu
 - Konzeptionelle Erstellung einer Auflistung für Testfälle
 - Umwandlung der konzeptionellen Auflistung der Testfälle zu Code, inklusive Überarbeitung und Reparatur der bereits bestehenden Testfälle
 - Einrichtung einer GitHub-Action zur automatischen Durchführung der Testfälle
-- Erstellung eines SonarQube Accounts für die anschließende Integration des SonarQube
+- Anlegen eines SonarQube Projektes für die anschließende Integration in eine GitHub-Action
 - Auswertung der Ergebnisse
 - Erstellung der Dokumentation
 
