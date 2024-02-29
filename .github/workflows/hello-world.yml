@@ -1,8 +1,15 @@
 name: hello-world
-on: push
+on:
+  push:
+    branches: [main]
 jobs:
   my-job:
     runs-on: ubuntu-latest
     steps:
       - name: my-step
         run: echo "Hello World!"
+    services:
+      mongodb:
+        image: mongo:4.4
+        ports:
+          - 27017:27017       
