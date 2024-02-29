@@ -53,6 +53,3 @@ jobs:
 
       - name: Run Cypress tests
         uses: cypress-io/github-action@v6
-        run: npm run cypress:run
-        env:
-          CYPRESS_baseUrl: http://localhost:3000
