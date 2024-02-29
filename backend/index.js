@@ -4,9 +4,8 @@ import DB from './db.js'
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 
-import { check, validationResult } from 'express-validator';
+import { check, checkExact, validationResult } from 'express-validator';
 import cookieParser from 'cookie-parser';
-import { getRandomValues } from 'crypto';
 
 const PORT = process.env.PORT || 3000;
 
@@ -74,9 +73,10 @@ const swaggerOptions = {
 
 /** Zentrales Objekt für unsere Express-Applikation */
 const app = express();
+app.disable("x-powered-by");
 
 app.use(cookieParser())
-app.use(express.static('../frontend'));
+app.use('/', express.static('../frontend', {index: 'todo.html'}));
 app.use(express.json());
 
 /** Middleware für Swagger */
@@ -94,21 +94,46 @@ async function initDB() {
     console.log("Connected to database");
 }
 
-
 const todoValidationRules = [
+    check('_id')
+        .optional(),
     check('title')
         .notEmpty()
         .withMessage('Titel darf nicht leer sein')
         .isLength({ min: 3 })
         .withMessage('Titel muss mindestens 3 Zeichen lang sein'),
+    check('due')
+        .notEmpty()
+        .withMessage('Fälligkeitsdatum darf nicht leer sein')
+        .isISO8601()
+        .withMessage('Fälligkeitsdatum muss ein ISO8601-Datum sein'),
+    check('status')
+        .notEmpty()
+        .withMessage('Status darf nicht leer sein')
+        .isInt({ min: 0, max: 2 })
+        .withMessage('Status muss 0, 1 oder 2 sein'),
+    checkExact([], { locations: ['body'] }),
 ];
 
+const validateTodo = (req, res, next) => {
+    const errors = validationResult(req);
+    if (errors.isEmpty()) {
+        return next();
+    }
+    return res.status(400).json({
+        error: "Bad Request",
+        errors: errors.array()
+    });
+}
 
 /** Middleware for authentication. 
  * This middleware could be used to implement JWT-based authentication. Currently, this is only a stub.
 */
 let authenticate = (req, res, next) => {
     // Dummy authentication
+    // if (!req.headers.authorization) {
+    //     return res.status(401).json({ error: 'Unauthorized' });
+    // }
     next();
 }
 
@@ -221,13 +246,13 @@ app.get('/todos/:id', authenticate,
  *    '500':
  *      description: Serverfehler
  */
-app.put('/todos/:id', authenticate,
+app.put('/todos/:id', authenticate, todoValidationRules, validateTodo,
     async (req, res) => {
         let id = req.params.id;
         let todo = req.body;
         if (todo._id !== id) {
             console.log("id in body does not match id in path: %s != %s", todo._id, id);
-            res.sendStatus(400, "{ message: id in body does not match id in path}");
+            res.sendStatus(400, { error: "id in body does not match id in path"});
             return;
         }
         return db.update(id, todo)
@@ -269,13 +294,13 @@ app.put('/todos/:id', authenticate,
  *     '500':
  *       description: Serverfehler
  */
-app.post('/todos', authenticate,
+app.post('/todos', authenticate, todoValidationRules, validateTodo,
     async (req, res) => {
         let todo = req.body;
-        if (!todo) {
-            res.sendStatus(400, { message: "Todo fehlt" });
-            return;
-        }
+        // if (!todo) {
+        //     res.sendStatus(400, { message: "Todo fehlt" });
+        //     return;
+        // }
         return db.insert(todo)
             .then(todo => {
                 res.status(201).send(todo);

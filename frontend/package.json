@@ -1,0 +1,10 @@
+{
+  "name": "frontend-tests",
+  "description": "Cypress Frontend-Tests.",
+  "devDependencies": {
+    "cypress": "^13.6.6"
+  },
+  "dependencies": {
+    "uuid": "^9.0.1"
+  }
+}
