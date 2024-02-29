@@ -8,11 +8,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
-    - name: Run Jest
-      uses: stefanoeb/jest-action@1.0.3
-      with:
-        jestArgs: backend/todo.test.js
+      - name: Checkout
+        uses: actions/checkout@v2
+       
+      - name: Start & Test backend 
+        run: |
+          cd backend &&
+          npm install &&
+          npm run test &
+          sleep 5 
       
     services:
       mongodb:
