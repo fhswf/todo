@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { app, server, db, validate } from './index';
+import { app, server, db } from './index';
 import getKeycloakToken from './utils';
 
 let token; // Speichert den abgerufenen JWT-Token
