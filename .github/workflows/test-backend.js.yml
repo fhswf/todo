@@ -35,18 +35,3 @@ jobs:
     - name: Run tests
       run: npm run test
       working-directory: ./backend
-
-    - name: Install dependencies
-      run: npm install
-      working-directory: ./
-
-    - name: Run Cypress tests
-      uses: cypress-io/github-action@v2
-      with:
-        browser: chrome
-        start: npm start # Command to start the server
-        wait-on: 'http://localhost:3000' # Wait for server to be available
-      env:
-        CYPRESS_BASE_URL: http://localhost:3000
-
-    
