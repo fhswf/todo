@@ -13,18 +13,14 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Start Server
-        uses: actions/checkout@v2
+        uses: cypress-io/github-action@v3
         with:
           working-directory: backend
           start: npm start
           wait-on: "http://localhost:3000"
-          
 
-      - name: Cypress E2E
-        uses: cypress-io/github-action@v3
-        with:
-          browser: chrome
-          start: npm run cypress:run
+      - name: Cypress run
+        run: npm run cypress:run
           
           
       - run: echo "PR number is $CYPRESS_PULL_REQUEST_ID"
