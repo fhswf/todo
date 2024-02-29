@@ -8,6 +8,7 @@ beforeAll(async () => {
     token = await getKeycloakToken();
 });
 
+//Aufruf ohne Token
 describe('GET /todos (unautorisiert)', () => {
     it('sollte einen 401-Fehler zurückgeben, wenn kein Token bereitgestellt wird', async () => {
         const response = await request(app).get('/todos');//Ohne Token
@@ -88,9 +89,6 @@ describe('DELETE /todos/:id (unauthorisiert)', () => {
 });
 
 
-
-
-
 describe('GET /todos', () => {
     it('sollte alle Todos abrufen', async () => {
         const response = await request(app)
@@ -99,6 +97,38 @@ describe('GET /todos', () => {
 
         expect(response.statusCode).toBe(200);
         expect(Array.isArray(response.body)).toBeTruthy();
+    });
+});
+
+describe('GET /todos/:id', () => {
+    it('sollte ein Todo abrufen', async () => {
+        const newTodo = {
+            "title": "Übung 4 machen",
+            "due": "2022-11-12T00:00:00.000Z",
+            "status": 0
+        };
+        const response = await request(app)
+            .post('/todos')
+            .set('Authorization', `Bearer ${token}`)
+            .send(newTodo);
+        const id = response.body._id;
+        const getResponse = await request(app)
+            .get(`/todos/${id}`)
+            .set('Authorization', `Bearer ${token}`);
+
+        expect(getResponse.statusCode).toBe(200);
+        expect(getResponse.body.title).toBe(newTodo.title);
+        expect(getResponse.body.due).toBe(newTodo.due);
+    });
+
+    it('sollte einen 404-Fehler zurückgeben, wenn das Todo nicht gefunden wurde', async () => {
+        const id = '123456789012345678901234';
+        const getResponse = await request(app)
+            .get(`/todos/${id}`)
+            .set('Authorization', `Bearer ${token}`);
+
+        expect(getResponse.statusCode).toBe(404);
+        expect(getResponse.body.error).toMatch(/Todo with id .+ not found/);
     });
 });
 
@@ -133,38 +163,6 @@ describe('POST /todos', () => {
         expect(response.body.error).toBe('Bad Request');
     });
 }); 
-
-describe('GET /todos/:id', () => {
-    it('sollte ein Todo abrufen', async () => {
-        const newTodo = {
-            "title": "Übung 4 machen",
-            "due": "2022-11-12T00:00:00.000Z",
-            "status": 0
-        };
-        const response = await request(app)
-            .post('/todos')
-            .set('Authorization', `Bearer ${token}`)
-            .send(newTodo);
-        const id = response.body._id;
-        const getResponse = await request(app)
-            .get(`/todos/${id}`)
-            .set('Authorization', `Bearer ${token}`);
-
-        expect(getResponse.statusCode).toBe(200);
-        expect(getResponse.body.title).toBe(newTodo.title);
-        expect(getResponse.body.due).toBe(newTodo.due);
-    });
-
-    it('sollte einen 404-Fehler zurückgeben, wenn das Todo nicht gefunden wurde', async () => {
-        const id = '123456789012345678901234';
-        const getResponse = await request(app)
-            .get(`/todos/${id}`)
-            .set('Authorization', `Bearer ${token}`);
-
-        expect(getResponse.statusCode).toBe(404);
-        expect(getResponse.body.error).toMatch(/Todo with id .+ not found/);
-    });
-});
 
 describe('PUT /todos/:id', () => {
     it('sollte ein Todo aktualisieren', async () => {
