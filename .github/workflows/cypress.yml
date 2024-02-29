@@ -19,17 +19,6 @@ jobs:
           - 27017:27017
         options: --name mongodb
 
-      app:
-        image: node:20-bullseye-slim
-        ports: 
-          - 3000:3000
-        steps:
-          - name: Install Dependencies
-            run: npm install
-            working-directory: ./backend
-          - name: Start Application
-            run: npm run serve
-
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
