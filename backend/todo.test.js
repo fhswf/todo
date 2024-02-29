@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { app, server, db } from './index';
+import { app, server, db, validate } from './index';
 import getKeycloakToken from './utils';
 
 let token; // Speichert den abgerufenen JWT-Token
@@ -7,7 +7,6 @@ let token; // Speichert den abgerufenen JWT-Token
 beforeAll(async () => {
      token = await getKeycloakToken();
 });
-
 
 describe('GET /todos (unautorisiert)', () => {
     it('sollte einen 401-Fehler zurückgeben, wenn kein Token bereitgestellt wird', async () => {
