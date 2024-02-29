@@ -1,9 +1,9 @@
 # ToDo-Anwendung
 
 ## Gruppenmitglieder
-- Roman Knjaskow
-- Mike Görzen
-- Florian Hees
+- Roman Knjaskow 30177871
+- Mike Görzen 30177107
+- Florian Hees 30161342
 
 # Dokumentation
 
