@@ -4,8 +4,17 @@ on: [push]
   
 
 jobs:
-  install:
+  test:
     runs-on: ubuntu-latest
+    container:
+      image: cypress/included:13.6.6
+      options: --user 1001
+    strategy:
+      matrix:
+        # Run the steps below with the following versions of Node.js
+        node-version: [18.x]
+
+        
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -15,7 +24,7 @@ jobs:
         with:
           working-directory: backend
           start: npm start
-          wait-on: "http://localhost:3000/todo.html"
+          
 
       - name: Cypress run
         run: npm run cypress:run
