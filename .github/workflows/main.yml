@@ -15,10 +15,9 @@ jobs:
         run: |
           cd backend &&
           npm install &&
+          npm run test &&
           npm run start &
-          sleep 5 &&
-          npm run test
-          
+          sleep 5 
 
       - name: Cypress Frontend Tests
         uses: cypress-io/github-action@v3
