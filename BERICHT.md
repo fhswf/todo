@@ -1,9 +1,9 @@
 # ToDo-Anwendung
 
 ## Gruppenmitglieder
-- Roman Knjaskow
-- Mike Görzen
-- Florian Hees
+- Roman Knjaskow 30177871
+- Mike Görzen 30177107
+- Florian Hees 30161342
 
 # Dokumentation
 
@@ -54,4 +54,3 @@ Sowohl die automatisierten Tests als auch die SonarQube-Analyse werden bei jedem
 
 Auch die SonarQube-Analyse hat positive Ergebnisse mit sich gebracht. Finden lässt sich diese unter folgendem Link:
 https://hopper.fh-swf.de/sonarqube/dashboard?id=fhswf_todo_roflmi_AY3xGLRYWNlYFiIpzZUr
-
