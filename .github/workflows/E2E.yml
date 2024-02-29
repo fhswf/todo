@@ -1,0 +1,36 @@
+name: E2E on Chrome und Electron
+
+on: [push]
+  
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+        
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+       
+      - name: Start & Test backend 
+        run: |
+          cd backend &&
+          npm install &&
+          npm run start &
+          sleep 5 
+
+      - name: Cypress Frontend Tests
+        uses: cypress-io/github-action@v3
+        with:
+          browser: chrome
+          start: npm run cypress:run
+          
+      - run: echo "PR number is $CYPRESS_PULL_REQUEST_ID"
+      - run: echo "PR URL is $CYPRESS_PULL_REQUEST_URL"
+      
+    services:
+      mongodb:
+        image: mongo:4.4
+        ports:
+          - 27017:27017        
+        
+        
