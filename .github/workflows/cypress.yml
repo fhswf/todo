@@ -31,6 +31,10 @@ jobs:
     - name: Install cypress Dependencies
       run: npm ci
 
+    - name: Install backend Dependencies
+      run: npm ci
+      working-directory: ./backend
+
     - name: Run Cypress Tests
       uses: cypress-io/github-action@v6
       with:
