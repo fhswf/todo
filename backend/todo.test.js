@@ -189,7 +189,7 @@ describe('PUT /todos/:id', () => {
         expect(updateResponse.statusCode).toBe(200);
         expect(updateResponse.body.status).toBe(updatedTodo.status);
     });
-    it('sollte den Fehler 400 zurückgeben, falls das Todo unvollständig ist', async () => {
+    it('sollte einen 400-Fehler zurückgeben, falls das Todo unvollständig ist', async () => {
         const newTodo = {
             "title": "Übung 4 machen",
             "due": "2022-11-12T00:00:00.000Z",
