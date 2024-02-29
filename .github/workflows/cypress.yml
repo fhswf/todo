@@ -38,6 +38,6 @@ jobs:
     - name: Run Cypress Tests
       uses: cypress-io/github-action@v6
       with:
-        start: node index.js
+        start: cd ./backend && node index.js
         wait-on: 'http://localhost:3000' 
         wait-on-timeout: 60
