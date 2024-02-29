@@ -1,0 +1,25 @@
+name: Test Backend
+
+on: [push]
+  
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+        
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+       
+      - name: Start & Test backend 
+        run: |
+          cd backend &&
+          npm install &&
+          npm run test &
+          sleep 5
+      
+    services:
+      mongodb:
+        image: mongo:4.4
+        ports:
+          - 27017:27017       
