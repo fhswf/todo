@@ -15,7 +15,7 @@ jobs:
       - name: Start Server
         uses: cypress-io/github-action@v3
         with: 
-          run: npm run start
+          start: npm run start
           working.directory: backend
 
       - name: Cypress E2E
