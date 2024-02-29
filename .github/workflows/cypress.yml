@@ -28,11 +28,16 @@ jobs:
       with:
         node-version: '18' 
 
+    - name: Install cypress Dependencies
+      run: npm install
+
     - name: Install Dependencies
       run: npm install
+      working-directory: ./backend
 
     - name: Start Express.js server
       run: npm start &
+      working-directory: ./backend
       env:
         CI: true
 

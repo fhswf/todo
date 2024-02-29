@@ -2,7 +2,7 @@
 
 let todos = [];
 const status = ["offen", "in Bearbeitung", "erledigt"];
-
+const LOGIN_URL="https://jupiter.fh-swf.de/keycloak/realms/webentwicklung/protocol/openid-connect/auth"
 const API = "/todos"
 
 function createTodoElement(todo) {
