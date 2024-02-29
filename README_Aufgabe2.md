@@ -27,4 +27,5 @@ Gruppe:
 - Unterschiede zwischen Dokumentation und der NPM-Version von `express-validator`. Dies konnte durch ein Update auf 7.0.0 behoben werden. `checkExact` und `checkSchema` waren bei der Implementierung sehr hilfreich.
 - Einrichtung der Actions: Hierbei hatten wir anfangs Schwierigkeiten zu definieren wann genau diese ausgeführt werden. Durch etwas probieren und lesen der Dokumentation konnten wir dies jedoch lösen.
 - Erstellung und Einbindung des Coverage an Sonarqube. Hier war vorher nicht bewusst, dass der Coverage erst erstellt und dann übertragen werden muss. 
-- Cypress konnte nicht sinnvoll zum Testen genutzt werden, da die Authentifizierung im Frontend nicht funktioniert. 
+- Cypress konnte nicht sinnvoll zum Testen genutzt werden, da die Authentifizierung im Frontend nicht funktioniert.
+- Eine Pipeline-Integration von Cypress hatt nicht funktioniert, da die laufende Node-Anwendung für die Cypress-Instanz nicht erreichbar ist.  
