@@ -2,7 +2,8 @@
   "scripts": {
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
-    "start": "cd backend && npm run start"
+    "start": "cd backend && npm run start",
+    "serve": "cd backend && node index.js"
   },
   "devDependencies": {
     "cypress": "^13.6.6"
