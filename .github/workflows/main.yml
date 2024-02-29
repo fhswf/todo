@@ -1,6 +1,9 @@
 name: E2E on Chrome
 
-on: [push]
+on: 
+  pull_request:
+  push:
+    branches: [main]
 
 jobs:
   install:
@@ -14,7 +17,6 @@ jobs:
         with:
           browser: chrome
           start: npm start
-          working-directory: backend
           wait-on: "http://localhost:3000"
       - run: echo "PR number is $CYPRESS_PULL_REQUEST_ID"
       - run: echo "PR URL is $CYPRESS_PULL_REQUEST_URL"
