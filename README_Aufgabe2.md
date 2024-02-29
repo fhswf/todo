@@ -27,7 +27,7 @@ Die automatisierten Tests zu erstellen schien vorübergehend als Herausforderung
 Auch die Integration von SonarQube erwies sich schwieriger als erwartet. Ursprünglich erstellten wir SonarQube außerhalb des FH-Repositories, wodurch unser Repository dort nicht als Projekt angelegt werden konnte. Die Lösung dessen bestand darin, das Projekt auf die Organisation fhswf zu übertragen. Diese Änderung führte jedoch dazu, dass Secret und Variablen nicht mehr eingetragen werden konnten, was ein neues Problem bildete. Hierbei bestand die Lösung darin, das Original-Repository fhswf/todo zu forken und das fehlerhafte Repository in das neue zu mergen. Zusätzlich musste ein neues Projekt in SonarQube angelegt werden. Diese Schritte ermöglichten es, das Secret und die Variablen hinzuzufügen. Trotzalledem muss erwähnt werden, dass dieser Prozess das Hinzufügen des neuen Schlüssels in die sonar-project.properties-Datei erforderte, da der vorherige nun nicht mehr verwendbar war.
 
 ## Ergebnisse der automatisierten Tests und SonarQube-Analysen
-Die automatisierten Tests und SonarQube-Analyse wird bei jedem Commit und Pull-Request durchgeführt. Die Ergebnisse fallen äußerst positiv aus. Insgesamt laufen alle 13 Tests erfolgreich durch. Folgend ist ein Beispiel eines automatisierten Durchlaufs der Tests:
+Sowohl die automatisierten Tests als auch die SonarQube-Analyse werden bei jedem Commit und Pull-Request durchgeführt. Die Ergebnisse fallen äußerst positiv aus. Insgesamt laufen alle 13 Tests erfolgreich durch. Folgend ist ein Beispiel eines automatisierten Durchlaufs der Tests:
 
 GET /todos (unautorisiert)
   ✓ sollte einen 401-Fehler zurückgeben, wenn kein Token bereitgestellt wird (13 ms)
