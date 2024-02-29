@@ -40,10 +40,10 @@ jobs:
         node-version: '18' 
 
     - name: Install cypress Dependencies
-      run: npm install
+      run: npm ci
 
     - name: Run Cypress Tests
       uses: cypress-io/github-action@v6
       with:
-        wait-on: 'http://localhost:3000' # Adjust if your app runs on a different port
-        wait-on-timeout: 60 # seconds to wait for your server to start
+        start: npm run serve
+        wait-on: 'http://localhost:3000'
