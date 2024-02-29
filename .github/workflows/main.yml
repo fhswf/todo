@@ -1,0 +1,32 @@
+name: E2E on Chrome
+
+on: [push]
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Cypress E2E
+        uses: cypress-io/github-action@v3
+        with:
+          browser: chrome
+          start: npm start
+          working-directory: backend
+          wait-on: "http://localhost:3000"
+      - run: echo "PR number is $CYPRESS_PULL_REQUEST_ID"
+      - run: echo "PR URL is $CYPRESS_PULL_REQUEST_URL"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} # Generate a token on SonarQube, add it to the secrets of this repo with the name SONAR_TOKEN (Settings > Secrets > Actions > add new repository secret)
+          SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
+          SONAR_ROOT_CERT: ${{ vars.SONAR_ROOT_CERT }}
+    services:
+      mongodb:
+        image: mongo:4.4
+        ports:
+          - 27017:27017        
+        
+        
