@@ -252,7 +252,7 @@ app.put('/todos/:id', authenticate, todoValidationRules, validateTodo,
         let todo = req.body;
         if (todo._id !== id) {
             console.log("id in body does not match id in path: %s != %s", todo._id, id);
-            res.sendStatus(400, "{ message: id in body does not match id in path}");
+            res.sendStatus(400, { error: "id in body does not match id in path"});
             return;
         }
         return db.update(id, todo)
@@ -297,10 +297,10 @@ app.put('/todos/:id', authenticate, todoValidationRules, validateTodo,
 app.post('/todos', authenticate, todoValidationRules, validateTodo,
     async (req, res) => {
         let todo = req.body;
-        if (!todo) {
-            res.sendStatus(400, { message: "Todo fehlt" });
-            return;
-        }
+        // if (!todo) {
+        //     res.sendStatus(400, { message: "Todo fehlt" });
+        //     return;
+        // }
         return db.insert(todo)
             .then(todo => {
                 res.status(201).send(todo);
