@@ -35,15 +35,9 @@ jobs:
       run: npm install
       working-directory: ./backend
 
-    - name: Start Express.js server
-      run: npm start &
-      working-directory: ./backend
-      env:
-        CI: true
-
     - name: Run Cypress Tests
-      uses: cypress-io/github-action@v4
+      uses: cypress-io/github-action@v6
       with:
-        start: npm start
+        start: npm run start
         wait-on: 'http://localhost:3000' 
         wait-on-timeout: 60
