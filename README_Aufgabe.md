@@ -6,13 +6,13 @@ Konstantin Jasny
 
 ## Vorgehen
 1 - Erster Arbeitsschritt war das schreiben der Backend- und Cypress Tests
-    Gleichzeitig konnten vom anderen Gruppenmitglied die Github Actions für die Backend- und Cypress Test erstellet werden.
-    Der Test der Authentifizierung in Cypress musste auf einen späteren Zeitpunkt verschoben werden, da diese Funktion noch nicht implementiert war.
+        Gleichzeitig konnten vom anderen Gruppenmitglied die Github Actions für die Backend- und Cypress Test erstellet werden.
+        Der Test der Authentifizierung in Cypress musste auf einen späteren Zeitpunkt verschoben werden, da diese Funktion noch nicht implementiert war.
 
 2 - Auf Basis der Testergebnisse Behebung der einzenlen Fehler in der Web Anwendung
 
 2.1 - Anpassung der Authentizierung im Backend (Benötigt für weitere Test)
-    Zunächst Probleme mit der Überprüfung des Tokens. Nach einigem probieren konnten wir einen falschen Öffentlichen Schlüssel als Fehler identifzieren.
+        Zunächst Probleme mit der Überprüfung des Tokens. Nach einigem probieren konnten wir einen falschen Öffentlichen Schlüssel als Fehler identifzieren.
 
 2.2 - Anpassung der Validierung
         Die Überprüfung der Übergebenenen Daten musste angepasst werden um die benötigten Fehlermelduzng bei Fehlerhaften Eingaben zu erzeugen.
@@ -29,12 +29,13 @@ Konstantin Jasny
 
 3.1 - erstellen der Sonarqube Action
 
-3.2 - integration von Code Coverage mit Jest und Sonarqube
+3.2 - Integration von Code Coverage mit Jest und Sonarqube
 
 
-3.3 - integration von Code Coverage mit Cypress und Sonarqube
-Hier stellte sich eine Herausforderung, welche wir nicht lösen konnten. Da Cypress keine native Unterstüzung einer Codecoverage Analyse bietet, mussten entsprechende Plugins installiert werden.
-Wir fanden heraus das Istanbul und nyc sowie babel sich hierfür eigeneten. Allerdings gelang es uns nicht mittels nyc eine Code Analyse durchzuführen.
+3.3 - Integration von Code Coverage mit Cypress und Sonarqube
+        Hier stellte sich eine Herausforderung, welche wir nicht lösen konnten. Da Cypress keine native Unterstüzung einer Codecoverage Analyse bietet, mussten entsprechende Plugins installiert werden.
+        Wir fanden heraus das Istanbul, nyc sowie babel sich hierfür eigeneten. Allerdings gelang es uns nicht mittels nyc eine Code Analyse durchzuführen. Wir konnten lediglich die Analyse in Cypress verlinken und nach und vor einem Test die Coverage abrufen.
+        Allerdings schagen die Tests im Moment daher auch fehl da keine Coverage bestimmt werden kann.
 
 3.4 - Überarbeitung der Anwendung mit Ergebnissen von Sonarqube
 
