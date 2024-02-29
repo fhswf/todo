@@ -12,6 +12,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Start Server
+        with: 
+          run: npm run start
+          working.directory: backend
+
       - name: Cypress E2E
         uses: cypress-io/github-action@v3
         with:
