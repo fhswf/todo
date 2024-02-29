@@ -31,26 +31,34 @@ Sowohl die automatisierten Tests als auch die SonarQube-Analyse werden bei jedem
 
 GET /todos (unautorisiert)
   ✓ sollte einen 401-Fehler zurückgeben, wenn kein Token bereitgestellt wird (13 ms)
+  
 POST /todos (unautorisiert)
   ✓ sollte einen 401-Fehler zurückgeben, wenn kein Token bereitgestellt wird (10 ms)
+  
 PUT /todos/:id (unautorisiert)
   ✓ sollte einen 401-Fehler zurückgeben, wenn ein fehlerhaftes Token bereitgestellt wird (30 ms)
+  
 DELETE /todos/:id (unauthorisiert)
   ✓ sollte einen 401-Fehler zurückgeben, wenn kein Token bereitgestellt wird (4 ms)
+  
 GET /todos
   ✓ sollte alle Todos abrufen (5 ms)
+  
 POST /todos
   ✓ sollte ein neues Todo erstellen (5 ms)
   ✓ sollte einen 400-Fehler zurückgeben, wenn das Todo unvollständig ist (3 ms)
+  
 GET /todos/:id
   ✓ sollte ein Todo abrufen (7 ms)
   ✓ sollte einen 404-Fehler zurückgeben, wenn das Todo nicht gefunden wurde (3 ms)
+  
 PUT /todos/:id
   ✓ sollte ein Todo aktualisieren (8 ms)
   ✓ sollte den Fehler 400 zurückgeben, falls das Todo unvollständig ist (6 ms)
   ✓ sollte einen 400-Fehler zurückgeben, wenn das Todo ungültig ist (6 ms)
+  
 DELETE /todos/:id
   ✓ sollte ein Todo löschen (10 ms)
 
-  Auch die SonarQube-Analyse hat positive Ergebnisse mit sich gebracht. Finden lässt sich diese unter folgendem Link:
-  https://hopper.fh-swf.de/sonarqube/dashboard?id=fhswf_todo_roflmi_AY3xGLRYWNlYFiIpzZUr
+Auch die SonarQube-Analyse hat positive Ergebnisse mit sich gebracht. Finden lässt sich diese unter folgendem Link:
+https://hopper.fh-swf.de/sonarqube/dashboard?id=fhswf_todo_roflmi_AY3xGLRYWNlYFiIpzZUr
