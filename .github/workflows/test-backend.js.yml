@@ -28,12 +28,20 @@ jobs:
       with:
         node-version: 18
 
-    - name: Install project dependencies
+    - name: Install backend dependencies
       run: npm install
       working-directory: ./backend
 
-    - name: Run tests
+    - name: Run backend tests
       run: npm run test
       working-directory: ./backend
+
+    - name: Install project dependencies
+      run: npm install
+      working-directory: ./
+
+    - name: Run project tests
+      run: npm run cypress:run
+      working-directory: ./
 
       
