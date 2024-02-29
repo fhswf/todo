@@ -24,6 +24,9 @@ jobs:
         with:
           browser: chrome
           start: npm run cypress:run
+          
+      - run: echo "PR number is $CYPRESS_PULL_REQUEST_ID"
+      - run: echo "PR URL is $CYPRESS_PULL_REQUEST_URL"
       
     services:
       mongodb:
