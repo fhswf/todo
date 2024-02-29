@@ -19,3 +19,8 @@ jobs:
     - run: npm test
       env:
         CI: true
+    services:
+      mongodb:
+        image: mongo:4.4
+        ports:
+          - 27017:27017
