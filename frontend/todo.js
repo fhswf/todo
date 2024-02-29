@@ -4,6 +4,7 @@ let todos = [];
 const status = ["offen", "in Bearbeitung", "erledigt"];
 
 const API = "/todos"
+LOGIN_URL="https://jupiter.fh-swf.de/keycloak/realms/webentwicklung/protocol/openid-connect/auth"
 
 function createTodoElement(todo) {
     let list = document.getElementById("todo-list");
@@ -25,7 +26,7 @@ function createTodoElement(todo) {
 function showTodos() {
     let todoList = document.getElementById("todo-list");
 
-    // Clear the todo list
+    // Clear the todo list!
     todoList.innerHTML = "";
 
     // Add all todos to the list
@@ -201,12 +202,11 @@ function checkLogin(response) {
             ?.split("=")[1]
         console.log("state: %s", state)
         let params = new URLSearchParams()
-        params.append("response_type", "code")
-        params.append("redirect_uri", new URL("/oauth_callback", window.location))
         params.append("client_id", "todo-backend")
+        params.append("redirect_uri", new URL("/oauth_callback", window.location))
+        params.append("response_type", "code")        
         params.append("scope", "openid")
         params.append("state", state)
-
         // redirect to login URL with proper parameters
         window.location = LOGIN_URL + "?" + params.toString()
         throw ("Need to log in")

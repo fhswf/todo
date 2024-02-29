@@ -36,7 +36,15 @@ export default class DB {
      * @returns {Promise} - Promise with todo
      */
     queryById(id) {
-        let _id = new ObjectId(id);
+        let _id;
+        try{
+            _id = new ObjectId(id);
+        }   
+        catch{
+            return collection.findOne({ _id });
+        }
+
+
         return collection.findOne({ _id });
     }
 
@@ -45,7 +53,14 @@ export default class DB {
      * @returns {Promise} - Promise with updated todo
      */
     update(id, todo) {
-        let _id = new ObjectId(id);
+        let _id;
+        try{
+            _id = new ObjectId(id);
+        }   
+        catch{
+            return collection.findOne({ _id });
+        }
+        
         if (typeof todo._id === 'string') {
             todo._id = _id;
         }
@@ -71,7 +86,14 @@ export default class DB {
      * @returns {Promise} - Promise with deleted todo
      */
     delete(id) {
-        let _id = new ObjectId(id);
+        let _id;
+        try{
+            _id = new ObjectId(id);
+        }   
+        catch{
+            return collection.findOne({ _id });
+        }
+        
         return collection.findOneAndDelete({ _id })
             .then(result => {
                 if (result.ok) {
