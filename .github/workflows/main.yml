@@ -1,9 +1,7 @@
 name: E2E on Chrome
 
-on: 
-  pull_request:
-  push:
-    branches: [github-actions-cypress-tests]
+on: [push]
+  
 
 jobs:
   install:
