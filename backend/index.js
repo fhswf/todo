@@ -4,14 +4,33 @@ import DB from './db.js'
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 
-import { check, validationResult } from 'express-validator';
+import { check, validationResult, checkSchema, checkExact } from 'express-validator';
 import cookieParser from 'cookie-parser';
-import { getRandomValues } from 'crypto';
+import authenticate from './jwtMiddleware.js';
 
 const PORT = process.env.PORT || 3000;
 
-const TOKEN_URL = "https://jupiter.fh-swf.de/keycloak/realms/webentwicklung/protocol/openid-connect/token"
+const validate = (req, res, next) => {
+    const errors = validationResult(req);
+    if (errors.isEmpty()) {
+        return next();
+    }
+    return res.status(400).json({
+        error: "Bad Request",
+        errors: errors.array()
+    });
+}
 
+const checkSwaggerSchema = (swaggerSchema) => {
+    const validatorSchema = {}
+    for(const [key] of Object.entries(swaggerSchema.properties)) {
+        if(key === "_id") continue;
+        const rule = {exists: true}
+        validatorSchema[key] = rule;
+    }
+    
+    return checkExact(checkSchema(validatorSchema))
+}
 
 const swaggerOptions = {
     swaggerDefinition: {
@@ -74,6 +93,7 @@ const swaggerOptions = {
 
 /** Zentrales Objekt für unsere Express-Applikation */
 const app = express();
+app.disable("x-powered-by"); // Sicherheitsmaßnahme https://hopper.fh-swf.de/sonarqube/security_hotspots?id=TODon-t-try-this-at-home-kids-&hotspots=AYu9_EGRGhkFKGC0cK2a
 
 app.use(cookieParser())
 app.use(express.static('../frontend'));
@@ -82,8 +102,6 @@ app.use(express.json());
 /** Middleware für Swagger */
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
-
-
 
 /** global instance of our database */
 let db = new DB();
@@ -101,17 +119,8 @@ const todoValidationRules = [
         .withMessage('Titel darf nicht leer sein')
         .isLength({ min: 3 })
         .withMessage('Titel muss mindestens 3 Zeichen lang sein'),
+        checkSwaggerSchema(swaggerOptions.swaggerDefinition.components.schemas.Todo)
 ];
-
-
-/** Middleware for authentication. 
- * This middleware could be used to implement JWT-based authentication. Currently, this is only a stub.
-*/
-let authenticate = (req, res, next) => {
-    // Dummy authentication
-    next();
-}
-
 
 /** Return all todos. 
  *  Be aware that the db methods return promises, so we need to use either `await` or `then` here! 
@@ -269,9 +278,10 @@ app.put('/todos/:id', authenticate,
  *     '500':
  *       description: Serverfehler
  */
-app.post('/todos', authenticate,
+app.post('/todos', authenticate, todoValidationRules, validate,
     async (req, res) => {
         let todo = req.body;
+                
         if (!todo) {
             res.sendStatus(400, { message: "Todo fehlt" });
             return;

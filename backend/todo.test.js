@@ -5,7 +5,7 @@ import getKeycloakToken from './utils';
 let token; // Speichert den abgerufenen JWT-Token
 
 beforeAll(async () => {
-    token = await getKeycloakToken();
+     token = await getKeycloakToken();
 });
 
 describe('GET /todos (unautorisiert)', () => {
@@ -44,13 +44,39 @@ describe('POST /todos', () => {
         expect(response.body.title).toBe(newTodo.title);
         expect(response.body.due).toBe(newTodo.due);
     });
+    it('sollte einen 400-Fehler zurückgeben wenn Titel zu kurz ist', async () => {
+        const newTodo = {
+            "title": "Üb",
+            "due": "2022-11-12T00:00:00.000Z",
+            "status": 0
+        };
 
+        const response = await request(app)
+            .post('/todos')
+            .set('Authorization', `Bearer ${token}`)
+            .send(newTodo);
+        expect(response.statusCode).toBe(400);
+        expect(response.body.error).toBe('Bad Request');
+    });
     it('sollte einen 400-Fehler zurückgeben, wenn das Todo unvollständig ist', async () => {
         const newTodo = {
             "due": "2022-11-12T00:00:00.000Z",
             "status": 0,
         };
 
+        const response = await request(app)
+            .post('/todos')
+            .set('Authorization', `Bearer ${token}`)
+            .send(newTodo);
+
+        expect(response.statusCode).toBe(400);
+        expect(response.body.error).toBe('Bad Request');
+    });
+    
+    it('sollte einen 400-Fehler zurückgeben, wenn leeres Todo übergeben wird', async () => {
+        const newTodo = {
+            
+        };
         const response = await request(app)
             .post('/todos')
             .set('Authorization', `Bearer ${token}`)
@@ -76,7 +102,7 @@ describe('POST /todos', () => {
         expect(response.statusCode).toBe(400);
         expect(response.body.error).toBe('Bad Request');
     });
-}); 0
+});
 
 describe('GET /todos/:id', () => {
     it('sollte ein Todo abrufen', async () => {
@@ -141,6 +167,15 @@ describe('PUT /todos/:id', () => {
 
         expect(updateResponse.statusCode).toBe(200);
         expect(updateResponse.body.status).toBe(updatedTodo.status);
+    });
+    it('sollte einen 400-Fehler zurückgeben, wenn das Todo nicht gefunden wurde', async () => {
+        const id = '123456789012345678901234';
+
+        const getResponse = await request(app)
+            .put(`/todos/${id}`)
+            .set('Authorization', `Bearer ${token}`);
+
+        expect(getResponse.statusCode).toBe(400);       
     });
 });
 

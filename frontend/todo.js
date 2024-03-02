@@ -2,7 +2,7 @@
 
 let todos = [];
 const status = ["offen", "in Bearbeitung", "erledigt"];
-
+const LOGIN_URL="https://jupiter.fh-swf.de/keycloak/realms/webentwicklung/protocol/openid-connect/auth"
 const API = "/todos"
 
 function createTodoElement(todo) {
@@ -209,7 +209,7 @@ function checkLogin(response) {
 
         // redirect to login URL with proper parameters
         window.location = LOGIN_URL + "?" + params.toString()
-        throw ("Need to log in")
+        throw new Error("Need to log in")
     }
     else return response
 }
