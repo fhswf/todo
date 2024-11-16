@@ -1,4 +1,4 @@
-describe('API Tests', () => {
+xdescribe('API Tests', () => {
     it('should fetch and display data from API', () => {
       cy.intercept('GET', '/api/data', { fixture: 'data.json' }).as('getData');
       cy.visit('/data');

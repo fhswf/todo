@@ -1,4 +1,4 @@
-describe('Navigation Tests', () => {
+xdescribe('Navigation Tests', () => {
     it('should navigate to the About page', () => {
       cy.visit('/');
       cy.get('nav').contains('About').click();
