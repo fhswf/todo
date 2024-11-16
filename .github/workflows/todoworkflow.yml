@@ -46,4 +46,13 @@ jobs:
         run: |
           cd frontend
           npm test
-  
+          
+      - name: Upload Cypress Test Results as Artifacts
+        if: always() # Damit die Artefakte auch bei einem fehlgeschlagenen Test hochgeladen werden
+        uses: actions/upload-artifact@v3
+        with:
+          name: cypress-artifacts
+          path: |
+            frontend/cypress/videos
+            frontend/cypress/screenshots
+            frontend/cypress/results
