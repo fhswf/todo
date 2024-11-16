@@ -16,6 +16,12 @@ permissions:
 jobs:
   Analysis:
     runs-on: ubuntu-latest
+    services:
+      mongodb:
+        image: mongo:4.4
+        ports:
+          - 27017:27017
+          
     permissions: write-all
 
     steps:
@@ -34,3 +40,5 @@ jobs:
       - name: Start
         run: npm start
         working-directory: ./backend
+
+      
