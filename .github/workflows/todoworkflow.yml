@@ -37,10 +37,6 @@ jobs:
         env:
           PORT: 3000
 
-      - name: Wait for Server to be Ready
-        run: |
-          npx wait-on http://localhost:3000
-
       - name: Run Tests for Backend
         run: |
           cd backend
