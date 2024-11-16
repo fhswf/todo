@@ -22,7 +22,7 @@ jobs:
         run: npm install
       
       - name: Build
-        working-directoryy: ./backend
+        working-directory: ./backend
         run: npm run build
 
   test:
@@ -42,7 +42,7 @@ jobs:
       - name: Run Jest tests
         working-directory: ./backend
         run: npm run test
-        
+
   cypress:
     runs-on: ubuntu-latest
     steps:
@@ -66,12 +66,10 @@ jobs:
           done
 
       - name: Test
-        if: always()
         working-directory: ./backend
         run: npx cypress run --headless
 
       - uses: actions/upload-artifact@v4
-        if: always()
         with:
           name: Upload Cypress screenshots
           path: backend/cypress/screenshots
@@ -81,15 +79,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '21'
-
-      - name: Install dependencies
-        working-directory: ./backend
-        run: npm install
 
       - name: Analyze with SonarQube
         uses: sonarsource/sonarqube-scan-action@v4
