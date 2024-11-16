@@ -1,33 +1,50 @@
 describe('To-Do App', () => {
-  it('passes', () => {
+  beforeEach( () => {
     // Besuche die Anwendung vor jedem Test
     cy.visit('http://localhost:3000/todo.html');
   });
 
-  it('should load the application successfully', () => {
+  it('Lade die Anwendung', () => {
     // Überprüfen, ob die Seite korrekt geladen wird
-    cy.contains('To-Do').should('be.visible');
-    cy.get('.todo-input').should('be.visible');
-    cy.get('.todo-list').should('exist');
+    // cy.contains('Todo Liste').should('be.visible');
+    cy.get('.new-todo').should('be.visible');
+    cy.get('#todo-list').should('exist');
   });
 
-  it('should allow the user to add a new to-do item', () => {
-    const newItem = 'Learn Cypress';
+  it('Es gibt ein Formular', () => {
+    // Überprüfen, ob ein <form> vorhanden ist
+    cy.get('form').should('exist');
+  });
+
+  it('Das Formular hat Eingabefelder und ein Absendebutton (submit)', () => {
+    // Überprüfen, ob die Eingabefelder und ein Button im Formular vorhanden sind
+    cy.get('form').within(() => {
+      cy.get('input[type="text"]').should('exist'); // Textfeld prüfen
+      cy.get('input[type="submit"]').should('exist'); // Absenden-Button prüfen
+    });
+  });
+
+  it('Prüfe, ob eine Eingabe funktioniert', () => {
+    const newItem = 'Cypress-Input';
+    const newDate = "2024-11-16";
+    const newStatus = "offen";
     
-    cy.get('.todo-input').type(newItem);
-    cy.get('.todo-add-button').click();
+    cy.get('#todo').type(newItem);
+    cy.get('#due').type(newDate);
+    cy.get('#status').type(newStatus);
+    cy.get('input[type="submit"]').click();
 
     // Überprüfen, ob das neue Element hinzugefügt wurde
-    cy.get('.todo-list')
+    cy.get('#todo-list')
       .should('contain', newItem);
   });
 
-  it('should mark a to-do item as completed', () => {
+  it('ändere ein Todo als erledigt', () => {
     const newItem = 'Write Tests';
 
     // To-Do hinzufügen
-    cy.get('.todo-input').type(newItem);
-    cy.get('.todo-add-button').click();
+    cy.get('#todo').type(newItem);
+    cy.get('input[type="submit"]').click();
 
     // Markiere das neue Element als abgeschlossen
     cy.contains(newItem).parent().find('.todo-checkbox').click();
@@ -36,7 +53,7 @@ describe('To-Do App', () => {
     cy.contains(newItem).should('have.class', 'completed');
   });
 
-  it('should delete a to-do item', () => {
+  it('lösche ein Item', () => {
     const newItem = 'Delete Me';
 
     // To-Do hinzufügen
