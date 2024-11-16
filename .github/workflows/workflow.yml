@@ -18,12 +18,15 @@ jobs:
           node-version: '21'
 
       - name: Install dependencies
+        working-directory: ./backend
         run: npm install
 
       - name: Run app
+        working-directory: ./backend
         run: npm start
 
       - name: Test
+        working-directory: ./backend
         run: npx cypress run --headless
 
     services:
