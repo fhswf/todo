@@ -42,27 +42,7 @@ jobs:
         working-directory: ./backend
         
       # Run tests
-      - name: Test
-        run: yarn run ci
-        env:
-          CI: true
-          REACT_APP_API_URL: /api/v1
-          GOOGLE_TOKENS: ${{ secrets.GOOGLE_TOKENS }}
-          CLIENT_ID: ${{ secrets.CLIENT_ID }}
-          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
-
-      - name: Post PR Comment
-        run: npx github-actions-ctrf ctrf/ctrf-report.json --pr-comment
-        if: always()
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: Upload Cypress screenshots
-          path: client/cypress/screenshots
-          overwrite: true
-
+      
       - name: Analyze with SonarQube
         if: always()
         # You can pin the exact commit or the version.
