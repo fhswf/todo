@@ -7,7 +7,25 @@ on:
     branches: [ "main", "develop" ]
 
 jobs:
-  build-and-test:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '21'
+
+      - name: Install dependencies
+        working-directory: ./backend
+        run: npm install
+      
+      - name: Build
+        working-directoryy: ./backend
+        run: npm run build
+
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -24,9 +42,22 @@ jobs:
       - name: Run Jest tests
         working-directory: ./backend
         run: npm run test
+        
+  cypress:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '21'
+
+      - name: Install dependencies
+        working-directory: ./backend
+        run: npm install
 
       - name: Run app
-        if: always()
         working-directory: ./backend
         run: | 
           npm run start & 
@@ -46,17 +77,27 @@ jobs:
           path: backend/cypress/screenshots
           overwrite: true
 
+  sonarqube:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '21'
+
+      - name: Install dependencies
+        working-directory: ./backend
+        run: npm install
+
       - name: Analyze with SonarQube
-        if: always()
-        # You can pin the exact commit or the version.
-        # uses: SonarSource/sonarqube-scan-action@v1.1.0
         uses: sonarsource/sonarqube-scan-action@v4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} # Generate a token on SonarQube, add it to the secrets of this repo with the name SONAR_TOKEN (Settings > Secrets > Actions > add new repository secret)
           SONAR_HOST_URL: http://hopper.fh-swf.de/sonarqube #${{ vars.SONAR_HOST_URL }}
         with:
-          # Additional arguments for the sonarcloud scanner
           args:
             -Dsonar.verbose=false
 
