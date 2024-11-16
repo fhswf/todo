@@ -50,7 +50,12 @@ jobs:
           done
         shell: bash
 
+      # Install frontend dependencies
+      - name: Install Backend Dependencies
+        run: npm install
+        working-directory: ./frontend
+        
       # Test
       - name: Start
-        run: npx cypress run --headless
+        run: npm test
         working-directory: ./frontend
