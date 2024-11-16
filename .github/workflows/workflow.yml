@@ -31,7 +31,7 @@ jobs:
 
       - name: Test
         working-directory: ./backend
-        run: npx cypress run --headless --config integrationFolder=../cypress
+        run: npx cypress run --headless
 
     services:
       mongodb:
