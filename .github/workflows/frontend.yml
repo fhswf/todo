@@ -51,7 +51,7 @@ jobs:
         shell: bash
 
       # Install frontend dependencies
-      - name: Install Backend Dependencies
+      - name: Install Frontend Dependencies
         run: npm install
         working-directory: ./frontend
         
