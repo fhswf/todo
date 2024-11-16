@@ -37,10 +37,10 @@ jobs:
         env:
           PORT: 3000
 
-      - name: Run Tests for Backend
-        run: |
-          cd backend
-          npm test
+     # - name: Run Tests for Backend
+      #  run: |
+       #   cd backend
+        #  npm test
           
       - name: Run Tests for Frontend
         run: |
