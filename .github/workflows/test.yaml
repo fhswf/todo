@@ -37,14 +37,6 @@ jobs:
       - name: Start Backend
         run: npm start &
         working-directory: ./backend
-
-      - name: Wait for Backend
-        run: |
-          echo "Waiting for backend to be ready..."
-          until curl -s http://localhost:3000 > /dev/null; do
-            sleep 5
-          done
-        shell: bash
         
       - name: Install frontend dependencies
         run: npm install
