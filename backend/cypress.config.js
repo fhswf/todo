@@ -6,6 +6,7 @@ export default defineConfig({
     e2e: {
         baseUrl: `http://localhost:${PORT}`,
         supportFile: false,
-
+        screenshotOnRunFailure: true,
+        screenshotsFolder: 'cypress/screenshots',
     },
 })
