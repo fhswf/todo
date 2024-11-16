@@ -2,12 +2,13 @@ import {createTodo} from "../e2e-test-utils.js";
 
 describe('ToDo App End-to-End Tests', () => {
     beforeEach(() => {
-        cy.visit('todo.html'); // Besucht die URL der Anwendung
+        cy.visit('todo.html');
+        cy.wait(1000);
     });
 
     it('sollte ein neues ToDo erstellen', () => {
 
-        createTodo('Übung 4 machen', '12.11.2022', 'in Bearbeitung');
+        createTodo('Übung 4 machen', '2022-11-12', 'in Bearbeitung');
 
         cy.get('div.todo').should('have.length', '1');
         cy.get('div.todo .title').first().should('contain', 'Übung 4 machen');
