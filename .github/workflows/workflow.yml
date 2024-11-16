@@ -57,6 +57,7 @@ jobs:
         run: npx cypress run --headless
 
       - uses: actions/upload-artifact@v4
+        if: failure()
         with:
           name: Upload Cypress screenshots
           path: backend/cypress/screenshots
