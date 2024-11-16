@@ -54,11 +54,11 @@ describe('To-Do App', () => {
   });
 
   it('lösche ein Item', () => {
-    const newItem = 'Delete Me';
+    const newItem = 'Lösche mich';
 
     // To-Do hinzufügen
-    cy.get('.todo-input').type(newItem);
-    cy.get('.todo-add-button').click();
+    cy.get('#input').type(newItem);
+    cy.get('input[type="submit"]').click();
 
     // Lösche das Element
     cy.contains(newItem).parent().find('.todo-delete-button').click();
@@ -68,7 +68,7 @@ describe('To-Do App', () => {
   });
 
   it('darf kein leeres Todo anlegen', () => {
-    cy.get('.todo-add-button').click();
+    cy.get('input[type="submit"]').click();
 
     // Überprüfen, ob keine leeren Elemente hinzugefügt werden
     cy.get('.todo-list').children().should('have.length', 0);
@@ -80,7 +80,7 @@ describe('To-Do App', () => {
     // Aufgaben hinzufügen
     items.forEach((item) => {
       cy.get('.todo-input').type(item);
-      cy.get('.todo-add-button').click();
+      cy.get('input[type="submit"]').click();
     });
 
     // Markiere alle Aufgaben als abgeschlossen
