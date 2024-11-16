@@ -58,7 +58,7 @@ jobs:
         with:
           # Additional arguments for the sonarcloud scanner
           args:
-            -Dsonar.verbose=false
+            -Dsonar.verbose=true
 
     services:
       mongodb:
