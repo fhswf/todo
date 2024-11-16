@@ -171,6 +171,34 @@ describe('DELETE /todos/:id', () => {
         expect(getResponse.statusCode).toBe(404);
     });
 });
+describe('PUT /todos/:id (Fehlerhafte Aktualisierung)', () => {
+    it('sollte mit einem 400-Fehler fehlschlagen, wenn der Status ungültig ist', async () => {
+        const newTodo = {
+            "title": "Ungültigen Status testen",
+            "due": "2022-11-12T00:00:00.000Z",
+            "status": 0
+        };
+
+        // Neues ToDo erstellen
+        const response = await request(app)
+            .post('/todos')
+            .set('Authorization', `Bearer ${token}`)
+            .send(newTodo);
+
+        const invalidUpdate = {
+            "status": "invalid_status" // Status ist kein gültiger Wert
+        };
+
+        // Versuchen, das ToDo mit ungültigem Status zu aktualisieren
+        const updateResponse = await request(app)
+            .put(`/todos/${response.body._id}`)
+            .set('Authorization', `Bearer ${token}`)
+            .send(invalidUpdate);
+
+        expect(updateResponse.statusCode).toBe(400);
+        expect(updateResponse.body.error).toBe('Invalid status value');
+    });
+});
 
 
 afterAll(async () => {
