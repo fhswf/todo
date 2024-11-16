@@ -9,7 +9,7 @@ describe('ToDo App End-to-End Tests', () => {
 
         createTodo('Übung 4 machen', '2022-11-12', 'in Bearbeitung');
 
-        cy.get('div.todo').should('have.length', '0');
+        cy.get('div.todo').should('have.length', '1');
         cy.get('div.todo .title').first().should('contain', 'Übung 4 machen');
         cy.get('div.todo .due').first().should('contain', '2022-11-12');
         cy.get('div.todo button.status').first().should('contain', 'in Bearbeitung');
