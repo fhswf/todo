@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  backend-tests:
+  tests:
     name: Test Backend
     runs-on: ubuntu-latest
     services:
@@ -19,7 +19,7 @@ jobs:
         ports:
           - 27017:27017
     steps:
-      # Checkout repository
+      # Test backend
       - name: Checkout code
         uses: actions/checkout@v3
         with:
@@ -33,25 +33,19 @@ jobs:
       #  run: npm test
       #  working-directory: ./backend
 
-  frontend-tests:
-    name: Test Frontend with Cypress
-    runs-on: ubuntu-latest
+      # Test frontend
+      - name: Start Backend
+        run: npm start &
+        working-directory: ./backend
 
-    services:
-      mongodb:
-        image: mongo:4.4
-        ports:
-          - 27017:27017
+      - name: Wait for Backend
+        run: |
+          echo "Waiting for backend to be ready..."
+          until curl -s http://localhost:3000 > /dev/null; do
+            sleep 5
+          done
+        shell: bash
         
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-
       - name: Install frontend dependencies
         run: npm install
         working-directory: ./frontend
