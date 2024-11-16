@@ -62,6 +62,15 @@ jobs:
           name: Upload Cypress screenshots
           path: backend/cypress/screenshots
           overwrite: true
+          retention-days: 7
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: Upload Cypress videos
+          path: backend/cypress/videos
+          overwrite: true
+          retention-days: 7
     services:
       mongodb:
         image: mongo:4.4
