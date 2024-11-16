@@ -28,7 +28,9 @@ jobs:
       # Install package dependencies
       - name: Install
         run: npm install
+        working-directory: ./backend
 
       # Start
       - name: Start
         run: npm start
+        working-directory: ./backend
