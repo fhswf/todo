@@ -6,5 +6,6 @@ export default defineConfig({
     e2e: {
         baseUrl: `http://localhost:${PORT}`,
         supportFile: false,
+
     },
 })
