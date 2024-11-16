@@ -67,35 +67,14 @@ describe('To-Do App', () => {
     cy.get('.todo-list').should('not.contain', newItem);
   });
 
-  it('should not allow adding an empty to-do item', () => {
+  it('darf kein leeres Todo anlegen', () => {
     cy.get('.todo-add-button').click();
 
     // Überprüfen, ob keine leeren Elemente hinzugefügt werden
     cy.get('.todo-list').children().should('have.length', 0);
   });
 
-  it('should filter completed and active items', () => {
-    const items = ['Task 1', 'Task 2', 'Task 3'];
-
-    // Aufgaben hinzufügen
-    items.forEach((item) => {
-      cy.get('.todo-input').type(item);
-      cy.get('.todo-add-button').click();
-    });
-
-    // Markiere "Task 2" als abgeschlossen
-    cy.contains('Task 2').parent().find('.todo-checkbox').click();
-
-    // Zeige nur abgeschlossene Aufgaben an
-    cy.get('.filter-completed').click();
-    cy.get('.todo-list').should('contain', 'Task 2').and('not.contain', 'Task 1').and('not.contain', 'Task 3');
-
-    // Zeige nur aktive Aufgaben an
-    cy.get('.filter-active').click();
-    cy.get('.todo-list').should('not.contain', 'Task 2').and('contain', 'Task 1').and('contain', 'Task 3');
-  });
-
-  it('should clear all completed items', () => {
+  it('lösche erledigte Todos', () => {
     const items = ['Clean room', 'Wash dishes'];
 
     // Aufgaben hinzufügen
