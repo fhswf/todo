@@ -55,7 +55,6 @@ jobs:
           --health-retries 3
         volumes:
           - ./backend:/backend
-        command: sh -c "cd /backend && npm install && npm start"
         
     steps:
       - name: Checkout code
