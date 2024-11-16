@@ -36,25 +36,6 @@ jobs:
   frontend-tests:
     name: Test Frontend with Cypress
     runs-on: ubuntu-latest
-
-    services:
-      mongodb:
-        image: mongo:6.0
-        ports:
-          - 27017:27017
-      backend:
-        image: node:18
-        env:
-          NODE_ENV: test
-        ports:
-          - 3000:3000
-        options: >-
-          --health-cmd "curl --fail http://localhost:3000/health || exit 1"
-          --health-interval 5s
-          --health-timeout 10s
-          --health-retries 3
-        volumes:
-          - ./backend:/backend
         
     steps:
       - name: Checkout code
