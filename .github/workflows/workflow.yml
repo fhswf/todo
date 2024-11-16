@@ -21,6 +21,10 @@ jobs:
         working-directory: ./backend
         run: npm install
 
+      - name: Run Jest tests
+        working-directory: ./backend
+        run: npm run test
+
       - name: Run app
         working-directory: ./backend
         run: | 
