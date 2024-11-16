@@ -1,6 +1,6 @@
 export function createTodo(name, duedate, status) {
-    if (status !== 'Offen' && status !== 'In Bearbeitung' && status !== 'Erledigt') {
-        throw new Error('Status is invalid. Must be one of: Offen, In Bearbeitung, Erledigt');
+    if (status !== 'offen' && status !== 'in Bearbeitung' && status !== 'erledigt') {
+        throw new Error('Status is invalid. Must be one of: offen, in Bearbeitung, erledigt');
     }
 
     cy.get('input#todo').type(name);

@@ -12,7 +12,7 @@ describe('ToDo App End-to-End Tests', () => {
         cy.get('div.todo').should('have.length', '1');
         cy.get('div.todo title').first().should('contain', 'Übung 4 machen');
         cy.get('div.todo due').first().should('contain', '2022-11-12');
-        cy.get('div.todo button.status').first().should('contain', 'In Bearbeitung');
+        cy.get('div.todo button.status').first().should('contain', 'in Bearbeitung');
 
         cy.get('div.todo').first().get('button.delete').click();
         cy.get('div.todo').should('have.length', '0');
