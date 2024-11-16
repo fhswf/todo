@@ -33,6 +33,7 @@ jobs:
       - name: Run Tests for Backend
         run: |
           cd backend
+          npm run start
           npm test
           
       - name: Run Tests for Frontend
