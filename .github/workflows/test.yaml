@@ -10,32 +10,66 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
-    name: Run Tests
+  backend-tests:
+    name: Test Backend
     runs-on: ubuntu-latest
     services:
       mongodb:
         image: mongo:6.0
         ports:
           - 27017:27017
-
     steps:
-    # Checkout repository
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+      # Checkout repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+  
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./backend
+  
+      #- name: Run Backend Tests
+      #  run: npm test
+      #  working-directory: ./backend
 
-    # Install and test Backend
-    - name: Install and test Backend
-      working-directory: ./backend
-      run: |
-        npm install
-        npm start
+  frontend-tests:
+    name: Test Frontend with Cypress
+    runs-on: ubuntu-latest
 
-    # Install and test Frontend
-    - name: Install and test Frontend
-      working-directory: ./frontend
-      run: |
-        npm install
-        npm test
+    services:
+      mongodb:
+        image: mongo:6.0
+        ports:
+          - 27017:27017
+      backend:
+        image: node:18
+        env:
+          NODE_ENV: test
+        ports:
+          - 3000:3000
+        options: >-
+          --health-cmd "curl --fail http://localhost:3000/health || exit 1"
+          --health-interval 5s
+          --health-timeout 10s
+          --health-retries 3
+        volumes:
+          - ./backend:/backend
+        command: sh -c "cd /backend && npm install && npm start"
+        
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install frontend dependencies
+        working-directory: ./frontend
+        run: npm install
+
+      - name: Run Cypress tests
+        working-directory: ./frontend
+        run: npm test
