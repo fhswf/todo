@@ -32,7 +32,7 @@ jobs:
 
       - name: Start Server
         run: |
-          cd frontend
+          cd backend
           npm run start &
         env:
           PORT: 3000
