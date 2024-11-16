@@ -47,21 +47,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install Backend Dependencies
-        run: npm install
-        working-directory: ./backend
-
-      - name: Start Backend
-        run: npm start &
-        working-directory: ./backend
-
-      - name: Wait for Backend
-        run: |
-          echo "Waiting for backend to be ready..."
-          until curl -s http://localhost:3000 > /dev/null; do
-            sleep 5
-          done
-        shell: bash
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
 
       - name: Install frontend dependencies
         run: npm install
