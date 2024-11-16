@@ -6,6 +6,7 @@ let token; // Speichert den abgerufenen JWT-Token
 
 beforeAll(async () => {
     token = await getKeycloakToken();
+    await db.clear(); // Leert die Datenbank vor den Tests
 });
 
 describe('GET /todos (unautorisiert)', () => {
@@ -18,13 +19,29 @@ describe('GET /todos (unautorisiert)', () => {
 });
 
 describe('GET /todos', () => {
-    it('sollte alle Todos abrufen', async () => {
+    it('sollte eine leere Liste zurückgeben, wenn keine Todos vorhanden sind', async () => {
         const response = await request(app)
             .get('/todos')
-            .set('Authorization', `Bearer ${token}`); // Fügen Sie den Authorization-Header hinzu
+            .set('Authorization', `Bearer ${token}`);
+        expect(response.statusCode).toBe(200);
+        expect(response.body).toEqual([]);
+    });
+
+    it('sollte alle Todos abrufen', async () => {
+        const newTodo = {
+            "title": "Test-Todo",
+            "due": "2023-12-01T00:00:00.000Z",
+            "status": 0
+        };
+
+        await db.insert(newTodo); // Füge ein Todo direkt zur DB hinzu
+        const response = await request(app)
+            .get('/todos')
+            .set('Authorization', `Bearer ${token}`);
 
         expect(response.statusCode).toBe(200);
         expect(Array.isArray(response.body)).toBeTruthy();
+        expect(response.body.length).toBeGreaterThan(0);
     });
 });
 
@@ -58,6 +75,21 @@ describe('POST /todos', () => {
 
         expect(response.statusCode).toBe(400);
         expect(response.body.error).toBe('Bad Request');
+    });
+
+    it('sollte einen 400-Fehler zurückgeben, wenn das Datum ungültig ist', async () => {
+        const invalidTodo = {
+            "title": "Ungültiges Datum",
+            "due": "ungültiges-datum",
+            "status": 0
+        };
+
+        const response = await request(app)
+            .post('/todos')
+            .set('Authorization', `Bearer ${token}`)
+            .send(invalidTodo);
+
+        expect(response.statusCode).toBe(400);
     });
 
     it('sollte einen 400-Fehler zurückgeben, wenn das Todo nicht valide ist', async () => {
@@ -142,6 +174,22 @@ describe('PUT /todos/:id', () => {
         expect(updateResponse.statusCode).toBe(200);
         expect(updateResponse.body.status).toBe(updatedTodo.status);
     });
+
+    it('sollte einen 404-Fehler zurückgeben, wenn das Todo beim nicht existiert', async () => {
+        const nonExistentId = '6452c3f8c7b4e842d90123aa';
+        const response = await request(app)
+            .put(`/todos/${nonExistentId}`)
+            .set('Authorization', `Bearer ${token}`)
+            .send({
+                "_id": nonExistentId,
+                "title": "Nicht existent",
+                "due": "2023-12-01T00:00:00.000Z",
+                "status": 0
+            });
+
+        expect(response.statusCode).toBe(404);
+        expect(response.body.error).toMatch(/Todo with id .+ not found/);
+    });
 });
 
 describe('DELETE /todos/:id', () => {
@@ -169,6 +217,17 @@ describe('DELETE /todos/:id', () => {
             .set('Authorization', `Bearer ${token}`);
 
         expect(getResponse.statusCode).toBe(404);
+    });
+
+    it('sollte einen 404-Fehler zurückgeben, wenn das Todo nicht existiert', async () => {
+        const nonExistentId = '6452c3f8c7b4e842d90123aa'; // Gültiges, aber nicht existierendes MongoDB-ObjectId
+
+        const response = await request(app)
+            .delete(`/todos/${nonExistentId}`)
+            .set('Authorization', `Bearer ${token}`);
+
+        expect(response.statusCode).toBe(404);
+        expect(response.body.error).toMatch(/Todo with id .+ not found/);
     });
 });
 
