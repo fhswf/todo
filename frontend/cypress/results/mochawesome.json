@@ -1,0 +1,255 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 8,
+    "passes": 4,
+    "pending": 0,
+    "failures": 4,
+    "start": "2024-11-16T14:52:47.164Z",
+    "end": "2024-11-16T14:53:08.143Z",
+    "duration": 20979,
+    "testsRegistered": 8,
+    "passPercent": 50,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "f949f2a9-e424-45e9-a327-e5e9aa15a7d5",
+      "title": "",
+      "fullFile": "cypress/e2e/todo.cy.js",
+      "file": "cypress/e2e/todo.cy.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "5a737ba5-bdb1-4fa8-b1c8-08bf7e3de201",
+          "title": "To-Do App",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "Lade die Anwendung",
+              "fullTitle": "To-Do App Lade die Anwendung",
+              "timedOut": null,
+              "duration": 210,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "// Überprüfen, ob die Seite korrekt geladen wird\n// cy.contains('Todo Liste').should('be.visible');\ncy.get('.new-todo').should('be.visible');\ncy.get('#todo-list').should('exist');",
+              "err": {},
+              "uuid": "3b8e8d8b-d8d1-4ec4-aefe-eb7ec4674128",
+              "parentUUID": "5a737ba5-bdb1-4fa8-b1c8-08bf7e3de201",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Es gibt ein Formular",
+              "fullTitle": "To-Do App Es gibt ein Formular",
+              "timedOut": null,
+              "duration": 73,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "// Überprüfen, ob ein <form> vorhanden ist\ncy.get('form').should('exist');",
+              "err": {},
+              "uuid": "cb8cda45-813d-4385-b220-bc3e46d50878",
+              "parentUUID": "5a737ba5-bdb1-4fa8-b1c8-08bf7e3de201",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Das Formular hat Eingabefelder und ein Absendebutton (submit)",
+              "fullTitle": "To-Do App Das Formular hat Eingabefelder und ein Absendebutton (submit)",
+              "timedOut": null,
+              "duration": 65,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "// Überprüfen, ob die Eingabefelder und ein Button im Formular vorhanden sind\ncy.get('form').within(() => {\n  cy.get('input[type=\"text\"]').should('exist'); // Textfeld prüfen\n  cy.get('input[type=\"submit\"]').should('exist'); // Absenden-Button prüfen\n});",
+              "err": {},
+              "uuid": "e1e683e2-55cd-40b6-ab2b-f494c08051da",
+              "parentUUID": "5a737ba5-bdb1-4fa8-b1c8-08bf7e3de201",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Prüfe, ob eine Eingabe funktioniert",
+              "fullTitle": "To-Do App Prüfe, ob eine Eingabe funktioniert",
+              "timedOut": null,
+              "duration": 882,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "const newItem = 'Cypress-Input';\nconst newDate = \"2024-11-16\";\nconst newStatus = \"offen\";\ncy.get('#todo').type(newItem);\ncy.get('#due').type(newDate);\ncy.get('#status').type(newStatus);\ncy.get('input[type=\"submit\"]').click();\n// Überprüfen, ob das neue Element hinzugefügt wurde\ncy.get('#todo-list').should('contain', newItem);",
+              "err": {},
+              "uuid": "b888ba1a-7868-4b73-a495-f32c768ebd77",
+              "parentUUID": "5a737ba5-bdb1-4fa8-b1c8-08bf7e3de201",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "ändere ein Todo als erledigt",
+              "fullTitle": "To-Do App ändere ein Todo als erledigt",
+              "timedOut": null,
+              "duration": 4644,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": null,
+              "code": "const newItem = 'Write Tests';\n// To-Do hinzufügen\ncy.get('#todo').type(newItem);\ncy.get('input[type=\"submit\"]').click();\n// Markiere das neue Element als abgeschlossen\ncy.contains(newItem).parent().find('.todo-checkbox').click();\n// Überprüfen, ob das Element als abgeschlossen markiert ist\ncy.contains(newItem).should('have.class', 'completed');",
+              "err": {
+                "message": "AssertionError: Timed out retrying after 4000ms: Expected to find element: `.todo-checkbox`, but never found it. Queried from:\n\n              > cy.contains(Write Tests).parent()",
+                "estack": "AssertionError: Timed out retrying after 4000ms: Expected to find element: `.todo-checkbox`, but never found it. Queried from:\n\n              > cy.contains(Write Tests).parent()\n    at Context.eval (webpack://frontend/./cypress/e2e/todo.cy.js:50:34)",
+                "diff": null
+              },
+              "uuid": "1ef251bd-e7c3-4acd-a9cd-33bb143c31b6",
+              "parentUUID": "5a737ba5-bdb1-4fa8-b1c8-08bf7e3de201",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "lösche ein Item",
+              "fullTitle": "To-Do App lösche ein Item",
+              "timedOut": null,
+              "duration": 4266,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": null,
+              "code": "const newItem = 'Delete Me';\n// To-Do hinzufügen\ncy.get('.todo-input').type(newItem);\ncy.get('.todo-add-button').click();\n// Lösche das Element\ncy.contains(newItem).parent().find('.todo-delete-button').click();\n// Überprüfen, ob das Element gelöscht wurde\ncy.get('.todo-list').should('not.contain', newItem);",
+              "err": {
+                "message": "AssertionError: Timed out retrying after 4000ms: Expected to find element: `.todo-input`, but never found it.",
+                "estack": "AssertionError: Timed out retrying after 4000ms: Expected to find element: `.todo-input`, but never found it.\n    at Context.eval (webpack://frontend/./cypress/e2e/todo.cy.js:60:7)",
+                "diff": null
+              },
+              "uuid": "4d701f37-c7d1-420f-843b-f23fd1f3c8a4",
+              "parentUUID": "5a737ba5-bdb1-4fa8-b1c8-08bf7e3de201",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "darf kein leeres Todo anlegen",
+              "fullTitle": "To-Do App darf kein leeres Todo anlegen",
+              "timedOut": null,
+              "duration": 4208,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": null,
+              "code": "cy.get('.todo-add-button').click();\n// Überprüfen, ob keine leeren Elemente hinzugefügt werden\ncy.get('.todo-list').children().should('have.length', 0);",
+              "err": {
+                "message": "AssertionError: Timed out retrying after 4000ms: Expected to find element: `.todo-add-button`, but never found it.",
+                "estack": "AssertionError: Timed out retrying after 4000ms: Expected to find element: `.todo-add-button`, but never found it.\n    at Context.eval (webpack://frontend/./cypress/e2e/todo.cy.js:71:7)",
+                "diff": null
+              },
+              "uuid": "5daa11e2-df4f-4524-b005-ba224c7eecdb",
+              "parentUUID": "5a737ba5-bdb1-4fa8-b1c8-08bf7e3de201",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "lösche erledigte Todos",
+              "fullTitle": "To-Do App lösche erledigte Todos",
+              "timedOut": null,
+              "duration": 4305,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": null,
+              "code": "const items = ['Clean room', 'Wash dishes'];\n// Aufgaben hinzufügen\nitems.forEach(item => {\n  cy.get('.todo-input').type(item);\n  cy.get('.todo-add-button').click();\n});\n// Markiere alle Aufgaben als abgeschlossen\nitems.forEach(item => {\n  cy.contains(item).parent().find('.todo-checkbox').click();\n});\n// Lösche alle abgeschlossenen Aufgaben\ncy.get('.clear-completed-button').click();\n// Überprüfen, ob die Liste leer ist\ncy.get('.todo-list').children().should('have.length', 0);",
+              "err": {
+                "message": "AssertionError: Timed out retrying after 4000ms: Expected to find element: `.todo-input`, but never found it.",
+                "estack": "AssertionError: Timed out retrying after 4000ms: Expected to find element: `.todo-input`, but never found it.\n    at eval (webpack://frontend/./cypress/e2e/todo.cy.js:82:9)\nat Array.forEach (<anonymous>)\n    at Context.eval (webpack://frontend/./cypress/e2e/todo.cy.js:81:10)",
+                "diff": null
+              },
+              "uuid": "e788a810-4b0c-4b23-b653-a98a477e1546",
+              "parentUUID": "5a737ba5-bdb1-4fa8-b1c8-08bf7e3de201",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "3b8e8d8b-d8d1-4ec4-aefe-eb7ec4674128",
+            "cb8cda45-813d-4385-b220-bc3e46d50878",
+            "e1e683e2-55cd-40b6-ab2b-f494c08051da",
+            "b888ba1a-7868-4b73-a495-f32c768ebd77"
+          ],
+          "failures": [
+            "1ef251bd-e7c3-4acd-a9cd-33bb143c31b6",
+            "4d701f37-c7d1-420f-843b-f23fd1f3c8a4",
+            "5daa11e2-df4f-4524-b005-ba224c7eecdb",
+            "e788a810-4b0c-4b23-b653-a98a477e1546"
+          ],
+          "pending": [],
+          "skipped": [],
+          "duration": 18653,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "7.0.1"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": false,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "7.1.3"
+    },
+    "marge": {
+      "options": {
+        "reportDir": "cypress/results",
+        "overwrite": false,
+        "html": false,
+        "json": true
+      },
+      "version": "6.2.0"
+    }
+  }
+}
