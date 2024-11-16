@@ -61,7 +61,7 @@ describe('To-Do App', () => {
     cy.get('input[type="submit"]').click();
 
     // Lösche das Element
-    cy.contains(newItem).parent().find('.todo-delete-button').click();
+    cy.contains(newItem).parent().find('.delete').click();
 
     // Überprüfen, ob das Element gelöscht wurde
     cy.get('.todo-list').should('not.contain', newItem);
