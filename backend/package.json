@@ -4,6 +4,7 @@
   "description": "Backend für ToDo-Anwendung",
   "main": "index.js",
   "scripts": {
+    "starttest": "nodemon index.js &",
     "start": "nodemon index.js",
     "test": "NODE_OPTIONS=--experimental-vm-modules npx jest"
   },
