@@ -1,0 +1,41 @@
+name: Test Backend and Frontend
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    services:
+      mongodb:
+        image: mongo:6.0
+        ports:
+          - 27017:27017
+
+    steps:
+    # Checkout repository
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    # Install and test Backend
+    - name: Install and test Backend
+      working-directory: ./backend
+      run: |
+        npm install
+        npm test
+
+    # Install and test Frontend
+    - name: Install and test Frontend
+      working-directory: ./frontend
+      run: |
+        npm install
+        npm test
