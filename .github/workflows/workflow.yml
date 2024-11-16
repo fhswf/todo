@@ -23,7 +23,9 @@ jobs:
 
       - name: Run app
         working-directory: ./backend
-        run: npm start
+        run: | 
+          npm run start & 
+          while ! nc -z localhost 3000; do sleep 1 done
 
       - name: Test
         working-directory: ./backend
