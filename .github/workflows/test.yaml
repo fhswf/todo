@@ -11,7 +11,7 @@ on:
 
 jobs:
   tests:
-    name: Test Backend
+    name: Test Backend and Frontend
     runs-on: ubuntu-latest
     services:
       mongodb:
