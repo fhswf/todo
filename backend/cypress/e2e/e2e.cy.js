@@ -5,7 +5,7 @@ describe('ToDo App End-to-End Tests', () => {
         cy.visit('todo.html', {
             onBeforeLoad (win) {
                 Object.defineProperty(win.navigator, 'language', {
-                    value: 'de-DE',
+                    value: 'de',
                 })
             }
         });

@@ -8,5 +8,7 @@ export default defineConfig({
         supportFile: false,
         screenshotOnRunFailure: true,
         screenshotsFolder: 'cypress/screenshots',
+        videosFolder: 'cypress/videos',
+        video: true,
     },
 })
