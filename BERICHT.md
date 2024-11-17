@@ -13,8 +13,8 @@ Diese Datei enthält den Projektbericht für die Todo Anwendung. Der Bericht wir
 
 
 ## Probleme
-### Platzhalter
-    Platzhalter
+### Unit-Tests benötigen eine Datenbank (TODO)
+    Die Unit-Tests benötigen aktuell eine Datenbank, um die Funktionalität zu testen. Dies ist nicht optimal, da die Tests dadurch nicht mehr unabhängig voneinander sind. Um dieses Problem zu lösen wird die Datenbank gemockt.
 
 
 ## Ergebnisse der QS

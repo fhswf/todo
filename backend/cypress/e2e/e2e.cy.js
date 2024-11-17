@@ -18,7 +18,7 @@ describe('ToDo App End-to-End Tests', () => {
         cy.get('div.todo').should('have.length', '0');
     });
 
-    it.only('sollte ein todo bearbeiten', () => {
+    it('sollte ein todo bearbeiten', () => {
         fillInForm('sollte ein todo bearbeiten', '2023-11-12', 'offen');
 
         const todo = findTodoByTitle('sollte ein todo bearbeiten');
