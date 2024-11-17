@@ -2,13 +2,7 @@ import {createTodo} from "../e2e-test-utils.js";
 
 describe('ToDo App End-to-End Tests', () => {
     beforeEach(() => {
-        cy.visit('todo.html', {
-            onBeforeLoad (win) {
-                Object.defineProperty(win.navigator, 'language', {
-                    value: 'de',
-                })
-            }
-        });
+        cy.visit('todo.html');
         cy.wait(1000);
     });
 
