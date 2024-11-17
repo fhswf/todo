@@ -59,7 +59,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: Upload Cypress screenshots
+          name: Cypress screenshots
           path: backend/cypress/screenshots
           overwrite: true
           retention-days: 7
@@ -67,7 +67,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: Upload Cypress videos
+          name: Cypress videos
           path: backend/cypress/videos
           overwrite: true
           retention-days: 7
