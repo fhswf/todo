@@ -9,14 +9,6 @@ export default defineConfig({
         screenshotOnRunFailure: true,
         screenshotsFolder: 'cypress/screenshots',
         videosFolder: 'cypress/videos',
-        video: true,
-        setupNodeEvents(on, config) {
-            on('before:browser:launch', (browser = {}, launchOptions) => {
-                if (browser.name === 'chrome') {
-                    launchOptions.args.push('--lang=de');
-                    return launchOptions;
-                }
-            })
-        }
+        video: true
     },
 })
