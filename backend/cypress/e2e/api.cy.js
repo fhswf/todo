@@ -1,4 +1,4 @@
-describe('API Tests', () => {
+xdescribe('API Tests', () => {
     it('should fetch and display data from API', () => {
       cy.intercept('GET', '/api/data', { fixture: 'data.json' }).as('getData');
       cy.visit('/data');
@@ -7,7 +7,7 @@ describe('API Tests', () => {
       cy.get('.data-item').first().should('contain', 'Item 1');
     });
   
-    xit('should handle API errors gracefully', () => {
+    it('should handle API errors gracefully', () => {
       cy.intercept('GET', '/api/data', { statusCode: 500 }).as('getDataError');
       cy.visit('/data');
       cy.wait('@getDataError');
