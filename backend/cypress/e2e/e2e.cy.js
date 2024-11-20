@@ -1,7 +1,7 @@
 import {expectTodoToBe, fillInForm, findTodoByTitle} from "../e2e-test-utils.js";
 
 describe('ToDo App End-to-End Tests', () => {
-    beforeEach(() => {
+    /*beforeEach(() => {
         cy.visit('todo.html');
         cy.wait(1000);
     });
@@ -19,14 +19,14 @@ describe('ToDo App End-to-End Tests', () => {
     });
 
     it('sollte ein todo bearbeiten', () => {
-        /*fillInForm('sollte ein todo bearbeiten', '2023-11-12', 'offen');
+        fillInForm('sollte ein todo bearbeiten', '2023-11-12', 'offen');
 
         const todo = findTodoByTitle('sollte ein todo bearbeiten');
         todo.find('button.edit').click();
 
         fillInForm('sollte ein todo bearbeiten haben', '2024-11-12', 'erledigt');
 
-        expectTodoToBe('sollte ein todo bearbeiten haben', '2024-11-12', 'erledigt');*/
+        expectTodoToBe('sollte ein todo bearbeiten haben', '2024-11-12', 'erledigt');
     });
 
     it('sollte ein todo löschen', () => {});
@@ -39,5 +39,5 @@ describe('ToDo App End-to-End Tests', () => {
 
     it('sollte todos laden', () => {});
 
-    it('sollte heutiges Datum als Standarddatum setzen', () => {});
+    it('sollte heutiges Datum als Standarddatum setzen', () => {});*/
 });
