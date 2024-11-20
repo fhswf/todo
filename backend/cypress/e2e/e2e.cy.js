@@ -1,7 +1,7 @@
 import {expectTodoToBe, fillInForm, findTodoByTitle} from "../e2e-test-utils.js";
 
 describe('ToDo App End-to-End Tests', () => {
-    /*beforeEach(() => {
+    beforeEach(() => {
         cy.visit('todo.html');
         cy.wait(1000);
     });
@@ -39,5 +39,5 @@ describe('ToDo App End-to-End Tests', () => {
 
     it('sollte todos laden', () => {});
 
-    it('sollte heutiges Datum als Standarddatum setzen', () => {});*/
+    it('sollte heutiges Datum als Standarddatum setzen', () => {});
 });
