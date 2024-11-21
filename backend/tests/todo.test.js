@@ -28,56 +28,6 @@ describe('GET /todos', () => {
     });
 });
 
-describe('POST /todos', () => {
-    it('sollte ein neues Todo erstellen', async () => {
-        const newTodo = {
-            "title": "Übung 4 machen",
-            "due": "2022-11-12T00:00:00.000Z",
-            "status": 0
-        };
-
-        const response = await request(app)
-            .post('/todos')
-            .set('Authorization', `Bearer ${token}`)
-            .send(newTodo);
-        expect(response.statusCode).toBe(201);
-        expect(response.body.title).toBe(newTodo.title);
-        expect(response.body.due).toBe(newTodo.due);
-    });
-
-    it('sollte einen 400-Fehler zurückgeben, wenn das Todo unvollständig ist', async () => {
-        const newTodo = {
-            "due": "2022-11-12T00:00:00.000Z",
-            "status": 0,
-        };
-
-        const response = await request(app)
-            .post('/todos')
-            .set('Authorization', `Bearer ${token}`)
-            .send(newTodo);
-
-        expect(response.statusCode).toBe(400);
-        expect(response.body.error).toBe('Bad Request');
-    });
-
-    it('sollte einen 400-Fehler zurückgeben, wenn das Todo nicht valide ist', async () => {
-        const newTodo = {
-            "title": "Übung 4 machen",
-            "due": "2022-11-12T00:00:00.000Z",
-            "status": 0,
-            "invalid": "invalid"
-        };
-
-        const response = await request(app)
-            .post('/todos')
-            .set('Authorization', `Bearer ${token}`)
-            .send(newTodo);
-
-        expect(response.statusCode).toBe(400);
-        expect(response.body.error).toBe('Bad Request');
-    });
-}); 0
-
 describe('GET /todos/:id', () => {
     it('sollte ein Todo abrufen', async () => {
         const newTodo = {
@@ -141,6 +91,56 @@ describe('PUT /todos/:id', () => {
 
         expect(updateResponse.statusCode).toBe(200);
         expect(updateResponse.body.status).toBe(updatedTodo.status);
+    });
+});
+
+describe('POST /todos', () => {
+    it('sollte ein neues Todo erstellen', async () => {
+        const newTodo = {
+            "title": "Übung 4 machen",
+            "due": "2022-11-12T00:00:00.000Z",
+            "status": 0
+        };
+
+        const response = await request(app)
+            .post('/todos')
+            .set('Authorization', `Bearer ${token}`)
+            .send(newTodo);
+        expect(response.statusCode).toBe(201);
+        expect(response.body.title).toBe(newTodo.title);
+        expect(response.body.due).toBe(newTodo.due);
+    });
+
+    it('sollte einen 400-Fehler zurückgeben, wenn das Todo unvollständig ist', async () => {
+        const newTodo = {
+            "due": "2022-11-12T00:00:00.000Z",
+            "status": 0,
+        };
+
+        const response = await request(app)
+            .post('/todos')
+            .set('Authorization', `Bearer ${token}`)
+            .send(newTodo);
+
+        expect(response.statusCode).toBe(400);
+        expect(response.body.error).toBe('Bad Request');
+    });
+
+    it('sollte einen 400-Fehler zurückgeben, wenn das Todo nicht valide ist', async () => {
+        const newTodo = {
+            "title": "Übung 4 machen",
+            "due": "2022-11-12T00:00:00.000Z",
+            "status": 0,
+            "invalid": "invalid"
+        };
+
+        const response = await request(app)
+            .post('/todos')
+            .set('Authorization', `Bearer ${token}`)
+            .send(newTodo);
+
+        expect(response.statusCode).toBe(400);
+        expect(response.body.error).toBe('Bad Request');
     });
 });
 
