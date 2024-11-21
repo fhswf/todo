@@ -22,7 +22,11 @@ Diese Datei enthält den Projektbericht für die Todo Anwendung. Der Bericht wir
 
 ## Ergebnisse der QS
 ### Gefundene Bugs
-| Verhalten | Erwartetes Verhalten                                                              |
-| --- |-----------------------------------------------------------------------------------|
-| Das Löschen eines Todo lässt die Anwendung abstürzen | Das Löschen eines Todos sollte das Todo aus der Liste und der Datenbank entfernen |
-| Das Ändern des Namens eines Todos hängt den neuen Namen an den alten an | Der Name des Todos sollte überschrieben werden                                    |
+| Verhalten                                                                         | Erwartetes Verhalten                                                                                                                      |
+|-----------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|
+| Das Löschen eines Todo lässt die Anwendung abstürzen                              | Das Löschen eines Todos sollte das Todo aus der Liste und der Datenbank entfernen                                                         |
+| Das Ändern des Namens eines Todos hängt den neuen Namen an den alten an           | Der Name des Todos sollte überschrieben werden                                                                                            |
+| Die Anwendung verügt über keine Authentifizierung                                 | Bei dem Aufruf der Seite wird eine Anmeldemaske angezeigt. Aufrufe der Enpunkte ohne gültiges Token werden mit dem Status 401 beantwortet |
+| Die Anwendung verfügt über keine Validierung ob ein gültiges Todo übergeben wurde | Ein Todo mit einem Namen der weniger als 3 Zeichen lang ist, wird abgelehnt                                                               |
+
+
