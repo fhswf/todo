@@ -14,10 +14,10 @@ Diese Datei enthält den Projektbericht für die Todo Anwendung. Der Bericht wir
 
 ## Probleme
 ### Unit-Tests benötigen eine Datenbank (TODO)
-    Die Unit-Tests benötigen aktuell eine Datenbank, um die Funktionalität zu testen. Dies ist nicht optimal, da die Tests dadurch nicht mehr unabhängig voneinander sind. Um dieses Problem zu lösen wird die Datenbank gemockt.
+    Die Unit-Tests benötigen aktuell eine Datenbank, um die Funktionalität zu testen. Dies ist nicht optimal, da die Tests dadurch nicht mehr unabhängig voneinander sind und eher als Systemtests behandelt werden müssten. Um dieses Problem zu lösen wird die Datenbank Klasse mit Jest gemockt.
 
 ### Anwendung stürzt ab, wenn ein Todo gelöscht wird
-    Wenn ein Todo gelöscht wird, stürzt die Anwendung ab. Dies sorgt dafür, dass die nachfolgenden E2E-Tests nicht mehr ausgeführt werden können.
+    Wenn ein Todo gelöscht wird, stürzt die Anwendung ab. Dies sorgt dafür, dass die nachfolgenden E2E-Tests nicht mehr ausgeführt werden können.  Dieses Problem wurde dadurch behoben, dass die Anwendung bei einem Absturz automatisch durch nodemon neugestartet wird. Dadurch können die einzelnen Tests noch ausgeführt werden. Um einen Absturz der Anwendung zu bemerken, wird die Ausgabe des npm run start Befehls in einer Log-Datei gesichert und in der CI/CD-Pipeline auch archiviert. In der Pipeline wird diese Datei zusätzlich noch nach Hinweisen auf einen Absturz durchsucht. Wird dort ein Absturz gefunden, wird der Job als fehlgeschlagen markiert.
 
 
 ## Ergebnisse der QS

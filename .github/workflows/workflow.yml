@@ -23,7 +23,7 @@ jobs:
 
       - name: Run Jest tests
         working-directory: ./backend
-        run: npm run test -- --coverage --coverageDirectory='coverage'
+        run: npm run test -- --coverage
 
       - uses: actions/upload-artifact@v4
         with:
@@ -33,7 +33,7 @@ jobs:
           retention-days: 7
     services:
       mongodb:
-        image: mongo:4.4
+        image: mongo:latest
         ports:
           - 27017:27017
 
@@ -86,9 +86,18 @@ jobs:
           path: backend/cypress/videos
           overwrite: true
           retention-days: 7
+
+      - name: check for crash
+        run: |
+          if grep -q "crash" backend/nodemon.log; then
+            echo "Crash detected. See nodemon.log"
+            exit 1
+          else
+            echo "No crash detected"
+          fi
     services:
       mongodb:
-        image: mongo:4.4
+        image: mongo:latest
         ports:
           - 27017:27017
 
@@ -108,7 +117,7 @@ jobs:
             -Dsonar.verbose=false
     services:
       mongodb:
-        image: mongo:4.4
+        image: mongo:latest
         ports:
           - 27017:27017
 
