@@ -34,10 +34,10 @@ describe('ToDo App End-to-End Tests', () => {
         fillInForm('sollte ein todo löschen', '2025-11-12', 'erledigt');
         const todo = findTodoByTitle('sollte ein todo löschen');
         const todoCountAfterCreate = getCurrentTodoCount();
-        expect(todoCountAfterCreate).to.equal(todoCountBefore + 1);
+        todoCountAfterCreate.should('eq', todoCountBefore + 1);
         todo.find('button.delete').click();
         const todoCountAfterDelete = getCurrentTodoCount();
-        expect(todoCountAfterDelete).to.equal(todoCountBefore);
+        todoCountAfterDelete.should('eq', todoCountBefore);
     });
 
     // Fehlermeldung ??
@@ -45,7 +45,7 @@ describe('ToDo App End-to-End Tests', () => {
         const todoCountBefore = getCurrentTodoCount();
         fillInForm('', '2026-11-12', 'offen');
         const todoCountAfterCreate = getCurrentTodoCount();
-        expect(todoCountAfterCreate).to.equal(todoCountBefore);
+        todoCountAfterCreate.should('eq', todoCountBefore);
     });
 
     // Fehlermeldung ??
@@ -56,14 +56,14 @@ describe('ToDo App End-to-End Tests', () => {
         cy.get('select#status').select('offen');
         cy.get('input[type=submit]').click();
         const todoCountAfterCreate = getCurrentTodoCount();
-        expect(todoCountAfterCreate).to.equal(todoCountBefore);
+        todoCountAfterCreate.should('eq', todoCountBefore);
     });
 
     it('sollte den status eines todos ändern', () => {
         fillInForm('sollte den status eines todos ändern', '2026-11-12', 'offen');
         const todo = findTodoByTitle('sollte den status eines todos ändern');
         const button = todo.find('button.status');
-        expect(button).to.contain('offen');
+        button.should('contain', 'offen');
         button.click();
         expectTodoToBe('sollte den status eines todos ändern', '2026-11-12', 'in Bearbeitung');
     });
