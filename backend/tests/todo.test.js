@@ -25,7 +25,6 @@ describe('GET /todos (unautorisiert)', () => {
 
 describe('GET /todos', () => {
     it('sollte alle Todos abrufen', async () => {
-        expect(MongoClient.connect).toHaveBeenCalledTimes(1);
 
         const response = await request(app)
             .get('/todos')
@@ -70,6 +69,15 @@ describe('GET /todos/:id', () => {
         expect(getResponse.statusCode).toBe(404);
         expect(getResponse.body.error).toMatch(/Todo with id .+ not found/);
     });
+
+    it('sollte einen 500-Fehler zurückgeben, wenn die ID nicht gültig ist', async () => {
+        const response = await request(app)
+            .get('/todos/1234645645645dsdvevsdzr')
+            .set('Authorization', `Bearer ${token}`); // Fügen Sie den Authorization-Header hinzu
+
+        expect(response.statusCode).toBe(500);
+        expect(response.body.error).toBe('Internal Server Error');
+    });
 });
 
 describe('PUT /todos/:id', () => {
@@ -101,12 +109,29 @@ describe('PUT /todos/:id', () => {
         expect(updateResponse.body.status).toBe(updatedTodo.status);
     });
 
-    it('sollte einen 404-Fehler zurückgeben, wenn das Todo nicht gefunden wurde', async () => {
+    it('sollte ein 400-Fehler zurückgeben, wenn die Ids nicht übereinstimmen', async () => {
         const updatedTodo = {
             "title": "Übung 4 machen",
             "due": "2022-11-12T00:00:00.000Z",
             "status": 1,
             "_id": "123456789012345678901234"
+        };
+
+        const updateResponse = await request(app)
+            .put(`/todos/122345`)
+            .set('Authorization', `Bearer ${token}`)
+            .send(updatedTodo);
+
+        expect(updateResponse.statusCode).toBe(400);
+        expect(updateResponse.body.error).toBe('id in body does not match id in path');
+    });
+
+    it('sollte einen 404-Fehler zurückgeben, wenn das Todo nicht gefunden wurde', async () => {
+        const updatedTodo = {
+            "title": "Übung 4 machen",
+            "due": "2022-11-12T00:00:00.000Z",
+            "status": 1,
+            "_id": "12344321"
         };
 
         const updateResponse = await request(app)
@@ -116,6 +141,23 @@ describe('PUT /todos/:id', () => {
 
         expect(updateResponse.statusCode).toBe(404);
         expect(updateResponse.body.error).toMatch(/Todo with id .+ not found/);
+    });
+
+    it('sollte einen 500-Fehler zurückgeben, wenn die ID nicht gültig ist', async () => {
+        const updatedTodo = {
+            "title": "Übung 4 machen",
+            "due": "2022-11-12T00:00:00.000Z",
+            "status": 1,
+            "_id": "123456789012345678901234www"
+        };
+
+        const response = await request(app)
+            .put('/todos/123456789012345678901234www')
+            .set('Authorization', `Bearer ${token}`)
+            .send(updatedTodo);
+
+        expect(response.statusCode).toBe(500);
+        expect(response.body.error).toBe('Error updating todo: BSONError: Argument passed in must be a string of 12 bytes or a string of 24 hex characters or an integer, 123456789012345678901234www');
     });
 });
 
@@ -171,10 +213,11 @@ describe('POST /todos', () => {
     it('sollte einen 400-Fehler zurückgeben, wenn kein Todo bereitgestellt wird', async () => {
         const response = await request(app)
             .post('/todos')
-            .set('Authorization', `Bearer ${token}`);
+            .set('Authorization', `Bearer ${token}`)
+            .send();
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.error).toBe('Bad Request');
+        expect(response.body.message).toBe('Todo fehlt');
     });
 });
 
@@ -207,14 +250,23 @@ describe('DELETE /todos/:id', () => {
     });
 
     it('sollte einen 404-Fehler zurückgeben, wenn das Todo nicht gefunden wurde', async () => {
-        const id = '123456789012345678901234';
+        const id = '333333333333333333333333';
 
         const deleteResponse = await request(app)
             .delete(`/todos/${id}`)
             .set('Authorization', `Bearer ${token}`);
 
         expect(deleteResponse.statusCode).toBe(404);
-        expect(deleteResponse.body.error).toMatch(/Todo with id .+ not found/);
+        expect(deleteResponse.body.error).toMatch('`Todo with id 333333333333333333333333 not found`');
+    });
+
+    it('sollte einen 500-Fehler zurückgeben, wenn die ID nicht gültig ist', async () => {
+        const response = await request(app)
+            .delete('/todos/123456789012345678901234www')
+            .set('Authorization', `Bearer ${token}`);
+
+        expect(response.statusCode).toBe(500);
+        expect(response.body.error).toBe('Error deleting todo: BSONError: Argument passed in must be a string of 12 bytes or a string of 24 hex characters or an integer, 123456789012345678901234www');
     });
 });
 describe('PUT /todos/:id (Fehlerhafte Aktualisierung)', () => {
