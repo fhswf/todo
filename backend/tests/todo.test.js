@@ -1,11 +1,17 @@
 import request from 'supertest';
-import { app, server, db } from '../index.js';
+import {app, db, server} from '../index.js';
 import getKeycloakToken from './utils.js';
+import {beforeAll, describe, expect, it} from "@jest/globals";
 
-let token; // Speichert den abgerufenen JWT-Token
+let token = null; // Speichert den abgerufenen JWT-Token
 
 beforeAll(async () => {
-    // token = await getKeycloakToken();
+    try {
+        token = await getKeycloakToken();
+    } catch (error) {
+        console.log('Fehler beim Abrufen des Tokens: ', error);
+        fail('Fehler beim Abrufen des Tokens');
+    }
 });
 
 describe('GET /todos (unautorisiert)', () => {
@@ -19,6 +25,8 @@ describe('GET /todos (unautorisiert)', () => {
 
 describe('GET /todos', () => {
     it('sollte alle Todos abrufen', async () => {
+        expect(MongoClient.connect).toHaveBeenCalledTimes(1);
+
         const response = await request(app)
             .get('/todos')
             .set('Authorization', `Bearer ${token}`); // Fügen Sie den Authorization-Header hinzu
@@ -92,6 +100,23 @@ describe('PUT /todos/:id', () => {
         expect(updateResponse.statusCode).toBe(200);
         expect(updateResponse.body.status).toBe(updatedTodo.status);
     });
+
+    it('sollte einen 404-Fehler zurückgeben, wenn das Todo nicht gefunden wurde', async () => {
+        const updatedTodo = {
+            "title": "Übung 4 machen",
+            "due": "2022-11-12T00:00:00.000Z",
+            "status": 1,
+            "_id": "123456789012345678901234"
+        };
+
+        const updateResponse = await request(app)
+            .put(`/todos/${updatedTodo._id}`)
+            .set('Authorization', `Bearer ${token}`)
+            .send(updatedTodo);
+
+        expect(updateResponse.statusCode).toBe(404);
+        expect(updateResponse.body.error).toMatch(/Todo with id .+ not found/);
+    });
 });
 
 describe('POST /todos', () => {
@@ -142,6 +167,15 @@ describe('POST /todos', () => {
         expect(response.statusCode).toBe(400);
         expect(response.body.error).toBe('Bad Request');
     });
+
+    it('sollte einen 400-Fehler zurückgeben, wenn kein Todo bereitgestellt wird', async () => {
+        const response = await request(app)
+            .post('/todos')
+            .set('Authorization', `Bearer ${token}`);
+
+        expect(response.statusCode).toBe(400);
+        expect(response.body.error).toBe('Bad Request');
+    });
 });
 
 describe('DELETE /todos/:id', () => {
@@ -169,6 +203,18 @@ describe('DELETE /todos/:id', () => {
             .set('Authorization', `Bearer ${token}`);
 
         expect(getResponse.statusCode).toBe(404);
+        expect(getResponse.body.error).toMatch(/Todo with id .+ not found/);
+    });
+
+    it('sollte einen 404-Fehler zurückgeben, wenn das Todo nicht gefunden wurde', async () => {
+        const id = '123456789012345678901234';
+
+        const deleteResponse = await request(app)
+            .delete(`/todos/${id}`)
+            .set('Authorization', `Bearer ${token}`);
+
+        expect(deleteResponse.statusCode).toBe(404);
+        expect(deleteResponse.body.error).toMatch(/Todo with id .+ not found/);
     });
 });
 describe('PUT /todos/:id (Fehlerhafte Aktualisierung)', () => {

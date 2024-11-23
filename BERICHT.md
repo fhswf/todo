@@ -7,6 +7,7 @@ Diese Datei enthält den Projektbericht für die Todo Anwendung. Der Bericht wir
 * Tim Tomczek
 
 ## Vorgehensweise
+Zuerst wurde eine Build-Pipeline mit GitHub-Actions erstellt. In der Die Anwendung gebaut und mit Cypress, für End-to-End (E2E) Tests, und Jest, für Unit-Tests, getestet wird. Anschließend wurden die Funktionen der Anwendung untersucht und mit E2E Tests abgedeckt. Für die Unit-Tests wurde geprüft ob für jede Funktion ein Test vorhanden ist. Die Überprüfung der Vollständigkeit der Tests erfolgte durch die Analyse der Code-Coverage durch Jest. Durch weitere Tests wurde die Abdeckung erhöht. Abschließend wurden die gefundenen Bugs dokumentiert und Lösungen für diese erarbeitet.
 
 
 ## Lösungen
@@ -14,13 +15,14 @@ Diese Datei enthält den Projektbericht für die Todo Anwendung. Der Bericht wir
 
 ## Probleme
 ### Unit-Tests benötigen eine Datenbank (TODO)
-    Die Unit-Tests benötigen aktuell eine Datenbank, um die Funktionalität zu testen. Dies ist nicht optimal, da die Tests dadurch nicht mehr unabhängig voneinander sind und eher als Systemtests behandelt werden müssten. Um dieses Problem zu lösen wird die Datenbank Klasse mit Jest gemockt.
+    Die Unit-Tests benötigen eine Datenbank, um die Funktionalität zu testen. Dadurch handelt es sich nicht mehr um Unit-Tests sondern um Integrationstests. Für Unit-Tests sollten die index.js und die DB-Klass eienzeln getestet werden.
 
 ### Anwendung stürzt ab, wenn ein Todo gelöscht wird
     Wenn ein Todo gelöscht wird, stürzt die Anwendung ab. Dies sorgt dafür, dass die nachfolgenden E2E-Tests nicht mehr ausgeführt werden können. Dieses Problem wurde dadurch behoben, dass die Anwendung bei einem Absturz automatisch durch nodemon neugestartet wird. Dazu werden Events von nodemon verwendet. Dadurch können die einzelnen Tests noch ausgeführt werden. Um einen Absturz der Anwendung zu bemerken, wird die Ausgabe des npm run start Befehls in einer Log-Datei gesichert und in der CI/CD-Pipeline auch archiviert. In der Pipeline wird diese Datei zusätzlich noch nach Hinweisen auf einen Absturz durchsucht. Wird dort ein Absturz gefunden, wird der Job als fehlgeschlagen markiert.
 
-
 ## Ergebnisse der QS
+### Erreichte Testabdeckung
+
 ### Gefundene Bugs
 | Verhalten                                                                         | Erwartetes Verhalten                                                                                                                      |
 |-----------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|
