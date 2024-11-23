@@ -159,6 +159,33 @@ describe('PUT /todos/:id', () => {
         expect(response.statusCode).toBe(500);
         expect(response.body.error).toBe('Error updating todo: BSONError: Argument passed in must be a string of 12 bytes or a string of 24 hex characters or an integer, 123456789012345678901234www');
     });
+
+    it('sollte einen 400-Fehler zurückgeben, wenn der Name des Todos invalide ist', async () => {
+        const newTodo = {
+            "title": "Übung 4 machen",
+            "due": "2022-11-12T00:00:00.000Z",
+            "status": 0
+        };
+
+        // Neues ToDo erstellen
+        const response = await request(app)
+            .post('/todos')
+            .set('Authorization', `Bearer ${token}`)
+            .send(newTodo);
+
+        const invalidUpdate = {
+            "title": "1" // Titel ist zu kurz
+        };
+
+        // Versuchen, das ToDo mit ungültigem Titel zu aktualisieren
+        const updateResponse = await request(app)
+            .put(`/todos/${response.body._id}`)
+            .set('Authorization', `Bearer ${token}`)
+            .send(invalidUpdate);
+
+        expect(updateResponse.statusCode).toBe(400);
+        expect(updateResponse.body.error).toBe('Titel muss mindestens 3 Zeichen lang sein');
+    })
 });
 
 describe('POST /todos', () => {
@@ -218,6 +245,22 @@ describe('POST /todos', () => {
 
         expect(response.statusCode).toBe(400);
         expect(response.body.message).toBe('Todo fehlt');
+    });
+
+    it('sollte einen 400-Fehler zurückgeben, wenn der Name des Todos invalide ist', async () => {
+        const newTodo = {
+            "title": "", // Titel ist leer
+            "due": "2022-11-12T00:00:00.000Z",
+            "status": 0
+        }
+
+        const response = await request(app)
+            .post('/todos')
+            .set('Authorization', `Bearer ${token}`)
+            .send(newTodo);
+
+        expect(response.statusCode).toBe(400);
+        expect(response.body.error).toBe('Titel darf nicht leer sein');
     });
 });
 
