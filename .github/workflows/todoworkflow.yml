@@ -15,7 +15,7 @@ jobs:
         image: mongo:4.4
         ports:
           - 27017:27017
-          
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -41,12 +41,18 @@ jobs:
       #  run: |
        #   cd backend
         #  npm test
-          
+
       - name: Run Tests for Frontend
         run: |
           cd frontend
           npm test
-          
+
+      - name: Run SonaCube Scan
+        uses: sonarsource/sonarqube-scan-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
       - name: Upload Cypress Test Results as Artifacts
         if: always() # Damit die Artefakte auch bei einem fehlgeschlagenen Test hochgeladen werden
         uses: actions/upload-artifact@v4
