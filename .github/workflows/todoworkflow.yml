@@ -48,6 +48,10 @@ jobs:
           npm test
         continue-on-error: true
 
+      - name: Check Frontend Test Results
+        if: failure()
+        run: exit 1
+
       - name: Run SonaCube Scan
         uses: sonarsource/sonarqube-scan-action@master
         env:
