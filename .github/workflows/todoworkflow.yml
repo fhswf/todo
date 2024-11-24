@@ -54,6 +54,7 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          SONAR_SCANNER_OPTS: -Dsonar.javascript.lcov.reportPaths=frontend/cypress/results/lcov.info
 
       - name: Upload Cypress Test Results as Artifacts
         if: always() # Damit die Artefakte auch bei einem fehlgeschlagenen Test hochgeladen werden
