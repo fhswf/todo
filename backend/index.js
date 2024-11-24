@@ -327,8 +327,7 @@ app.delete('/todos/:id', authenticate,
 );
 
 
-//let server;
-const server = None;
+let server;
 await initDB()
     .then(() => {
         server = app.listen(PORT, () => {
