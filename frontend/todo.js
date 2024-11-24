@@ -5,6 +5,7 @@ const status = ["offen", "in Bearbeitung", "erledigt"];
 
 const API = "/todos"
 
+//<button class="status" onclick="changeStatus(${todo._id})">${status[todo.status || 0]}</button>
 function createTodoElement(todo) {
     let list = document.getElementById("todo-list");
     let due = new Date(todo.due);
@@ -13,7 +14,7 @@ function createTodoElement(todo) {
            <div class="title">${todo.title}</div> 
            <div class="due">${due.toLocaleDateString()}</div>
            <div class="actions">
-              <button class="status" onclick="changeStatus(${todo._id})">${status[todo.status || 0]}</button>
+              <button class="status" onclick="changeStatus(${todo._id})">${[todo.status || 0]}</button>
               <button class="edit" onclick="editTodo(${todo._id})">Bearbeiten</button>
               <button class="delete" onclick="deleteTodo(${todo._id})">Löschen</button>
            </div>
@@ -209,7 +210,7 @@ function checkLogin(response) {
 
         // redirect to login URL with proper parameters
         window.location = LOGIN_URL + "?" + params.toString()
-        throw ("Need to log in")
+        throw new Error("Need to log in")
     }
     else return response
 }
