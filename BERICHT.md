@@ -1,11 +1,44 @@
---------------------------------
-Ausarbeitung Softwarequalität 
-    von:
-        Robin Wessel
-        Tobias Höh
+# Ausarbeitung Softwarequalität
+Wintersemester 2024/25 <br>
+Fachhochschule Südwestfalen<br>
+Angewandte Informatik
 
-    Stand 16.11.2024
+Termin
 --------------------------------
+    16.11.2024
+--------------------------------
+
+## Team
+Robin Wessel<br>
+Tobias Höh
+
+## Dozent
+Prof. Dr. Gawron
+
+# Aufgabe
+> **Siehe:** https://github.com/fhswf/softwarequalitaet/tree/main/Exercises/CI_ToDo
+
+## Erledigte Aufgaben
+
+ - [x] Fork des Repositories
+ - [x] Verstehen der ToDo Anwendung (Front- und Backend)
+ - [x] Erstellung von Testfällen mit Cypress
+ - [x] Github Action bei jedem Push oder Pull Request erstellen
+        + MongoDB als zusätzlichen Service hinterlegen
+ - [x] Integration SonarQube
+ - [x] Auswertung Ergebnisse
+
+# Vorgehensweise
+
+# Probleme und Lösungen
+Cypress lies sich nicht ausführen, dies war der Tatsache geschuldet, dass wir die Anwendung über Codespaces laufen lassen.
+Die Einrichtung musste lokal erfolgen, nach der Einrichtung konnte in Codespaces weitergearbeitet werden.
+
+# Ergebnisse
+- Testabdeckung: xx%
+- Wichtige Erkenntnisse aus SonarQube-Berichten.
+
+# Notizen
 
 > Ihre Vorgehensweise
 
