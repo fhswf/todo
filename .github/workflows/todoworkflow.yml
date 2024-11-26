@@ -10,12 +10,18 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
+      security-events: write
+      statuses: write
     services:
       mongodb:
         image: mongo:4.4
         ports:
           - 27017:27017
-          
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -41,12 +47,22 @@ jobs:
       #  run: |
        #   cd backend
         #  npm test
-          
+
       - name: Run Tests for Frontend
+        id: frontend-tests
         run: |
           cd frontend
           npm test
-          
+        continue-on-error: true
+
+      - name: Run SonaCube Scan
+        uses: sonarsource/sonarqube-scan-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          SONAR_SCANNER_OPTS: -Dsonar.javascript.lcov.reportPaths=frontend/cypress/results/lcov.info
+
       - name: Upload Cypress Test Results as Artifacts
         if: always() # Damit die Artefakte auch bei einem fehlgeschlagenen Test hochgeladen werden
         uses: actions/upload-artifact@v4
@@ -56,3 +72,7 @@ jobs:
             frontend/cypress/videos
             frontend/cypress/screenshots
             frontend/cypress/results
+
+      - name: Fail Workflow if Frontend Tests Failed
+        if: steps.frontend-tests.outcome == 'failure'
+        run: exit 1
