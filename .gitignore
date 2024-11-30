@@ -131,6 +131,6 @@ dist
 
 sonar-scanner-5.0.1.3006-linux/**/*
 
-frontendcypress/screenshots/**/*
+frontend/cypress/screenshots/**/*
 frontend/cypress/videos/**/*
 frontend/cypress/results/**/*
