@@ -84,6 +84,13 @@ export default class DB {
             })
     }
 
+     /** Delete all todos
+     * @returns {Promise} - Promise with deleted todo
+     */
+     deleteAll() {
+        return collection.deleteMany({});
+    }
+
     /** Insert todo
      * @param {object} todo - todo to insert
      * @returns {Promise} - Promise with inserted todo
