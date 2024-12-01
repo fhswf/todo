@@ -13,9 +13,9 @@ function createTodoElement(todo) {
            <div class="title">${todo.title}</div> 
            <div class="due">${due.toLocaleDateString()}</div>
            <div class="actions">
-              <button class="status" onclick="changeStatus(${todo._id})">${status[todo.status || 0]}</button>
-              <button class="edit" onclick="editTodo(${todo._id})">Bearbeiten</button>
-              <button class="delete" onclick="deleteTodo(${todo._id})">Löschen</button>
+              <button class="status" onclick="changeStatus('${todo._id}')">${status[todo.status || 0]}</button>
+              <button class="edit" onclick="editTodo('${todo._id}')">Bearbeiten</button>
+              <button class="delete" onclick="deleteTodo('${todo._id}')">Löschen</button>
            </div>
          </div>`);
 
@@ -63,7 +63,7 @@ function saveTodo(evt) {
     evt.preventDefault();
 
     // Get the id from the form. If it is not set, we are creating a new todo.
-    let _id = Number.parseInt(evt.target.dataset.id) || Date.now();
+    let _id = evt.target.dataset._id || undefined;
 
     let todo = {
         _id,
@@ -208,7 +208,7 @@ function checkLogin(response) {
         params.append("state", state)
 
         // redirect to login URL with proper parameters
-        window.location = LOGIN_URL + "?" + params.toString()
+        window.location = TOKEN_URL + "?" + params.toString()
         throw ("Need to log in")
     }
     else return response
