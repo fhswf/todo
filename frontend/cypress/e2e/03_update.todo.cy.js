@@ -102,7 +102,7 @@ describe('todo app update tests', () => {
     cy.get('#todo-form input[type="submit"]').click();
 
     // check if the element was changed
-    cy.get(`#todo-list #${todoItemUpdate.id} .due`).should('have.value', todoItemUpdate.date);
+    cy.get(`#todo-list #${todoItemUpdate.id} .due`).should('have.text', new Date(todoItemUpdate.date).toLocaleDateString());
   });
 
   it('update todo text to "cypress-update-updated" formular', () => {
@@ -121,7 +121,7 @@ describe('todo app update tests', () => {
     cy.get('#todo-form input[type="submit"]').click();
 
     // check if the element was changed
-    cy.get(`#todo-list #${todoItemUpdate.id} .title`).should('have.value', todoItemUpdate.title);
+    cy.get(`#todo-list #${todoItemUpdate.id} .title`).should('have.text', todoItemUpdate.title);
   });
 
   it('update todo state to "open" formular', () => {
@@ -141,7 +141,7 @@ describe('todo app update tests', () => {
     cy.get('#todo-form input[type="submit"]').click();
 
     // check if the element was changed
-    cy.get(`#todo-list #${todoItemUpdate.id} button.status`).should('have.value', todoItemUpdate.state);
+    cy.get(`#todo-list #${todoItemUpdate.id} button.status`).should('have.text', todoItemUpdate.stateText);
   });
 
   it('update todo state to "at work" formular', () => {
@@ -161,7 +161,7 @@ describe('todo app update tests', () => {
     cy.get('#todo-form input[type="submit"]').click();
 
     // check if the element was changed
-    cy.get(`#todo-list #${todoItemUpdate.id} button.status`).should('have.value', todoItemUpdate.state);
+    cy.get(`#todo-list #${todoItemUpdate.id} button.status`).should('have.text', todoItemUpdate.stateText);
   });
 
   it('update todo state to "finished" formular', () => {
@@ -181,6 +181,6 @@ describe('todo app update tests', () => {
     cy.get('#todo-form input[type="submit"]').click();
 
     // check if the element was changed
-    cy.get(`#todo-list #${todoItemUpdate.id} button.status`).should('have.value', todoItemUpdate.state);
+    cy.get(`#todo-list #${todoItemUpdate.id} button.status`).should('have.text', todoItemUpdate.stateText);
   });
 });
