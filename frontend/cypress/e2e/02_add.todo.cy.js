@@ -1,36 +1,63 @@
-describe('To-Do App', () => {
+describe('todo app add tests', () => {
+  let todoItemAdd = {
+    id: 0,
+    title: 'cypress-add',
+    date: '2024-01-01',
+    dateText: '01/01/2024',
+    state: 0, // open
+    stateText: 'offen',
+  }
+
+  before(() => {
+    // Setzen Sie eine globale Variable
+    Cypress.env('todoItemAdd', {
+      title: 'cypress-add',
+      date: '2024-01-01',
+      state: 'offen', // Text für den Status
+      stateText: 'offen',
+    });
+  });
+
   beforeEach( () => {
-    // Besuche die Anwendung vor jedem Test
-    cy.visit('http://localhost:3000/todo.html');
+    // visit the application before each test
+    cy.visit('http://127.0.0.1:3000/todo.html');
   });
 
-  it('create todo cypress-input', () => {
-    const newItem = 'cypress-input';
-    const newDate = "2024-11-16";
-    const newStatus = "offen";
+  it('create todo cypress-add', () => {
+    // add new todo
+    cy.get('#todo-form input#todo').type(todoItemAdd.title);
+    cy.get('#todo-form input#due').type(todoItemAdd.date);
+    cy.get('#todo-form select#status').select(todoItemAdd.state);
+    cy.get('#todo-form input[type="submit"]').click();
 
-    cy.get('#todo').type(newItem);
-    cy.get('#due').type(newDate);
-    cy.get('#status').type(newStatus);
-    cy.get('input[type="submit"]').click();
+    // check if the new element exists
+    cy.get('#todo-list .due').last().invoke('text').then((text) => {
+      const dateText = text.trim();
+      const date = new Date(dateText);
+      const expectedDate = new Date(todoItemAdd.date);
 
-    // Überprüfen, ob das neue Element hinzugefügt wurde
-    cy.get('#todo-list')
-      .should('contain', newItem)
-      .should('contain', newDate)
-      .should('contain', newStatus);
+      // check if the date is correct
+      expect(date.toLocaleDateString()).to.equal(expectedDate.toLocaleDateString());
+    });
+
+    cy.get('#todo-list .title').should('contain', todoItemAdd.title)
+    cy.get('#todo-list .status').should('contain', todoItemAdd.stateText);
   });
-  
-  it('created todo cypress-input check form reset', () => {
-    cy.get('#due').should('have.value', '2024-12-03');
-    cy.get('#status').should('have.value', 'offen');
-    cy.get('#todo').should('have.value', '');
+
+  it('check form reset', () => {
+    // check if the form is reset
+    cy.get('#todo-form input#due').should('have.value', '2024-12-04');
+    cy.get('#todo-form select#status').should('have.value', '0');
+    cy.get('#todo-form input#todo').should('have.value', '');
   });
 
   it('should not create empty todo', () => {
-    cy.get('input[type="submit"]').click();
+    // add empty todo
+    cy.get('#todo-form input[type="submit"]').click();
 
-    // Überprüfen, ob keine leeren Elemente hinzugefügt werden
-    cy.get('.todo-list').children().filter(c => c.text().trim() === '').should('have.length', 0);
+    // check if the element was not added
+    cy.get('#todo-list').children().filter((index, element) => {
+      return Cypress.$(element).text().trim() === '';
+    }).should('have.length', 0);
   });
 });

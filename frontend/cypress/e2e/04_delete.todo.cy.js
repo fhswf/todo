@@ -1,20 +1,33 @@
-describe('To-Do App', () => {
+describe('todo app delete tests', () => {
+  let todoItemDelete = {
+    id: 0,
+    title: 'cypress-delete',
+    date: '2024-11-16',
+    state: 0, // open
+  };
+
   beforeEach( () => {
-    // Besuche die Anwendung vor jedem Test
-    cy.visit('http://localhost:3000/todo.html');
+    // visit the application before each test
+    cy.visit('http://127.0.0.1:3000/todo.html');
   });
 
   it('delete todo', () => {
-    const newItem = 'delete me';
+    // add delete todo
+    cy.get('#todo-form input#todo').type(todoItemDelete.title);
+    cy.get('#todo-form input#due').type(todoItemDelete.date);
+    cy.get('#todo-form select#status').select(todoItemDelete.state);
+    cy.get('#todo-form input[type="submit"]').click();
 
-    // To-Do hinzufügen
-    cy.get('#input').type(newItem);
-    cy.get('input[type="submit"]').click();
+    cy.get('#todo-list .todo').last().invoke('attr', 'id')
+    .then((id) => {
+      cy.log('get id of todo item: ' + id);
+      todoItemDelete.id = id;
 
-    // Lösche das Element
-    cy.contains(newItem).parent().find('.delete').click();
+      // delete todo
+      cy.get(`#todo-list #${todoItemDelete.id}`).find('button.delete').click();
 
-    // Überprüfen, ob das Element gelöscht wurde
-    cy.get('.todo-list').should('not.contain', newItem);
+      // check if the element not exists
+      cy.get(`#todo-list #${todoItemDelete.id}`).should('not.exist');
+    });
   });
 });

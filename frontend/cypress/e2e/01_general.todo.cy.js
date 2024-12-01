@@ -1,32 +1,32 @@
-describe('To-Do App', () => {
+describe('todo app general tests', () => {
   before(() => {
-    // Lösche alle To-Dos vor jedem Test
-    cy.request('DELETE', 'http://localhost:3000/todos');
+    // delete all todos before start the tests
+    cy.request('DELETE', 'http://127.0.0.1:3000/todos');
   });
 
   beforeEach( () => {
-    // Besuche die Anwendung vor jedem Test
-    cy.visit('http://localhost:3000/todo.html');
+    // visit the application before each test
+    cy.visit('http://127.0.0.1:3000/todo.html');
   });
 
-  it('load application', () => {
-    // Überprüfen, ob die Seite korrekt geladen wird
+  it('check if application succesfully load', () => {
+    // check if the site/elements are correctly loaded
     cy.get('.new-todo').should('be.visible');
     cy.get('#todo-list').should('exist');
   });
 
   it('form exists', () => {
-    // Überprüfen, ob ein <form> vorhanden ist
+    // check if the form exists
     cy.get('form').should('exist');
   });
 
   it('inputs and submit button exists', () => {
-    // Überprüfen, ob die Eingabefelder und ein Button im Formular vorhanden sind
+    // check if the elements of the form exists
     cy.get('form').within(() => {
-      cy.get('input[type="text"]').should('exist'); // Textfeld prüfen
-      cy.get('input[type="date"]').should('exist'); // Zu erledigen bis prüfen
-      cy.get('select#status').should('exist'); // Status prüfen
-      cy.get('input[type="submit"]').should('exist'); // Absenden-Button prüfen
+      cy.get('input[type="text"]').should('exist'); // todo title
+      cy.get('input[type="date"]').should('exist'); // due date
+      cy.get('select#status').should('exist'); // state
+      cy.get('input[type="submit"]').should('exist'); // submit button
     });
   });
 });
