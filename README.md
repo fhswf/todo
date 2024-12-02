@@ -4,6 +4,6 @@ Diese Anwendung dient als Beispiel für das [Modul Softwarequalität](https://el
 
 ## Links
 * [Aufgabe](https://github.com/fhswf/softwarequalitaet/tree/main/Exercises/CI_ToDo)
-* [SonarQube](https://hopper.fh-swf.de/sonarqube/dashboard?id=peters_todo&codeScope=overall)
+* [SonarQube](https://hopper.fh-swf.de/sonarqube/dashboard?id=peters_todo)
 * [GitHub Actions](https://github.com/Ranea-D/todo/actions)
 * [GitHub](https://github.com/Ranea-D/todo)
