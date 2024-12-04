@@ -7,8 +7,8 @@ Cypress.on('fail', (error) => {
     throw error; // Andere Fehler weitergeben
 });
 
-cy.on('fail', (error) => {
-    if (error.message.includes('cy.type() cannot accept an empty string')) {
+Cypress.on('fail', (error) => {
+    if (error.message.includes('`cy.type()` cannot accept an empty string.')) {
         cy.log('Fehler abgefangen: Der Name ist leer!');
         return false;  // Verhindert den Fehler, der den Test stoppt
     }
