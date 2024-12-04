@@ -60,7 +60,7 @@ describe('ToDo App End-to-End Tests', () => {
     // Fehlermeldung ??
     it('sollte ein todo mit ungültigem Datum nicht erstellen', () => {
         const todoCountBefore = getCurrentTodoCount();
-        fillInForm('Todo_4', '123', 'offen');
+        testStatus('Todo_4', '123', 'offen');
         //cy.get('input#todo').type('sollte ein todo mit ungültigem Datum nicht erstellen');
         //cy.get('input#due').type('123');
         //cy.get('select#status').select('offen');

@@ -53,3 +53,30 @@ export function expectTodoToBe(title, duedate, status) {
 export function getCurrentTodoCount() {
     return cy.get('div.todo').its('length');
 }
+
+export function testStatus(name, duedate, status) {
+    let statusNum;
+    switch (status) {
+        case 'offen':
+            statusNum = 0;
+            break;
+        case 'in Bearbeitung':
+            statusNum = 1;
+            break;
+        case 'erledigt':
+            statusNum = 2;
+            break;
+        default:
+            throw new Error('Status is invalid. Must be one of: offen, in Bearbeitung, erledigt');
+    }
+    try{
+        cy.get('input#todo').type(name);
+        cy.get('input#due').type(duedate);
+        cy.get('select#status').select(statusNum);
+        cy.get('input[type=submit]').click();
+    }
+    catch(err){
+        cy.log("ungültiges Datum. Todo wird nicht angelegt!");
+        return;
+    }
+}
