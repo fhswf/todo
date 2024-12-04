@@ -8,7 +8,7 @@ export function fillInForm(name, duedate, status) {
     //}
 
     try{
-        new Date(duedate).toLocaleDateString();
+        cy.get('input#due').type(duedate);
     }
     catch{
         cy.log("ungültiges Datum. Todo wird nicht angelegt!");
