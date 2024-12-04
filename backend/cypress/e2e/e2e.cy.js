@@ -8,8 +8,8 @@ describe('ToDo App End-to-End Tests', () => {
 
     it('sollte ein neues ToDo erstellen', () => {
         const formInput = ['Todo_1', '2022-11-12', 'in Bearbeitung'];
-        fillInForm(formInput);
-        expectTodoToBe(formInput);
+        fillInForm(formInput[0],formInput[1],formInput[2]);
+        expectTodoToBe(formInput[0],formInput[1],formInput[2]);
         //fillInForm('Todo_1', '2022-11-12', 'in Bearbeitung');
         //expectTodoToBe('Todo_1', '2022-11-12', 'in Bearbeitung');
         //const expectedDate = new Date('2022-11-12').toLocaleDateString();
