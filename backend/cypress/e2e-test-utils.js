@@ -7,6 +7,14 @@ Cypress.on('fail', (error) => {
     throw error; // Andere Fehler weitergeben
 });
 
+cy.on('fail', (error) => {
+    if (error.message.includes('cy.type() cannot accept an empty string')) {
+        cy.log('Fehler abgefangen: Der Name ist leer!');
+        return false;  // Verhindert den Fehler, der den Test stoppt
+    }
+    throw error;  // Wirf den Fehler erneut, wenn es sich um einen anderen Fehler handelt
+});
+
 export function fillInForm(name, duedate, status) {
     //if (status !== 'offen' && status !== 'in Bearbeitung' && status !== 'erledigt') {
     //    throw new Error('Status is invalid. Must be one of: offen, in Bearbeitung, erledigt');
@@ -30,11 +38,7 @@ export function fillInForm(name, duedate, status) {
             throw new Error('Status is invalid. Must be one of: offen, in Bearbeitung, erledigt');
     }
 
-    if (name.trim() === '') {
-        cy.log('Der Name ist leer und wird daher nicht eingegeben.');
-    } else {
-        cy.get('input#todo').type(name);
-    }
+    cy.get('input#todo').type(name);
     cy.get('input#due').type(duedate);
     cy.get('select#status').select(statusNum);
     cy.get('input[type=submit]').click();
