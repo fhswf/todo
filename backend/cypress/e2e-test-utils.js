@@ -75,7 +75,7 @@ export function testStatus(name, duedate, status) {
         cy.get('select#status').select(statusNum);
         cy.get('input[type=submit]').click();
     }
-    catch(err){
+    catch(error){
         cy.log("ungültiges Datum. Todo wird nicht angelegt!");
         return;
     }
