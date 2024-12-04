@@ -88,6 +88,11 @@ describe('ToDo App End-to-End Tests', () => {
     it('sollte heutiges Datum als Standarddatum setzen', () => {
         cy.reload();
         cy.wait(1000);
-        cy.get('input#due').should('have.value', new Date().toLocaleDateString());
+
+        // Datum in das richtige Format bringen (YYYY-MM-DD)
+        const today = new Date().toISOString().split('T')[0];
+
+        cy.get('input#due').should('have.value', today);
+        //cy.get('input#due').should('have.value', new Date().toLocaleDateString());
     });
 });
