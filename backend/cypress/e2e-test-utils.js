@@ -6,6 +6,14 @@ export function fillInForm(name, duedate, status) {
     //if (name == '' || name== NaN){
     //    throw new nameError('Kein gültiger Name eingegeben.');
     //}
+
+    try{
+        new Date(duedate).toLocaleDateString();
+    }
+    catch{
+        cy.log("ungültiges Datum. Todo wird nicht angelegt!");
+        return;
+    }
     switch (status) {
         case 'offen':
             statusNum = 0;
