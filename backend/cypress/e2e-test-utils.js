@@ -1,7 +1,24 @@
 export function fillInForm(name, duedate, status) {
     function isValidDate(dateString) {
+        // Prüfe, ob das Format YYYY-MM-DD eingehalten wird
+        const regex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!regex.test(dateString)) {
+            return false;
+        }
+    
+        // Versuche, das Datum zu erstellen
         const date = new Date(dateString);
-        return !isNaN(date.getTime()); // Gültige Datumsprüfung
+        if (isNaN(date.getTime())) {
+            return false;
+        }
+    
+        // Zusätzliche Überprüfung: Stimmen Monat und Tag?
+        const [year, month, day] = dateString.split('-').map(Number);
+        return (
+            date.getUTCFullYear() === year &&
+            date.getUTCMonth() + 1 === month && // getUTCMonth() ist nullbasiert
+            date.getUTCDate() === day
+        );
     }
     //if (status !== 'offen' && status !== 'in Bearbeitung' && status !== 'erledigt') {
     //    throw new Error('Status is invalid. Must be one of: offen, in Bearbeitung, erledigt');
@@ -11,13 +28,6 @@ export function fillInForm(name, duedate, status) {
     //    throw new nameError('Kein gültiger Name eingegeben.');
     //}
 
-    try{
-        cy.get('input#due').type(duedate);
-    }
-    catch(err){
-        cy.log("ungültiges Datum. Todo wird nicht angelegt!");
-        return;
-    }
     switch (status) {
         case 'offen':
             statusNum = 0;
