@@ -6,10 +6,13 @@ export function fillInForm(name, duedate, status) {
     switch (status) {
         case 'offen':
             statusNum = 0;
+            break;
         case 'in Bearbeitung':
             statusNum = 1;
+            break;
         case 'erledigt':
             statusNum = 2;
+            break;
         default:
             throw new Error('Status is invalid. Must be one of: offen, in Bearbeitung, erledigt');
     }
