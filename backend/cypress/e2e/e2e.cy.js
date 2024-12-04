@@ -35,16 +35,14 @@ describe('ToDo App End-to-End Tests', () => {
         fillInForm('Todo_3', '2024-11-12', 'in Bearbeitung');
         expectTodoToBe('Todo_3', '2024-11-12', 'in Bearbeitung');
         const todoCountBefore = getCurrentTodoCount();
-        console.log(todoCountBefore);
         //fillInForm('sollte ein todo löschen', '2025-11-12', 'erledigt');
         const todo = findTodoByTitle('Todo_3');
         //const todoCountAfterCreate = getCurrentTodoCount();
         //todoCountAfterCreate.should('eq', todoCountBefore + 1);
         todo.find('button.delete').click();
         const todoCountAfterDelete = getCurrentTodoCount();
-        console.log(todoCountAfterDelete);
-        throw new Error(todoCountAfterDelete + " " + todoCountBefore);
-        //todoCountAfterDelete.should('eq', todoCountBefore+1);
+
+        todoCountAfterDelete.should('lt', todoCountBefore);
     });
 
     // Eingabe ohne Name ist möglich
@@ -58,10 +56,11 @@ describe('ToDo App End-to-End Tests', () => {
     // Fehlermeldung ??
     it('sollte ein todo mit ungültigem Datum nicht erstellen', () => {
         const todoCountBefore = getCurrentTodoCount();
-        cy.get('input#todo').type('sollte ein todo mit ungültigem Datum nicht erstellen');
-        cy.get('input#due').type('123');
-        cy.get('select#status').select('offen');
-        cy.get('input[type=submit]').click();
+        fillInForm('Todo_4', '123', 'offen');
+        //cy.get('input#todo').type('sollte ein todo mit ungültigem Datum nicht erstellen');
+        //cy.get('input#due').type('123');
+        //cy.get('select#status').select('offen');
+        //cy.get('input[type=submit]').click();
         const todoCountAfterCreate = getCurrentTodoCount();
         todoCountAfterCreate.should('eq', todoCountBefore);
     });
