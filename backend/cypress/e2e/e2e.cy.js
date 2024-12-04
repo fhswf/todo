@@ -90,10 +90,13 @@ describe('ToDo App End-to-End Tests', () => {
         cy.wait(1000);
 
         // Datum in das richtige Format bringen (YYYY-MM-DD)
-        const today = new Date().toISOString().split('T')[0];
+        const today = new Date();
         today.setDate(today.getDate() + 3); // 3 Tage hinzufügen
 
-        cy.get('input#due').should('have.value', today);
+        // Datum im richtigen Format (YYYY-MM-DD)
+        const formattedDate = today.toISOString().split('T')[0];
+
+        cy.get('input#due').should('have.value', formattedDate);
         //cy.get('input#due').should('have.value', new Date().toLocaleDateString());
     });
 });
