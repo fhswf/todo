@@ -85,12 +85,13 @@ describe('ToDo App End-to-End Tests', () => {
         expectTodoToBe('sollte todos laden', '2026-11-12', 'offen');
     });
 
-    it('sollte heutiges Datum als Standarddatum setzen', () => {
+    it('sollte heutiges Datum + 3 Tage als Standarddatum setzen', () => {
         cy.reload();
         cy.wait(1000);
 
         // Datum in das richtige Format bringen (YYYY-MM-DD)
         const today = new Date().toISOString().split('T')[0];
+        today.setDate(today.getDate() + 3); // 3 Tage hinzufügen
 
         cy.get('input#due').should('have.value', today);
         //cy.get('input#due').should('have.value', new Date().toLocaleDateString());
