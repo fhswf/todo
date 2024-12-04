@@ -33,9 +33,9 @@ export function findTodoByTitle(title) {
 
 export function expectTodoToBe(title, duedate, status) {
     const todo = findTodoByTitle(title);
-    //const expectedDate = new Date(duedate).toLocaleDateString();
+    const expectedDate = new Date(duedate).toLocaleDateString();
     todo.get('.title').should('contain', title);
-    todo.get('.due').should('contain', duedate);
+    todo.get('.due').should('contain', expectedDate);
     todo.get('button.status').should('contain', status);
 }
 
