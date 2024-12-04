@@ -3,16 +3,11 @@ Cypress.on('fail', (error) => {
     if (error.message.includes('Typing into a `date` input with `cy.type()` requires a valid date with the format `YYYY-MM-DD`')) {
         cy.log('Erwarteter Fehler: Ungültiges Datum erkannt und als Erfolg gewertet.');
         return false; // Verhindert das Abbrechen des Tests
-    }
-    throw error; // Andere Fehler weitergeben
-});
-
-Cypress.on('fail', (error) => {
-    if (error.message.includes('`cy.type()` cannot accept an empty string.')) {
+    } else if (error.message.includes('`cy.type()` cannot accept an empty string.')){
         cy.log('Fehler abgefangen: Der Name ist leer!');
         return false;  // Verhindert den Fehler, der den Test stoppt
     }
-    throw error;  // Wirf den Fehler erneut, wenn es sich um einen anderen Fehler handelt
+    throw error; // Andere Fehler weitergeben
 });
 
 export function fillInForm(name, duedate, status) {
