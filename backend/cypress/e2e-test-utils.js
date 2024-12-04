@@ -10,7 +10,7 @@ export function fillInForm(name, duedate, status) {
     try{
         cy.get('input#due').type(duedate);
     }
-    catch{
+    catch(err){
         cy.log("ungültiges Datum. Todo wird nicht angelegt!");
         return;
     }
