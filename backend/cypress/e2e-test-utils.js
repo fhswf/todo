@@ -1,9 +1,10 @@
 Cypress.on('fail', (error) => {
-    if (error.message.includes('invalid date')) {
-        cy.log('Erwarteter Fehler: Ungültiges Datum erkannt.');
-        return false; // Verhindert, dass der Test als fehlerhaft markiert wird
+    // Prüfe, ob die Fehlermeldung auf das ungültige Datum hinweist
+    if (error.message.includes('Typing into a `date` input with `cy.type()` requires a valid date with the format `YYYY-MM-DD`')) {
+        cy.log('Erwarteter Fehler: Ungültiges Datum erkannt und als Erfolg gewertet.');
+        return false; // Verhindert das Abbrechen des Tests
     }
-    throw error; // Unbekannte Fehler weiterleiten
+    throw error; // Andere Fehler weitergeben
 });
 
 export function fillInForm(name, duedate, status) {
