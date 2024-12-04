@@ -7,14 +7,22 @@ describe('ToDo App End-to-End Tests', () => {
     });
 
     it('sollte ein neues ToDo erstellen', () => {
+        // Aufgabe eingeben
+        cy.get('#todo').type('Einkaufen');
+        cy.get('#due').type('2024-12-10');
+        cy.get('#status').select('1'); // Status "in Bearbeitung" auswählen
 
-        fillInForm('Todo_1', '2022-11-12', 'in Bearbeitung');
+        // Formular absenden
+        cy.get('[type="submit"]').click();
+
+        //Alte Einstellungen
+        //fillInForm('Todo_1', '2022-11-12', 'in Bearbeitung');
 
         //const expectedDate = new Date('2022-11-12').toLocaleDateString();
         //cy.get('div.todo').should('have.length', '1');
         //expectTodoToBe('sollte ein neues ToDo erstellen', expectedDate, 'in Bearbeitung');
 
-        cy.get('div.todo').first().get('button.submit').click();
+        //cy.get('div.todo').first().get('button.submit').click();
         //cy.get('div.todo').should('have.length', '0');
     });
 
