@@ -8,20 +8,20 @@ describe('ToDo App End-to-End Tests', () => {
 
     it('sollte ein neues ToDo erstellen', () => {
 
-        fillInForm('sollte ein neues ToDo erstellen', '2022-11-12', 'in Bearbeitung');
+        fillInForm('Todo_1', '2022-11-12', 'in Bearbeitung');
 
         const expectedDate = new Date('2022-11-12').toLocaleDateString();
         cy.get('div.todo').should('have.length', '1');
         expectTodoToBe('sollte ein neues ToDo erstellen', expectedDate, 'in Bearbeitung');
 
-        cy.get('div.todo').first().get('button.delete').click();
+        cy.get('div.todo').first().get('button.submit').click();
         cy.get('div.todo').should('have.length', '0');
     });
 
     it('sollte ein todo bearbeiten', () => {
-        fillInForm('sollte ein todo bearbeiten', '2023-11-12', 'offen');
+        //fillInForm('Todo_1', '2023-11-12', 'offen');
 
-        const todo = findTodoByTitle('sollte ein todo bearbeiten');
+        const todo = findTodoByTitle('Todo_1');
         todo.find('button.edit').click();
 
         fillInForm('sollte ein todo bearbeiten haben', '2024-11-12', 'erledigt');
