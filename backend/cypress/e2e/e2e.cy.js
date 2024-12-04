@@ -7,8 +7,8 @@ describe('ToDo App End-to-End Tests', () => {
     });
 
     it('sollte ein neues ToDo erstellen', () => {
-        fillInForm('Todo_1', Date('2022-11-12'), 'in Bearbeitung');
-        expectTodoToBe('Todo_1', Date('2024-11-12'), 'erledigt');
+        fillInForm('Todo_1', '2022-11-12', 'in Bearbeitung');
+        expectTodoToBe('Todo_1', '2024-11-12', 'erledigt');
         //const expectedDate = new Date('2022-11-12').toLocaleDateString();
         //cy.get('div.todo').should('have.length', '1');
         //expectTodoToBe('sollte ein neues ToDo erstellen', expectedDate, 'in Bearbeitung');
