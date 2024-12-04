@@ -43,6 +43,7 @@ describe('ToDo App End-to-End Tests', () => {
         todo.find('button.delete').click();
         const todoCountAfterDelete = getCurrentTodoCount();
         console.log(todoCountAfterDelete);
+        throw new Error(todoCountAfterDelete + " " + todoCountBefore);
         //todoCountAfterDelete.should('eq', todoCountBefore+1);
     });
 
