@@ -40,8 +40,9 @@ describe('ToDo App End-to-End Tests', () => {
         //const todoCountAfterCreate = getCurrentTodoCount();
         //todoCountAfterCreate.should('eq', todoCountBefore + 1);
         todo.find('button.delete').click();
+        cy.reload();
+        cy.wait(1000);
         const todoCountAfterDelete = getCurrentTodoCount();
-
         expect(todoCountAfterDelete).to.equal(todoCountBefore-1);
 
         //todoCountAfterDelete.should('lt', todoCountBefore);
