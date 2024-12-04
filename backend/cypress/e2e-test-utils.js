@@ -1,4 +1,8 @@
 export function fillInForm(name, duedate, status) {
+    function isValidDate(dateString) {
+        const date = new Date(dateString);
+        return !isNaN(date.getTime()); // Gültige Datumsprüfung
+    }
     //if (status !== 'offen' && status !== 'in Bearbeitung' && status !== 'erledigt') {
     //    throw new Error('Status is invalid. Must be one of: offen, in Bearbeitung, erledigt');
     //}
@@ -27,14 +31,14 @@ export function fillInForm(name, duedate, status) {
         default:
             throw new Error('Status is invalid. Must be one of: offen, in Bearbeitung, erledigt');
     }
-    if (new Date(duedate).toString() === 'Invalid Date') {
-        cy.log("ungültiges Datum. Todo wird nicht angelegt!");
+    cy.get('input#todo').type(name);
+    if (!isValidDate(duedate)) {
+        cy.log(`Ungültiges Datum: "${duedate}". Todo wird nicht angelegt!`);
     } else {
-        cy.get('input#todo').type(name);
         cy.get('input#due').type(duedate);
-        cy.get('select#status').select(statusNum);
-        cy.get('input[type=submit]').click();
     }
+    cy.get('select#status').select(statusNum);
+    cy.get('input[type=submit]').click();
 }
 
 export function findTodoByTitle(title) {
@@ -56,31 +60,4 @@ export function expectTodoToBe(title, duedate, status) {
 
 export function getCurrentTodoCount() {
     return cy.get('div.todo').its('length');
-}
-
-export function testStatus(name, duedate, status) {
-    let statusNum;
-    switch (status) {
-        case 'offen':
-            statusNum = 0;
-            break;
-        case 'in Bearbeitung':
-            statusNum = 1;
-            break;
-        case 'erledigt':
-            statusNum = 2;
-            break;
-        default:
-            throw new Error('Status is invalid. Must be one of: offen, in Bearbeitung, erledigt');
-    }
-
-    if (new Date(duedate).toString() === 'Invalid Date') {
-        cy.log("ungültiges Datum. Todo wird nicht angelegt!");
-    } else {
-        cy.get('input#todo').type(name);
-        cy.get('input#due').type(duedate);
-        cy.get('select#status').select(statusNum);
-        cy.get('input[type=submit]').click();
-    }
-    
 }
