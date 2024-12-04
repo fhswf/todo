@@ -27,10 +27,14 @@ export function fillInForm(name, duedate, status) {
         default:
             throw new Error('Status is invalid. Must be one of: offen, in Bearbeitung, erledigt');
     }
-    cy.get('input#todo').type(name);
-    cy.get('input#due').type(duedate);
-    cy.get('select#status').select(statusNum);
-    cy.get('input[type=submit]').click();
+    if (new Date(duedate).toString() === 'Invalid Date') {
+        cy.log("ungültiges Datum. Todo wird nicht angelegt!");
+    } else {
+        cy.get('input#todo').type(name);
+        cy.get('input#due').type(duedate);
+        cy.get('select#status').select(statusNum);
+        cy.get('input[type=submit]').click();
+    }
 }
 
 export function findTodoByTitle(title) {
