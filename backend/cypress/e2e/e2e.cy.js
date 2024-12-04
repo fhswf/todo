@@ -49,13 +49,12 @@ describe('ToDo App End-to-End Tests', () => {
         //todoCountAfterDelete.should('lt', todoCountBefore);
     });
 
-    // Eingabe ohne Name ist möglich
-    //it('sollte ein todo ohne Namen nicht erstellen', () => {
-    //    const todoCountBefore = getCurrentTodoCount();
-    //    fillInForm('', '2026-11-12', 'offen');
-    //    const todoCountAfterCreate = getCurrentTodoCount();
-    //    todoCountAfterCreate.should('eq', todoCountBefore);
-    //});
+    it('sollte ein todo ohne Namen nicht erstellen', () => {
+        const todoCountBefore = getCurrentTodoCount();
+        fillInForm('', '2026-11-12', 'offen');
+        const todoCountAfterCreate = getCurrentTodoCount();
+        todoCountAfterCreate.should('eq', todoCountBefore);
+    });
 
     // Fehlermeldung ??
     it('sollte ein todo mit ungültigem Datum nicht erstellen', () => {
