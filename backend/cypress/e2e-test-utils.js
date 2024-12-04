@@ -3,6 +3,9 @@ export function fillInForm(name, duedate, status) {
     //    throw new Error('Status is invalid. Must be one of: offen, in Bearbeitung, erledigt');
     //}
     let statusNum;
+    //if (name == '' || name== NaN){
+    //    throw new nameError('Kein gültiger Name eingegeben.');
+    //}
     switch (status) {
         case 'offen':
             statusNum = 0;
