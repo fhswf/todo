@@ -42,7 +42,9 @@ describe('ToDo App End-to-End Tests', () => {
         todo.find('button.delete').click();
         const todoCountAfterDelete = getCurrentTodoCount();
 
-        todoCountAfterDelete.should('lt', todoCountBefore);
+        expect(todoCountAfterDelete).to.equal(todoCountBefore-1);
+
+        //todoCountAfterDelete.should('lt', todoCountBefore);
     });
 
     // Eingabe ohne Name ist möglich
