@@ -7,9 +7,9 @@ describe('ToDo App End-to-End Tests', () => {
     });
 
     it('sollte ein neues ToDo erstellen', () => {
-        const formInput = ['Todo_1', '2022-11-12', 'in Bearbeitung'];
-        fillInForm(formInput[0],formInput[1],formInput[2]);
-        expectTodoToBe(formInput[0],formInput[1],formInput[2]);
+        //const formInput = ['Todo_1', '2022-11-12', 'in Bearbeitung'];
+        fillInForm('Todo_1', '2022-11-12', 'in Bearbeitung');
+        expectTodoToBe('Todo_1', '2022-11-12', 'in Bearbeitung');
         //fillInForm('Todo_1', '2022-11-12', 'in Bearbeitung');
         //expectTodoToBe('Todo_1', '2022-11-12', 'in Bearbeitung');
         //const expectedDate = new Date('2022-11-12').toLocaleDateString();
@@ -21,16 +21,22 @@ describe('ToDo App End-to-End Tests', () => {
     });
 
     it('sollte ein todo bearbeiten', () => {
-        const todo = findTodoByTitle('Todo_1');
+        //const formInput = ['Todo_2', '2024-11-12', 'in Bearbeitung'];
+        fillInForm('Todo_2', '2024-11-12', 'in Bearbeitung');
+        expectTodoToBe('Todo_2', '2024-11-12', 'in Bearbeitung');
+
+        const todo = findTodoByTitle('Todo_2');
         todo.find('button.edit').click();
-        fillInForm('Todo_2', '2024-11-12', 'erledigt');
-        expectTodoToBe('Todo_2', '2024-11-12', 'erledigt');
+        fillInForm('Todo_2_bearbeitet', '2024-11-12', 'erledigt');
+        expectTodoToBe('Todo_2_bearbeitet', '2024-11-12', 'erledigt');
     });
 
     it('sollte ein todo löschen', () => {
+        fillInForm('Todo_3', '2024-11-12', 'in Bearbeitung');
+        expectTodoToBe('Todo_3', '2024-11-12', 'in Bearbeitung');
         const todoCountBefore = getCurrentTodoCount();
         //fillInForm('sollte ein todo löschen', '2025-11-12', 'erledigt');
-        const todo = findTodoByTitle('Todo_2');
+        const todo = findTodoByTitle('Todo_3');
         //const todoCountAfterCreate = getCurrentTodoCount();
         //todoCountAfterCreate.should('eq', todoCountBefore + 1);
         todo.find('button.delete').click();
