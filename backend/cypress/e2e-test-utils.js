@@ -29,7 +29,12 @@ export function fillInForm(name, duedate, status) {
         default:
             throw new Error('Status is invalid. Must be one of: offen, in Bearbeitung, erledigt');
     }
-    cy.get('input#todo').type(name);
+
+    if (name.trim() === '') {
+        cy.log('Der Name ist leer und wird daher nicht eingegeben.');
+    } else {
+        cy.get('input#todo').type(name);
+    }
     cy.get('input#due').type(duedate);
     cy.get('select#status').select(statusNum);
     cy.get('input[type=submit]').click();
