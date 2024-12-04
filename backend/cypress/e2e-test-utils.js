@@ -23,7 +23,12 @@ export function fillInForm(name, duedate, status) {
 }
 
 export function findTodoByTitle(title) {
-    return cy.get('div.todo').find('.title').contains(title).first().parent();
+    try{
+        return cy.get('div.todo').find('.title').contains(title).first().parent();
+    }
+    catch(err){
+        throw new Error('Todo not found: ' + title);
+    }
 }
 
 export function expectTodoToBe(title, duedate, status) {

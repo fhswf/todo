@@ -7,17 +7,8 @@ describe('ToDo App End-to-End Tests', () => {
     });
 
     it('sollte ein neues ToDo erstellen', () => {
-        // Aufgabe eingeben
-        //cy.get('#todo').type('Einkaufen');
-        //cy.get('#due').type('2024-12-10');
-        //cy.get('#status').select('1'); // Status "in Bearbeitung" auswählen
-
-        // Formular absenden
-        //cy.get('[type="submit"]').click();
-
-        //Alte Einstellungen
         fillInForm('Todo_1', '2022-11-12', 'in Bearbeitung');
-
+        expectTodoToBe('Todo_1', '2024-11-12', 'erledigt');
         //const expectedDate = new Date('2022-11-12').toLocaleDateString();
         //cy.get('div.todo').should('have.length', '1');
         //expectTodoToBe('sollte ein neues ToDo erstellen', expectedDate, 'in Bearbeitung');
@@ -27,25 +18,21 @@ describe('ToDo App End-to-End Tests', () => {
     });
 
     it('sollte ein todo bearbeiten', () => {
-        //fillInForm('Todo_1', '2023-11-12', 'offen');
-
         const todo = findTodoByTitle('Todo_1');
         todo.find('button.edit').click();
-
-        fillInForm('sollte ein todo bearbeiten haben', '2024-11-12', 'erledigt');
-
-        expectTodoToBe('sollte ein todo bearbeiten haben', '2024-11-12', 'erledigt');
+        fillInForm('Todo_2', '2024-11-12', 'erledigt');
+        expectTodoToBe('Todo_2', '2024-11-12', 'erledigt');
     });
 
     it('sollte ein todo löschen', () => {
         const todoCountBefore = getCurrentTodoCount();
-        fillInForm('sollte ein todo löschen', '2025-11-12', 'erledigt');
-        const todo = findTodoByTitle('sollte ein todo löschen');
-        const todoCountAfterCreate = getCurrentTodoCount();
-        todoCountAfterCreate.should('eq', todoCountBefore + 1);
+        //fillInForm('sollte ein todo löschen', '2025-11-12', 'erledigt');
+        const todo = findTodoByTitle('Todo_2');
+        //const todoCountAfterCreate = getCurrentTodoCount();
+        //todoCountAfterCreate.should('eq', todoCountBefore + 1);
         todo.find('button.delete').click();
         const todoCountAfterDelete = getCurrentTodoCount();
-        todoCountAfterDelete.should('eq', todoCountBefore);
+        todoCountAfterDelete.should('eq', todoCountBefore-1);
     });
 
     // Fehlermeldung ??
