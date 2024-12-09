@@ -23,7 +23,7 @@ Zuerst wurde eine Build-Pipeline mit GitHub-Actions erstellt, in der die Anwendu
 
 ## Ergebnisse der QS
 ### Jest Analyse
-Durch die Jest-Tests sind einige Fehler bei der Behandlung von Fehlern audgefallen, die nun behoben werden müssen. Durch diese Fehler ist es ohne Änderungen an der Anwendung nich tmöglich eine 100%-ige Code-Abdeckung zu erreichen.
+Durch die Jest-Tests sind einige Fehler bei der Behandlung von Fehlern aufgefallen, die nun behoben werden müssen. Durch diese Fehler ist es ohne Änderungen an der Anwendung nicht möglich eine 100%-ige Code-Abdeckung zu erreichen.
 
 Die aktuelle Code-Abdeckung ist im nachfolgenden Screenshot zu sehen:
 ![Code-Abdeckung](./images/jest-code-coverage-before-fixes.png)

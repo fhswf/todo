@@ -7,3 +7,8 @@ Diese Anwendung dient als Beispiel für das [Modul Softwarequalität](https://el
 * [SonarQube](https://hopper.fh-swf.de/sonarqube/dashboard?id=peters_todo)
 * [GitHub Actions](https://github.com/Ranea-D/todo/actions)
 * [GitHub](https://github.com/Ranea-D/todo)
+
+
+## Todos
+* Validierung der Post und PUT Requests mit todoValidationRules
+* 

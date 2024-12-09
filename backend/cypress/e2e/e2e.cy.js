@@ -59,11 +59,10 @@ describe('ToDo App End-to-End Tests', () => {
     // Fehlermeldung ??
     it('sollte ein todo mit ungültigem Datum nicht erstellen', () => {
         const todoCountBefore = getCurrentTodoCount();
-        fillInForm('Todo_4', '123', 'offen');
-        //cy.get('input#todo').type('sollte ein todo mit ungültigem Datum nicht erstellen');
-        //cy.get('input#due').type('123');
-        //cy.get('select#status').select('offen');
-        //cy.get('input[type=submit]').click();
+        cy.get('input#todo').type('sollte ein todo mit ungültigem Datum nicht erstellen');
+        cy.get('input#due').invoke('attr', 'value', '123');
+        cy.get('select#status').select('offen');
+        cy.get('input[type=submit]').click();
         const todoCountAfterCreate = getCurrentTodoCount();
         todoCountAfterCreate.should('eq', todoCountBefore);
     });
