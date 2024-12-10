@@ -36,8 +36,13 @@ export default class DB {
      * @returns {Promise} - Promise with todo
      */
     queryById(id) {
-        const _id = ObjectId.createFromHexString(id);
-        return collection.findOne({ _id });
+        try {
+            const _id = ObjectId.createFromHexString(id);
+            return collection.findOne({ _id });
+        } catch (err) {
+            console.log('Error parsing id: %o, %s', err, id);
+            return Promise.reject(err);
+        }
     }
 
     /** Update todo by id
@@ -45,25 +50,32 @@ export default class DB {
      * @returns {Promise} - Promise with updated todo
      */
     update(id, todo) {
-        const _id = ObjectId.createFromHexString(id);
-        if (typeof todo._id === 'string') {
-            todo._id = _id;
+        try {
+            const _id = ObjectId.createFromHexString(id);
+            if (typeof todo._id === 'string') {
+                todo._id = _id;
+            }
+            return collection
+                .replaceOne({ _id }, todo)
+                .then(result => {
+                    if (result.modifiedCount === 1) {
+                        return todo;
+                    } else if (result.modifiedCount === 0) {
+                        console.log('Todo not found: %s', id);
+                        return null;
+                    } else {
+                        console.log('Error updating todo: %o, %s', result, id);
+                        throw new Error('Error updating todo');
+                    }
+                })
+                .catch(err => {
+                    console.log('Error updating todo: %o, %s', err, id);
+                    throw err;
+                });
+        } catch (err) {
+            console.log('Error parsing id: %o, %s', err, id);
+            return Promise.reject(err);
         }
-        return collection
-            .replaceOne({ _id }, todo)
-            .then(result => {
-                if (result.modifiedCount === 1) {
-                    return todo;
-                }
-                else {
-                    console.log('Error updating todo: %o, %s', result, id);
-                    throw new Error('Error updating todo');
-                }
-            })
-            .catch(err => {
-                console.log('Error updating todo: %o, %s', err, id);
-                throw err;
-            });
     }
 
     /** Delete todo by id
@@ -71,17 +83,22 @@ export default class DB {
      * @returns {Promise} - Promise with deleted todo
      */
     delete(id) {
-        const _id = ObjectId.createFromHexString(id);
-        return collection.findOneAndDelete({ _id })
-            .then(result => {
-                if (result.ok) {
-                    return result.value;
-                }
-                else {
-                    console.log('Error deleting todo: %o, %s', result, id);
-                    throw new Error('Error deleting todo');
-                }
-            })
+        try {
+            const _id = ObjectId.createFromHexString(id);
+            return collection.findOneAndDelete({ _id })
+                .then(result => {
+                    if (result.ok) {
+                        return result.value;
+                    }
+                    else {
+                        console.log('Error deleting todo: %o, %s', result, id);
+                        throw new Error('Error deleting todo');
+                    }
+                })
+        } catch (err) {
+            console.log('Error parsing id: %o, %s', err, id);
+            return Promise.reject(err);
+        }
     }
 
     /** Insert todo

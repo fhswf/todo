@@ -4,7 +4,7 @@ import DB from './db.js'
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 
-import { check, validationResult } from 'express-validator';
+import {checkExact, checkSchema, validationResult} from 'express-validator';
 import cookieParser from 'cookie-parser';
 import { getRandomValues } from 'crypto';
 
@@ -93,12 +93,38 @@ async function initDB() {
 }
 
 
+// Validation rules for todos, check if title is not empty and at least 3 characters long and the todo only has the allow properties
 const todoValidationRules = [
-    check('title')
-        .notEmpty()
-        .withMessage('Titel darf nicht leer sein')
-        .isLength({ min: 3 })
-        .withMessage('Titel muss mindestens 3 Zeichen lang sein'),
+    checkExact(
+        checkSchema({
+            _id: {
+                in: ['body'],
+                optional: true,
+                isString: true,
+            },
+            title: {
+                in: ['body'],
+                isString: true,
+                notEmpty: {
+                    errorMessage: 'Titel darf nicht leer sein'
+                },
+                isLength: {
+                    options: { min: 3 },
+                    errorMessage: 'Title must be at least 3 characters long'
+                }
+            },
+            due: {
+                in: ['body'],
+                optional: true,
+                isISO8601: true,
+            },
+            status: {
+                in: ['body'],
+                optional: true,
+                isInt: true,
+            }
+        })
+    )
 ];
 
 
@@ -106,7 +132,11 @@ const todoValidationRules = [
  * This middleware could be used to implement JWT-based authentication. Currently, this is only a stub.
 */
 let authenticate = (req, res, next) => {
-    // Dummy authentication
+    // check if there is an authorization header, fail if not
+    if (!req.headers.authorization) {
+        res.status(401).send({ error: 'Unauthorized' });
+        return;
+    }
     next();
 }
 
@@ -177,7 +207,7 @@ app.get('/todos/:id', authenticate,
             })
             .catch(err => {
                 console.log(err);
-                res.sendStatus(500);
+                res.status(500).send({ error: 'Internal Server Error' });
             });
     }
 );
@@ -219,13 +249,27 @@ app.get('/todos/:id', authenticate,
  *    '500':
  *      description: Serverfehler
  */
-app.put('/todos/:id', authenticate,
+app.put('/todos/:id', authenticate, todoValidationRules,
     async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res.status(400).send({ error: errors.array() });
+            return;
+        }
+
         let id = req.params.id;
         let todo = req.body;
+        if (!checkCorrectStatus(todo.status)) {
+            res.status(400).send({ error: 'Invalid status value' });
+            return;
+        }
+        if (!todo) {
+            res.status(400).send({ error: 'Todo fehlt' });
+            return;
+        }
         if (todo._id !== id) {
             console.log("id in body does not match id in path: %s != %s", todo._id, id);
-            res.sendStatus(400, "{ message: id in body does not match id in path}");
+            res.status(400).send({ error: 'id in body does not match id in path'});
             return;
         }
         return db.update(id, todo)
@@ -233,14 +277,31 @@ app.put('/todos/:id', authenticate,
                 if (todo) {
                     res.send(todo);
                 } else {
-                    res.sendStatus(404);
+                    res.status(404).send({ error: `Todo with id ${id} not found` });
                 }
             })
             .catch(err => {
                 console.log("error updating todo: %s, %o, %j", id, todo, err);
-                res.sendStatus(500);
+                res.status(500).send({ error: `Error updating todo: ${err} or an integer, ${id}` });
             })
     });
+
+function checkCorrectStatus(status) {
+
+    // check if status is a number
+    if (isNaN(status)) {
+        return false;
+    }
+    // check if status is an integer
+    if (!Number.isInteger(status)) {
+        return false;
+    }
+    // check if status is in the correct range
+    if (status < 0 || status > 2) {
+        return false;
+    }
+    return true;
+}
 
 /** Create a new todo.
  * @swagger
@@ -267,13 +328,15 @@ app.put('/todos/:id', authenticate,
  *     '500':
  *       description: Serverfehler
  */
-app.post('/todos', authenticate,
+app.post('/todos', authenticate, todoValidationRules,
     async (req, res) => {
-        let todo = req.body;
-        if (!todo) {
-            res.sendStatus(400, { message: "Todo fehlt" });
-            return;
+        const errors = validationResult(req);
+        console.log(errors);
+        if (!errors.isEmpty()) {
+            return res.status(400).send({ error: errors.array() });
         }
+
+        let todo = req.body;
         return db.insert(todo)
             .then(todo => {
                 res.status(201).send(todo);
@@ -314,12 +377,12 @@ app.delete('/todos/:id', authenticate,
                 if (todo) {
                     res.sendStatus(204);
                 } else {
-                    res.sendStatus(404);
+                    res.status(404).send({ error: `Todo with id ${id} not found` });
                 }
             })
             .catch(err => {
                 console.log(err);
-                res.sendStatus(500);
+                res.status(500).send({ error: `Error deleting todo: ${err} or an integer, ${id}` });
             });
     }
 );

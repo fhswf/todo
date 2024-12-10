@@ -131,7 +131,7 @@ describe('PUT /todos/:id', () => {
             "title": "Übung 4 machen",
             "due": "2022-11-12T00:00:00.000Z",
             "status": 1,
-            "_id": "12344321"
+            "_id": "123443211234432112344321"
         };
 
         const updateResponse = await request(app)
@@ -157,7 +157,7 @@ describe('PUT /todos/:id', () => {
             .send(updatedTodo);
 
         expect(response.statusCode).toBe(500);
-        expect(response.body.error).toBe('Error updating todo: BSONError: Argument passed in must be a string of 12 bytes or a string of 24 hex characters or an integer, 123456789012345678901234www');
+        expect(response.body.error).toBe('Error updating todo: BSONError: Argument passed in must be a single String of 12 bytes or a string of 24 hex characters or an integer, 123456789012345678901234www');
     });
 
     it('sollte einen 400-Fehler zurückgeben, wenn der Name des Todos invalide ist', async () => {
@@ -184,7 +184,13 @@ describe('PUT /todos/:id', () => {
             .send(invalidUpdate);
 
         expect(updateResponse.statusCode).toBe(400);
-        expect(updateResponse.body.error).toBe('Titel muss mindestens 3 Zeichen lang sein');
+        expect(updateResponse.body.error).toEqual([{
+            value: '1',
+            msg: 'Title must be at least 3 characters long',
+            path: 'title',
+            type: 'field',
+            location: 'body'
+        }]);
     })
 });
 
@@ -217,7 +223,29 @@ describe('POST /todos', () => {
             .send(newTodo);
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.error).toBe('Bad Request');
+        expect(response.body.error).toEqual([
+            {
+                type: 'field',
+                value: undefined,
+                msg: 'Invalid value',
+                path: 'title',
+                location: 'body'
+            },
+            {
+                type: 'field',
+                value: undefined,
+                msg: 'Titel darf nicht leer sein',
+                path: 'title',
+                location: 'body'
+            },
+            {
+                type: 'field',
+                value: undefined,
+                msg: 'Title must be at least 3 characters long',
+                path: 'title',
+                location: 'body'
+            }
+        ]);
     });
 
     it('sollte einen 400-Fehler zurückgeben, wenn das Todo nicht valide ist', async () => {
@@ -234,7 +262,19 @@ describe('POST /todos', () => {
             .send(newTodo);
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.error).toBe('Bad Request');
+        expect(response.body.error).toEqual([
+            {
+                "fields": [
+                    {
+                        "location": "body",
+                        "path": "invalid",
+                        "value": "invalid"
+                    }
+                ],
+                "msg": "Unknown field(s)",
+                "type": "unknown_fields"
+            }
+        ]);
     });
 
     it('sollte einen 400-Fehler zurückgeben, wenn kein Todo bereitgestellt wird', async () => {
@@ -244,7 +284,29 @@ describe('POST /todos', () => {
             .send();
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.message).toBe('Todo fehlt');
+        expect(response.body.error).toEqual([
+            {
+                type: 'field',
+                value: undefined,
+                msg: 'Invalid value',
+                path: 'title',
+                location: 'body'
+            },
+            {
+                type: 'field',
+                value: undefined,
+                msg: 'Titel darf nicht leer sein',
+                path: 'title',
+                location: 'body'
+            },
+            {
+                type: 'field',
+                value: undefined,
+                msg: 'Title must be at least 3 characters long',
+                path: 'title',
+                location: 'body'
+            }
+        ]);
     });
 
     it('sollte einen 400-Fehler zurückgeben, wenn der Name des Todos invalide ist', async () => {
@@ -260,7 +322,22 @@ describe('POST /todos', () => {
             .send(newTodo);
 
         expect(response.statusCode).toBe(400);
-        expect(response.body.error).toBe('Titel darf nicht leer sein');
+        expect(response.body.error).toEqual([
+            {
+                value: '',
+                msg: 'Titel darf nicht leer sein',
+                path: 'title',
+                type: 'field',
+                location: 'body'
+            },
+            {
+                value: '',
+                msg: 'Title must be at least 3 characters long',
+                path: 'title',
+                type: 'field',
+                location: 'body'
+            }
+        ]);
     });
 });
 
@@ -300,7 +377,7 @@ describe('DELETE /todos/:id', () => {
             .set('Authorization', `Bearer ${token}`);
 
         expect(deleteResponse.statusCode).toBe(404);
-        expect(deleteResponse.body.error).toMatch('`Todo with id 333333333333333333333333 not found`');
+        expect(deleteResponse.body.error).toMatch('Todo with id 333333333333333333333333 not found');
     });
 
     it('sollte einen 500-Fehler zurückgeben, wenn die ID nicht gültig ist', async () => {
@@ -309,7 +386,7 @@ describe('DELETE /todos/:id', () => {
             .set('Authorization', `Bearer ${token}`);
 
         expect(response.statusCode).toBe(500);
-        expect(response.body.error).toBe('Error deleting todo: BSONError: Argument passed in must be a string of 12 bytes or a string of 24 hex characters or an integer, 123456789012345678901234www');
+        expect(response.body.error).toBe('Error deleting todo: BSONError: Argument passed in must be a single String of 12 bytes or a string of 24 hex characters or an integer, 123456789012345678901234www');
     });
 });
 describe('PUT /todos/:id (Fehlerhafte Aktualisierung)', () => {
@@ -327,6 +404,8 @@ describe('PUT /todos/:id (Fehlerhafte Aktualisierung)', () => {
             .send(newTodo);
 
         const invalidUpdate = {
+            "title": "Ungültigen Status testen",
+            "due": "2022-11-12T00:00:00.000Z",
             "status": "invalid_status" // Status ist kein gültiger Wert
         };
 
@@ -337,7 +416,13 @@ describe('PUT /todos/:id (Fehlerhafte Aktualisierung)', () => {
             .send(invalidUpdate);
 
         expect(updateResponse.statusCode).toBe(400);
-        expect(updateResponse.body.error).toBe('Invalid status value');
+        expect(updateResponse.body.error).toEqual([{
+            "location": "body",
+            "msg": "Invalid value",
+            "path": "status",
+            "type": "field",
+            "value": "invalid_status"
+        }]);
     });
 });
 
