@@ -33,7 +33,7 @@ describe('ToDo App End-to-End Tests', () => {
         todoCountAfterCreate.should('eq', todoCountBefore + 1);
         todo.find('button.delete').click();
         const todoCountAfterDelete = getCurrentTodoCount();
-        expect(todoCountAfterDelete).to.equal(todoCountBefore-1);
+        todoCountAfterDelete.should('eq', todoCountBefore-1);
     });
 
     it('sollte ein todo ohne Namen nicht erstellen', () => {
