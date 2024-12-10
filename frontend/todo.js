@@ -1,5 +1,3 @@
-
-
 let todos = [];
 const status = ["offen", "in Bearbeitung", "erledigt"];
 
@@ -13,9 +11,9 @@ function createTodoElement(todo) {
            <div class="title">${todo.title}</div> 
            <div class="due">${due.toLocaleDateString()}</div>
            <div class="actions">
-              <button class="status" onclick="changeStatus(${todo._id})">${status[todo.status || 0]}</button>
-              <button class="edit" onclick="editTodo(${todo._id})">Bearbeiten</button>
-              <button class="delete" onclick="deleteTodo(${todo._id})">Löschen</button>
+              <button class="status" onclick="changeStatus('${todo._id}')">${status[todo.status || 0]}</button>
+              <button class="edit" onclick="editTodo('${todo._id}')">Bearbeiten</button>
+              <button class="delete" onclick="deleteTodo('${todo._id}')">Löschen</button>
            </div>
          </div>`);
 
@@ -63,7 +61,7 @@ function saveTodo(evt) {
     evt.preventDefault();
 
     // Get the id from the form. If it is not set, we are creating a new todo.
-    let _id = Number.parseInt(evt.target.dataset.id) || Date.now();
+    let _id = Number.parseInt(evt.target.dataset.id) || undefined;
 
     let todo = {
         _id,
@@ -74,6 +72,7 @@ function saveTodo(evt) {
 
     // Save the todo
     let index = todos.findIndex(t => t._id === _id);
+    console.log(index)
     if (index >= 0) {
         console.log("Updating todo: %o", todo);
         fetch(API + "/" + _id, {

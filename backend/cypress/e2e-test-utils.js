@@ -1,24 +1,5 @@
-Cypress.on('fail', (error) => {
-    // Prüfe, ob die Fehlermeldung auf das ungültige Datum hinweist
-    if (error.message.includes('Typing into a `date` input with `cy.type()` requires a valid date with the format `YYYY-MM-DD`')) {
-        cy.log('Erwarteter Fehler: Ungültiges Datum erkannt und als Erfolg gewertet.');
-        return false; // Verhindert das Abbrechen des Tests
-    } else if (error.message.includes('`cy.type()` cannot accept an empty string.')){
-        cy.log('Fehler abgefangen: Der Name ist leer!');
-        return false;  // Verhindert den Fehler, der den Test stoppt
-    }
-    throw error; // Andere Fehler weitergeben
-});
-
 export function fillInForm(name, duedate, status) {
-    //if (status !== 'offen' && status !== 'in Bearbeitung' && status !== 'erledigt') {
-    //    throw new Error('Status is invalid. Must be one of: offen, in Bearbeitung, erledigt');
-    //}
     let statusNum;
-    //if (name == '' || name== NaN){
-    //    throw new nameError('Kein gültiger Name eingegeben.');
-    //}
-
     switch (status) {
         case 'offen':
             statusNum = 0;
@@ -33,17 +14,16 @@ export function fillInForm(name, duedate, status) {
             throw new Error('Status is invalid. Must be one of: offen, in Bearbeitung, erledigt');
     }
 
-    cy.get('input#todo').type(name);
+    cy.get('input#todo').clear().type(name);
     cy.get('input#due').type(duedate);
     cy.get('select#status').select(statusNum);
     cy.get('input[type=submit]').click();
 }
 
 export function findTodoByTitle(title) {
-    try{
+    try {
         return cy.get('div.todo').find('.title').contains(title).first().parent();
-    }
-    catch(err){
+    } catch(err) {
         throw new Error('Todo not found: ' + title);
     }
 }

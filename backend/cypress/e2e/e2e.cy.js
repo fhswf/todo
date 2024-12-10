@@ -7,21 +7,15 @@ describe('ToDo App End-to-End Tests', () => {
     });
 
     it('sollte ein neues ToDo erstellen', () => {
-        //const formInput = ['Todo_1', '2022-11-12', 'in Bearbeitung'];
+        const todoCountBefore = getCurrentTodoCount();
         fillInForm('Todo_1', '2022-11-12', 'in Bearbeitung');
         expectTodoToBe('Todo_1', '2022-11-12', 'in Bearbeitung');
-        //fillInForm('Todo_1', '2022-11-12', 'in Bearbeitung');
-        //expectTodoToBe('Todo_1', '2022-11-12', 'in Bearbeitung');
-        //const expectedDate = new Date('2022-11-12').toLocaleDateString();
-        //cy.get('div.todo').should('have.length', '1');
-        //expectTodoToBe('sollte ein neues ToDo erstellen', expectedDate, 'in Bearbeitung');
-
-        //cy.get('div.todo').first().get('button.submit').click();
-        //cy.get('div.todo').should('have.length', '0');
+        const expectedDate = new Date('2022-11-12').toLocaleDateString();
+        cy.get('div.todo').should('have.length', todoCountBefore + 1);
+        expectTodoToBe('sollte ein neues ToDo erstellen', expectedDate, 'in Bearbeitung');
     });
 
     it('sollte ein todo bearbeiten', () => {
-        //const formInput = ['Todo_2', '2024-11-12', 'in Bearbeitung'];
         fillInForm('Todo_2', '2024-11-12', 'in Bearbeitung');
         expectTodoToBe('Todo_2', '2024-11-12', 'in Bearbeitung');
 
@@ -31,22 +25,15 @@ describe('ToDo App End-to-End Tests', () => {
         expectTodoToBe('Todo_2_bearbeitet', '2024-11-12', 'erledigt');
     });
 
-    //Fehlermeldung, da scheint ein Problem vorzuliegen
     it('sollte ein todo löschen', () => {
-        fillInForm('Todo_3', '2024-11-12', 'in Bearbeitung');
-        expectTodoToBe('Todo_3', '2024-11-12', 'in Bearbeitung');
         const todoCountBefore = getCurrentTodoCount();
-        //fillInForm('sollte ein todo löschen', '2025-11-12', 'erledigt');
+        fillInForm('sollte ein todo löschen', '2025-11-12', 'erledigt');
         const todo = findTodoByTitle('Todo_3');
-        //const todoCountAfterCreate = getCurrentTodoCount();
-        //todoCountAfterCreate.should('eq', todoCountBefore + 1);
+        const todoCountAfterCreate = getCurrentTodoCount();
+        todoCountAfterCreate.should('eq', todoCountBefore + 1);
         todo.find('button.delete').click();
-        cy.reload();
-        cy.wait(1000);
         const todoCountAfterDelete = getCurrentTodoCount();
         expect(todoCountAfterDelete).to.equal(todoCountBefore-1);
-
-        //todoCountAfterDelete.should('lt', todoCountBefore);
     });
 
     it('sollte ein todo ohne Namen nicht erstellen', () => {
@@ -56,7 +43,6 @@ describe('ToDo App End-to-End Tests', () => {
         todoCountAfterCreate.should('eq', todoCountBefore);
     });
 
-    // Fehlermeldung ??
     it('sollte ein todo mit ungültigem Datum nicht erstellen', () => {
         const todoCountBefore = getCurrentTodoCount();
         cy.get('input#todo').type('sollte ein todo mit ungültigem Datum nicht erstellen');
@@ -84,9 +70,6 @@ describe('ToDo App End-to-End Tests', () => {
     });
 
     it('sollte heutiges Datum + 3 Tage als Standarddatum setzen', () => {
-        cy.reload();
-        cy.wait(1000);
-
         // Datum in das richtige Format bringen (YYYY-MM-DD)
         const today = new Date();
         today.setDate(today.getDate() + 3); // 3 Tage hinzufügen
@@ -95,6 +78,6 @@ describe('ToDo App End-to-End Tests', () => {
         const formattedDate = today.toISOString().split('T')[0];
 
         cy.get('input#due').should('have.value', formattedDate);
-        //cy.get('input#due').should('have.value', new Date().toLocaleDateString());
+        cy.get('input#due').should('have.value', new Date().toLocaleDateString());
     });
 });
