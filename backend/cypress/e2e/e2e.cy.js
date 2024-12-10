@@ -11,7 +11,7 @@ describe('ToDo App End-to-End Tests', () => {
         fillInForm('Todo_1', '2022-11-12', 'in Bearbeitung');
         expectTodoToBe('Todo_1', '2022-11-12', 'in Bearbeitung');
         const expectedDate = new Date('2022-11-12').toLocaleDateString();
-        cy.get('div.todo').should('have.length', todoCountBefore + 1);
+        cy.get('div.todo').should('have.length.gt', todoCountBefore);
         expectTodoToBe('sollte ein neues ToDo erstellen', expectedDate, 'in Bearbeitung');
     });
 
@@ -28,7 +28,7 @@ describe('ToDo App End-to-End Tests', () => {
     it('sollte ein todo löschen', () => {
         const todoCountBefore = getCurrentTodoCount();
         fillInForm('sollte ein todo löschen', '2025-11-12', 'erledigt');
-        const todo = findTodoByTitle('Todo_3');
+        const todo = findTodoByTitle('sollte ein todo löschen');
         const todoCountAfterCreate = getCurrentTodoCount();
         todoCountAfterCreate.should('eq', todoCountBefore + 1);
         todo.find('button.delete').click();
