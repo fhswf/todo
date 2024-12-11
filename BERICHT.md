@@ -52,5 +52,6 @@ Außerdem gibt es ein Security Hotspot in einer Testdatei, da dort ein Passwort 
 ## Vergleich der Ergebnisse
 Nach dem alle Fehler behoben wurde, die zu Testfehlern führten, wurde die Code-Abdeckung durch Jest erneut analysiert. Die Abdeckung beträgt nun über 85% in der schlechtesten Kategorie (Branches). Die Ergebnisse sind im nachfolgenden Screenshot zu sehen:
 ![Code-Abdeckung](./images/jest-code-coverage-after-fixes.png)
+
 Dies ist eine Steigerung von 10% im Vergleich zu den vorherigen Ergebnissen.
 Die von SonarQube gefundenen Probleme wurden ebenfalls behoben. Es gibt nun keine Reliability Probleme mehr und die Maintainability Probleme wurden auf 0 reduziert. Ein Security Hotspot wurde ebenfalls behoben. Ein zweiter wurde als falsch positiv markiert, da es sich um ein Testpasswort handelt.
