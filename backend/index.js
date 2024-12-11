@@ -77,6 +77,7 @@ const app = express();
 app.use(cookieParser())
 app.use(express.static('../frontend'));
 app.use(express.json());
+app.disable("x-powered-by");
 
 /** Middleware für Swagger */
 const swaggerDocs = swaggerJsdoc(swaggerOptions);

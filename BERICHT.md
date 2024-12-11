@@ -7,12 +7,11 @@ Diese Datei enthält den Projektbericht für die Todo Anwendung. Der Bericht wir
 * Tim Tomczek
 
 ## Vorgehensweise
-Zuerst wurde eine Build-Pipeline mit GitHub-Actions erstellt, in der die Anwendung gebaut und mit Cypress, für End-to-End (E2E) Tests, und Jest, für Unit-Tests, getestet wird. Anschließend wurden die Funktionen der Anwendung untersucht und mit E2E Tests abgedeckt. Für die Unit-Tests wurde geprüft ob für jede Funktion ein Test vorhanden ist. Die Überprüfung der Vollständigkeit der Tests erfolgte durch die Analyse der Code-Coverage durch Jest. Durch weitere Tests wurde die Abdeckung erhöht. Danach fand die Analyse der SonarQube Ergebnisse statt. Nach der Testphase wurden die gefundenen Bugs dokumentiert und Lösungen für diese erarbeitet. Abschließend gab es einen Vergleich der Ergebnisse nach den Korrekturen mit dne Ergebnissen vor den Korrekturen.
+Zuerst wurde eine Build-Pipeline mit GitHub-Actions erstellt, in der die Anwendung gebaut und mit Cypress, für End-to-End (E2E) Tests, und Jest, für Unit-Tests, getestet wird. Anschließend wurden die Funktionen der Anwendung untersucht und mit E2E Tests abgedeckt. Für die Unit-Tests wurde geprüft ob für jede Funktion ein Test vorhanden ist. Die Überprüfung der Vollständigkeit der Tests erfolgte durch die Analyse der Code-Coverage durch Jest. Durch weitere Tests wurde die Abdeckung erhöht. Danach fand die Analyse der SonarQube Ergebnisse statt. Nach der Testphase wurden die gefundenen Bugs dokumentiert und Lösungen für diese erarbeitet. Abschließend gab es einen Vergleich der Ergebnisse nach den Korrekturen mit den Ergebnissen vor den Korrekturen.
 
 
 ## Lösungen
-// TODO
-
+Für die Unit-Tests wird das Test-Framework Jest verwendet. Für die End-to-End Tests wird das Test-Framework Cypress verwendet. Dieses wurde in den devDependencies des Backend-Servers hinzugefügt, da dieser Server die gesamte Anwendung bereitstellt.
 
 ## Probleme
 ### Unit-Tests benötigen eine Datenbank (TODO)
@@ -31,6 +30,9 @@ Durch die Jest-Tests sind einige Fehler bei der Behandlung von Fehlern aufgefall
 Die aktuelle Code-Abdeckung ist im nachfolgenden Screenshot zu sehen:
 ![Code-Abdeckung](./images/jest-code-coverage-before-fixes.png)
 
+### Cypress Analyse
+Durch die End-to-End-Tests sind einige Fehler bei der Behandlung der Id der Todos und dem Umgang mit Fehlern der API Aufrufen aufgefallen. 
+
 ### Gefundene Bugs
 | Verhalten                                                                         | Erwartetes Verhalten                                                                                                                       |
 |-----------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
@@ -43,6 +45,12 @@ Die aktuelle Code-Abdeckung ist im nachfolgenden Screenshot zu sehen:
 
 ### SonarQube Analyse
 Die SonarQube Analyse zeigt zwei mittlere Reliability Probleme einmal ein fehlendes lang-Attribut in der todo.html und die Verwendung eines let statt eines const in der index.js. Beide Probleme können ohne großen Aufwand behoben werden.
-Außerdem gibt es 44 Maintainability Probleme. Davon einer mit einer hohen Stufe und 43 mit einer niedrigen Stufe. Das Problem mit der hohen Stufe kann auch wieder durch die Verwendung von const anstatt let behoben werden. Bei den Problemen mit niedriger Stufe sind viele falsche Probleme. Da hier die Wörter Todo als noch zu erledingende Aufgabe markiert werden. Außerdem wird dabei auf ungenutzte Imports aufmerksam gemacht. Dadurch ist aufgefallen das die definierte Validierung der Todos nicht genutzt wird.
-Bei den doppelten Codezeilen scheint es sich um Vergleiche mit anderen Repos zu handeln die das gleiche Projekt geforkt haben, daher wird dieser Punkt ignoriert.
+Außerdem gibt es 44 Maintainability Probleme. Davon einer mit einer hohen Stufe und 43 mit einer niedrigen Stufe. Das Problem mit der hohen Stufe kann auch wieder durch die Verwendung von const anstatt let behoben werden. Bei den Problemen mit niedriger Stufe sind viele falsche Probleme. Da hier die Wörter Todo als noch zu erledigende Aufgabe markiert werden. Außerdem wird dabei auf ungenutzte Imports aufmerksam gemacht. Dadurch ist aufgefallen das die definierte Validierung der Todos nicht genutzt wird.
+Bei den doppelten Codezeilen scheint es sich um Vergleiche mit anderen Repos zu handeln, die das gleiche Projekt geforkt haben, daher wird dieser Punkt ignoriert.
 Außerdem gibt es ein Security Hotspot in einer Testdatei, da dort ein Passwort im Klartext gespeichert ist.
+
+## Vergleich der Ergebnisse
+Nach dem alle Fehler behoben wurde, die zu Testfehlern führten, wurde die Code-Abdeckung durch Jest erneut analysiert. Die Abdeckung beträgt nun über 85% in der schlechtesten Kategorie (Branches). Die Ergebnisse sind im nachfolgenden Screenshot zu sehen:
+![Code-Abdeckung](./images/jest-code-coverage-after-fixes.png)
+Dies ist eine Steigerung von 10% im Vergleich zu den vorherigen Ergebnissen.
+Die von SonarQube gefundenen Probleme wurden ebenfalls behoben. Es gibt nun keine Reliability Probleme mehr und die Maintainability Probleme wurden auf 0 reduziert. Ein Security Hotspot wurde ebenfalls behoben. Ein zweiter wurde als falsch positiv markiert, da es sich um ein Testpasswort handelt.
