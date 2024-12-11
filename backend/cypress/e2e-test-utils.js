@@ -15,7 +15,7 @@ export function fillInForm(chain, name, duedate, status) {
     }
 
     return chain
-        .get('input#todo').clear().type(name)
+        .get('input#todo').type(name)
         .get('input#due').type(duedate)
         .get('select#status').select(statusNum)
         .get('input[type=submit]').click();
