@@ -1,4 +1,5 @@
 export function fillInForm(chain, name, duedate, status) {
+    cy.log('Filling in form with name: ' + name + ', due date: ' + duedate + ', status: ' + status);
     let statusNum;
     switch (status) {
         case 'offen':
