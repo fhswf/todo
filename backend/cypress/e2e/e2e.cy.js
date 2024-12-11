@@ -4,7 +4,7 @@ describe('ToDo App End-to-End Tests', () => {
     let chain;
     beforeEach(async () => {
         chain = cy;
-        chain.visit('todo.html').wait(1000);
+        chain = chain.visit('todo.html').wait(1000);
     });
 
     it('sollte ein neues ToDo erstellen', () => {
