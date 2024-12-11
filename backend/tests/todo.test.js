@@ -404,6 +404,7 @@ describe('PUT /todos/:id (Fehlerhafte Aktualisierung)', () => {
             .send(newTodo);
 
         const invalidUpdate = {
+            "_id": response.body._id,
             "title": "Ungültigen Status testen",
             "due": "2022-11-12T00:00:00.000Z",
             "status": "invalid_status" // Status ist kein gültiger Wert
@@ -416,13 +417,7 @@ describe('PUT /todos/:id (Fehlerhafte Aktualisierung)', () => {
             .send(invalidUpdate);
 
         expect(updateResponse.statusCode).toBe(400);
-        expect(updateResponse.body.error).toEqual([{
-            "location": "body",
-            "msg": "Invalid value",
-            "path": "status",
-            "type": "field",
-            "value": "invalid_status"
-        }]);
+        expect(updateResponse.body.error).toEqual([{"location": "body", "msg": "Invalid value", "path": "status", "type": "field", "value": "invalid_status"}]);
     });
 });
 

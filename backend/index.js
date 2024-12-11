@@ -258,14 +258,6 @@ app.put('/todos/:id', authenticate, todoValidationRules,
 
         let id = req.params.id;
         let todo = req.body;
-        if (!checkCorrectStatus(todo.status)) {
-            res.status(400).send({ error: 'Invalid status value' });
-            return;
-        }
-        if (!todo) {
-            res.status(400).send({ error: 'Todo fehlt' });
-            return;
-        }
         if (todo._id !== id) {
             console.log("id in body does not match id in path: %s != %s", todo._id, id);
             res.status(400).send({ error: 'id in body does not match id in path'});
@@ -284,20 +276,6 @@ app.put('/todos/:id', authenticate, todoValidationRules,
                 res.status(500).send({ error: `Error updating todo: ${err} or an integer, ${id}` });
             })
     });
-
-function checkCorrectStatus(status) {
-
-    // check if status is a number
-    if (isNaN(status)) {
-        return false;
-    }
-    // check if status is an integer
-    if (!Number.isInteger(status)) {
-        return false;
-    }
-    // check if status is in the correct range
-    return !(status < 0 || status > 2);
-}
 
 /** Create a new todo.
  * @swagger
