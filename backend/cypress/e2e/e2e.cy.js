@@ -54,7 +54,7 @@ describe('ToDo App End-to-End Tests', () => {
         chain = deleteTodoByTitle(chain, 'sollte todos laden');
     });
 
-    it.skip('sollte heutiges Datum + 3 Tage als Standarddatum setzen', () => {
+    it('sollte heutiges Datum + 3 Tage als Standarddatum setzen', () => {
         // Datum in das richtige Format bringen (YYYY-MM-DD)
         const today = new Date();
         today.setDate(today.getDate() + 3); // 3 Tage hinzufügen
