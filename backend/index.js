@@ -6,7 +6,6 @@ import swaggerJsdoc from 'swagger-jsdoc';
 
 import {checkExact, checkSchema, validationResult} from 'express-validator';
 import cookieParser from 'cookie-parser';
-import { getRandomValues } from 'crypto';
 
 const PORT = process.env.PORT || 3000;
 
@@ -297,10 +296,7 @@ function checkCorrectStatus(status) {
         return false;
     }
     // check if status is in the correct range
-    if (status < 0 || status > 2) {
-        return false;
-    }
-    return true;
+    return !(status < 0 || status > 2);
 }
 
 /** Create a new todo.
@@ -387,12 +383,9 @@ app.delete('/todos/:id', authenticate,
 );
 
 
-let server;
-await initDB()
-    .then(() => {
-        server = app.listen(PORT, () => {
-            console.log(`Server listening on port ${PORT}`);
-        })
-    })
+await initDB();
+const server = app.listen(PORT, () => {
+                         console.log(`Server listening on port ${PORT}`);
+                      })
 
 export { app, server, db }
