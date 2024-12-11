@@ -331,7 +331,6 @@ function checkCorrectStatus(status) {
 app.post('/todos', authenticate, todoValidationRules,
     async (req, res) => {
         const errors = validationResult(req);
-        console.log(errors);
         if (!errors.isEmpty()) {
             return res.status(400).send({ error: errors.array() });
         }

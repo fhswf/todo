@@ -1,4 +1,4 @@
-export function fillInForm(name, duedate, status) {
+export function fillInForm(chain, name, duedate, status) {
     let statusNum;
     switch (status) {
         case 'offen':
@@ -14,28 +14,30 @@ export function fillInForm(name, duedate, status) {
             throw new Error('Status is invalid. Must be one of: offen, in Bearbeitung, erledigt');
     }
 
-    cy.get('input#todo').clear().type(name);
-    cy.get('input#due').type(duedate);
-    cy.get('select#status').select(statusNum);
-    cy.get('input[type=submit]').click();
+    return chain
+        .get('input#todo').clear().type(name)
+        .get('input#due').type(duedate)
+        .get('select#status').select(statusNum)
+        .get('input[type=submit]').click();
 }
 
-export function findTodoByTitle(title) {
-    try {
-        return cy.get('div.todo').find('.title').contains(title).first().parent();
-    } catch(err) {
-        throw new Error('Todo not found: ' + title);
-    }
+export function findTodoByTitle(chain, title) {
+    return chain.get('div.todo').find('.title').contains(title).first().parent();
 }
 
-export function expectTodoToBe(title, duedate, status) {
-    const todo = findTodoByTitle(title);
-    const expectedDate = new Date(duedate).toLocaleDateString();
-    todo.get('.title').should('contain', title);
-    todo.get('.due').should('contain', expectedDate);
-    todo.get('button.status').should('contain', status);
+export function expectTodoToBe(chain, title, dueDate, status) {
+    const expectedDate = new Date(dueDate).toLocaleDateString();
+    return findTodoByTitle(chain, title)
+        .find('.title').should('contain', title).parent()
+        .find('.due').should('contain', expectedDate).parent()
+        .find('button.status').should('contain', status);
 }
 
 export function getCurrentTodoCount() {
-    return cy.get('div.todo').its('length');
+    return cy.get('div.todo').should('have.length.above', -1).its('length');
+}
+
+export function deleteTodoByTitle(chain, title) {
+    return findTodoByTitle(chain, title)
+    .find('button.delete').click();
 }

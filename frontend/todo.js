@@ -2,6 +2,8 @@ let todos = [];
 const status = ["offen", "in Bearbeitung", "erledigt"];
 
 const API = "/todos"
+// URL scheint nicht zu stimmen
+const LOGIN_URL = "https://jupiter.fh-swf.de/keycloak/realms/webentwicklung";
 
 function createTodoElement(todo) {
     let list = document.getElementById("todo-list");
@@ -61,7 +63,7 @@ function saveTodo(evt) {
     evt.preventDefault();
 
     // Get the id from the form. If it is not set, we are creating a new todo.
-    let _id = Number.parseInt(evt.target.dataset.id) || undefined;
+    let _id = evt.target.dataset._id || undefined;
 
     let todo = {
         _id,
@@ -72,13 +74,13 @@ function saveTodo(evt) {
 
     // Save the todo
     let index = todos.findIndex(t => t._id === _id);
-    console.log(index)
     if (index >= 0) {
         console.log("Updating todo: %o", todo);
         fetch(API + "/" + _id, {
             method: "PUT",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization": "Bearer "
             },
             body: JSON.stringify(todo)
         })
@@ -95,13 +97,18 @@ function saveTodo(evt) {
         fetch(API, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization": "Bearer "
             },
             body: JSON.stringify(todo)
         })
             .then(checkLogin)
             .then(response => response.json())
             .then(response => {
+                if (response.error) {
+                    console.error("POST %s failed: %o", API, response)
+                    return todos
+                }
                 console.log("POST %s: %o", API, response)
                 todos.push(response)
                 showTodos()
@@ -132,7 +139,8 @@ function deleteTodo(id) {
         fetch(API + "/" + id, {
             method: "DELETE",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization": "Bearer "
             }
         })
             .then(checkLogin)
@@ -152,7 +160,8 @@ function changeStatus(id) {
         fetch(API + "/" + id, {
             method: "PUT",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization": "Bearer "
             },
             body: JSON.stringify(todo)
         })
@@ -168,7 +177,13 @@ function changeStatus(id) {
 }
 
 function loadTodos() {
-    return fetch(API)
+    return fetch(API, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer "
+        }
+    })
         .then(checkLogin)
         .then(response => response.json())
         .then(response => {
@@ -192,7 +207,7 @@ function loadTodos() {
  */
 function checkLogin(response) {
     // check if we need to login
-    if (response.status == 401) {
+    if (response.status === 401) {
         console.log("GET %s returned 401, need to log in", API)
         let state = document.cookie
             .split('; ')
