@@ -36,6 +36,11 @@ jobs:
           cd frontend
           npm install
 
+      - name: Run Prepare (Instrumentation) for Frontend
+        run: |
+          cd frontend
+          npm run prepare
+
       - name: Start Server
         run: |
           cd backend
@@ -43,7 +48,7 @@ jobs:
         env:
           PORT: 3000
 
-      - name: Run Tests & Coverage incl. Instrumentation for Frontend
+      - name: Run Tests & Coverage for Frontend
         id: frontend-tests
         run: |
           cd frontend

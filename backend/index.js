@@ -75,8 +75,11 @@ const swaggerOptions = {
 /** Zentrales Objekt für unsere Express-Applikation */
 const app = express();
 
-app.use(cookieParser())
-app.use(express.static('../frontend'));
+app.use(cookieParser());
+
+const isTesting = process.env.IS_TESTING || false;
+app.use(express.static(isTesting ? '../frontend/instrumented' : '../frontend/src'));
+
 app.use(express.json());
 
 /** Middleware für Swagger */
