@@ -35,7 +35,7 @@ Prof. Dr. Gawron
 Die Einrichtung musste lokal erfolgen, nach der Einrichtung konnte in Codespaces weitergearbeitet werden.
 - Beim Testen vom Datum musste auf die Berechnung geachtet werden (heute + 3 Tage)
 - Die Codecoverage vom Frontend wird nicht automatisch durchgeführt
-Die Einrichtung muss händisch erfolgen
+Die Einrichtung muss händisch erfolgen und wird mit Instanbul/nyc durchgeführt
 
 # Ergebnisse
 - Testabdeckung: xx%
