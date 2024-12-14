@@ -46,7 +46,12 @@ describe('todo app add tests', () => {
 
   it('check form reset', () => {
     // check if the form is reset
-    cy.get('#todo-form input#due').should('have.value', '2024-12-04');
+    const today = new Date();
+    const futureDate = new Date(today);
+    futureDate.setDate(today.getDate() + 3);
+    const dateString = futureDate.toISOString().split('T')[0];
+
+    cy.get('#todo-form input#due').should('have.value', dateString);
     cy.get('#todo-form select#status').should('have.value', '0');
     cy.get('#todo-form input#todo').should('have.value', '');
   });

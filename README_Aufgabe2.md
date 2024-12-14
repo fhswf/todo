@@ -31,8 +31,11 @@ Prof. Dr. Gawron
 # Vorgehensweise
 
 # Probleme und Lösungen
-Cypress lies sich nicht ausführen, dies war der Tatsache geschuldet, dass wir die Anwendung über Codespaces laufen lassen.
+- Cypress lies sich nicht ausführen, dies war der Tatsache geschuldet, dass wir die Anwendung über Codespaces laufen lassen.
 Die Einrichtung musste lokal erfolgen, nach der Einrichtung konnte in Codespaces weitergearbeitet werden.
+- Beim Testen vom Datum musste auf die Berechnung geachtet werden (heute + 3 Tage)
+- Die Codecoverage vom Frontend wird nicht automatisch durchgeführt
+Die Einrichtung muss händisch erfolgen
 
 # Ergebnisse
 - Testabdeckung: xx%
