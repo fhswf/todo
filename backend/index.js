@@ -86,7 +86,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 
 /** global instance of our database */
-let db = new DB();
+const db = new DB();
 
 /** Initialize database connection */
 async function initDB() {
@@ -108,8 +108,12 @@ const todoValidationRules = [
  * This middleware could be used to implement JWT-based authentication. Currently, this is only a stub.
 */
 let authenticate = (req, res, next) => {
-    // Dummy authentication
-    next();
+    const requiredHeader = 'authorization';
+    if (req.headers[requiredHeader] == 'Bearer 123') {
+        next();
+    } else {
+        res.status(401).send({ error: 'Unauthorized' })
+    }
 }
 
 
@@ -184,8 +188,6 @@ app.get('/todos/:id', authenticate,
     }
 );
 
-
-
 /** Update a todo by id.
  * @swagger
  * /todos/{id}:
@@ -225,11 +227,13 @@ app.put('/todos/:id', authenticate,
     async (req, res) => {
         let id = req.params.id;
         let todo = req.body;
-        if (todo._id !== id) {
+
+        if (todo._id.toString() !== id.toString()) {
             console.log("id in body does not match id in path: %s != %s", todo._id, id);
             res.sendStatus(400, "{ message: id in body does not match id in path}");
             return;
         }
+
         return db.update(id, todo)
             .then(todo => {
                 if (todo) {
@@ -269,23 +273,36 @@ app.put('/todos/:id', authenticate,
  *     '500':
  *       description: Serverfehler
  */
-app.post('/todos', authenticate,
-    async (req, res) => {
-        let todo = req.body;
-        if (!todo) {
-            res.sendStatus(400, { message: "Todo fehlt" });
-            return;
-        }
-        return db.insert(todo)
-            .then(todo => {
-                res.status(201).send(todo);
-            })
-            .catch(err => {
-                console.log(err);
-                res.sendStatus(500);
-            });
+app.post('/todos', authenticate, async (req, res) => {
+    const allowedFields = ['_id', 'title', 'due', 'status']; // Define allowed fields
+    const todo = req.body;
+
+    // Check if request body is provided
+    if (!todo) {
+        return res.status(400).json({ message: "Todo fehlt" });
     }
-);
+
+    // Check for invalid fields
+    const extraFields = Object.keys(todo).filter(key => !allowedFields.includes(key));
+    if (extraFields.length > 0) {
+        return res.status(400).json({ error: 'Bad Request', message: `Ungültige Felder: ${extraFields.join(', ')}` });
+    }
+
+    // Validate required fields
+    allowedFields.splice(0, 1)
+    const missingFields = allowedFields.filter(key => !(key in todo));
+    if (missingFields.length > 0) {
+        return res.status(400).json({ error: 'Bad Request', message: `Fehlende Felder: ${missingFields.join(', ')}` });
+    }
+
+    try {
+        const newTodo = await db.insert(todo); // Insert todo into the database
+        res.status(201).json(newTodo); // Return created todo
+    } catch (error) {
+        console.error('Fehler beim Erstellen des Todos:', error);
+        res.status(500).json({ error: 'Serverfehler beim Erstellen des Todos' });
+    }
+});
 
 /** Delete a todo by id.
  * @swagger
@@ -308,32 +325,29 @@ app.post('/todos', authenticate,
  *        '500':
  *          description: Serverfehler
  */
-app.delete('/todos/:id', authenticate,
-    async (req, res) => {
-        let id = req.params.id;
-        return db.delete(id)
-            .then(todo => {
-                if (todo) {
-                    res.sendStatus(204);
-                } else {
-                    res.sendStatus(404);
-                }
-            })
-            .catch(err => {
-                console.log(err);
-                res.sendStatus(500);
-            });
+app.delete('/todos/:id', authenticate, async (req, res) => {
+    let id = req.params.id;
+
+    try {
+        const todo = await db.delete(id);
+        if (todo) {
+            res.sendStatus(204);
+        } else {
+            res.sendStatus(404);
+        }
+    } catch (err) {
+        console.log(err);
+        res.sendStatus(500);
     }
-);
+});
 
+const serverPromise = (async () => {
+    await initDB();
+    const server = app.listen(PORT, () => {
+        console.log(`Server listening on port ${PORT}`);
+    });
+    return server;
+})();
 
+export { app, serverPromise as server, db };
 
-let server;
-await initDB()
-    .then(() => {
-        server = app.listen(PORT, () => {
-            console.log(`Server listening on port ${PORT}`);
-        })
-    })
-
-export { app, server, db }

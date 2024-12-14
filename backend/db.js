@@ -7,8 +7,17 @@ let db = null;
 let collection = null;
 let client = null;
 
-export default class DB {
+function parseToObjectId(value) {
+    try {
+        // Check if it's a valid ObjectId and return it
+        return new ObjectId(value)
+    } catch (e) {
+        // If parsing fails, return the original value
+        return Number(value);
+    }
+}
 
+export default class DB {
     /** Connect to MongoDB and open client */
     connect() {
         return MongoClient.connect(MONGO_URI)
@@ -45,17 +54,22 @@ export default class DB {
      * @returns {Promise} - Promise with updated todo
      */
     update(id, todo) {
-        let _id = new ObjectId(id);
+        let _id = parseToObjectId(id)
         if (typeof todo._id === 'string') {
             todo._id = _id;
         }
+        
         return collection
-            .replaceOne({ _id }, todo)
+            .replaceOne({_id: _id}, todo)
             .then(result => {
                 if (result.modifiedCount === 1) {
                     return todo;
-                }
-                else {
+                } else {
+                    // No document found to update
+                    if (result.matchedCount === 0) {
+                        // Return null to indicate not found
+                        return null;
+                    }
                     console.log('Error updating todo: %o, %s', result, id);
                     throw new Error('Error updating todo');
                 }
@@ -71,8 +85,8 @@ export default class DB {
      * @returns {Promise} - Promise with deleted todo
      */
     delete(id) {
-        let _id = new ObjectId(id);
-        return collection.findOneAndDelete({ _id })
+        let _id = parseToObjectId(id)
+        return collection.findOneAndDelete({ _id: _id })
             .then(result => {
                 if (result.ok) {
                     return result.value;
@@ -101,5 +115,10 @@ export default class DB {
                     throw new Error('Error inserting todo');
                 }
             });
+    }
+
+    /** Delete all todos (for testing purposes) */
+    deleteAll() {
+        return collection.deleteMany({});
     }
 }
