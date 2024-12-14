@@ -25,7 +25,7 @@ function createTodoElement(todo) {
 function showTodos() {
     let todoList = document.getElementById("todo-list");
 
-    // Clear the todo list
+    // Clear the todos list
     todoList.innerHTML = "";
 
     // Add all todos to the list
@@ -40,7 +40,7 @@ function initForm(event) {
     // Reset the form
     event.target.title.value = "";
     event.target.submit.value = "Todo hinzufügen";
-    // Reset the id. This is used to determine if we are editing or creating a new todo.
+    // Reset the id. This is used to determine if we are editing or creating a new todos.
     event.target.dataset.id = "";
 
     // Set the default due date to 3 days from now
@@ -62,7 +62,7 @@ async function init() {
 function saveTodo(evt) {
     evt.preventDefault();
 
-    // Get the id from the form. If it is not set, we are creating a new todo.
+    // Get the id from the form. If it is not set, we are creating a new todos.
     let _id = evt.target.dataset._id || undefined;
 
     let todo = {
@@ -72,7 +72,7 @@ function saveTodo(evt) {
         status: Number.parseInt(evt.target.status.value) || 0
     }
 
-    // Save the todo
+    // Save the todos
     let index = todos.findIndex(t => t._id === _id);
     if (index >= 0) {
         console.log("Updating todo: %o", todo);
