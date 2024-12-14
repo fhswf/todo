@@ -72,7 +72,7 @@ jobs:
           path: |
             frontend/cypress/videos
             frontend/cypress/screenshots
-            frontend/cypress/coverage
+            frontend/coverage
 
       - name: Fail Workflow if Frontend Tests Failed
         if: steps.frontend-tests.outcome == 'failure'
