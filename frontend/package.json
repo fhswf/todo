@@ -4,8 +4,16 @@
   "description": "",
   "main": "cypress.config.js",
   "scripts": {
-    "test": "npx cypress run"
+    "test": "npm run instrument && npm run cypress && nyc report --reporter=lcov",
+    "cypress": "npx cypress run",
+    "instrument": "npx nyc instrument --compact=false ./ ./ --in-place"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "nyc": "^17.1.0"
+  },
+  "devDependencies": {
+    "@cypress/code-coverage": "^3.13.9"
+  }
 }

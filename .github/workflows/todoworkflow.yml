@@ -43,7 +43,7 @@ jobs:
         env:
           PORT: 3000
 
-      - name: Run Tests for Frontend
+      - name: Run Tests & Coverage incl. Instrumentation for Frontend
         id: frontend-tests
         run: |
           cd frontend
@@ -65,7 +65,7 @@ jobs:
           path: |
             frontend/cypress/videos
             frontend/cypress/screenshots
-            frontend/cypress/reports
+            frontend/cypress/coverage
 
       - name: Fail Workflow if Frontend Tests Failed
         if: steps.frontend-tests.outcome == 'failure'
