@@ -1,0 +1,126 @@
+name: Build
+
+on:
+  push:
+    branches: [ "main", "develop", "peters" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '21'
+
+      - name: Install dependencies
+        working-directory: ./backend
+        run: npm install
+
+      - name: Run Jest tests
+        working-directory: ./backend
+        run: npm run test -- --coverage
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: jest-code-coverage
+          path: backend/coverage
+          overwrite: true
+          retention-days: 7
+    services:
+      mongodb:
+        image: mongo:latest
+        ports:
+          - 27017:27017
+
+  cypress:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '21'
+
+      - name: Install dependencies
+        working-directory: ./backend
+        run: npm install
+
+      - name: Run app
+        working-directory: ./backend
+        run: | 
+          npm run start > nodemon.log &
+          while ! nc -z localhost 3000; do 
+            sleep 1 
+          done
+
+      - name: Test
+        working-directory: ./backend
+        run: npx cypress run --headless
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: nodemon logs
+          path: backend/nodemon.log
+          overwrite: true
+          retention-days: 7
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: Cypress screenshots
+          path: backend/cypress/screenshots
+          overwrite: true
+          retention-days: 7
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: Cypress videos
+          path: backend/cypress/videos
+          overwrite: true
+          retention-days: 7
+
+      - name: check for crash
+        run: |
+          if grep -q "crash" backend/nodemon.log; then
+            echo "Crash detected. See nodemon.log"
+            exit 1
+          else
+            echo "No crash detected"
+          fi
+    services:
+      mongodb:
+        image: mongo:latest
+        ports:
+          - 27017:27017
+
+  sonarqube:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Analyze with SonarQube
+        uses: sonarsource/sonarqube-scan-action@v4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} # Generate a token on SonarQube, add it to the secrets of this repo with the name SONAR_TOKEN (Settings > Secrets > Actions > add new repository secret)
+          SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
+        with:
+          args:
+            -Dsonar.verbose=false
+    services:
+      mongodb:
+        image: mongo:latest
+        ports:
+          - 27017:27017
+

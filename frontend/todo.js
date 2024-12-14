@@ -1,9 +1,9 @@
-
-
 let todos = [];
 const status = ["offen", "in Bearbeitung", "erledigt"];
 
 const API = "/todos"
+// URL scheint nicht zu stimmen
+const LOGIN_URL = "https://jupiter.fh-swf.de/keycloak/realms/webentwicklung";
 
 function createTodoElement(todo) {
     let list = document.getElementById("todo-list");
@@ -13,9 +13,9 @@ function createTodoElement(todo) {
            <div class="title">${todo.title}</div> 
            <div class="due">${due.toLocaleDateString()}</div>
            <div class="actions">
-              <button class="status" onclick="changeStatus(${todo._id})">${status[todo.status || 0]}</button>
-              <button class="edit" onclick="editTodo(${todo._id})">Bearbeiten</button>
-              <button class="delete" onclick="deleteTodo(${todo._id})">Löschen</button>
+              <button class="status" onclick="changeStatus('${todo._id}')">${status[todo.status || 0]}</button>
+              <button class="edit" onclick="editTodo('${todo._id}')">Bearbeiten</button>
+              <button class="delete" onclick="deleteTodo('${todo._id}')">Löschen</button>
            </div>
          </div>`);
 
@@ -63,7 +63,7 @@ function saveTodo(evt) {
     evt.preventDefault();
 
     // Get the id from the form. If it is not set, we are creating a new todo.
-    let _id = Number.parseInt(evt.target.dataset.id) || Date.now();
+    let _id = evt.target.dataset._id || undefined;
 
     let todo = {
         _id,
@@ -79,7 +79,8 @@ function saveTodo(evt) {
         fetch(API + "/" + _id, {
             method: "PUT",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization": "Bearer "
             },
             body: JSON.stringify(todo)
         })
@@ -96,13 +97,18 @@ function saveTodo(evt) {
         fetch(API, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization": "Bearer "
             },
             body: JSON.stringify(todo)
         })
             .then(checkLogin)
             .then(response => response.json())
             .then(response => {
+                if (response.error) {
+                    console.error("POST %s failed: %o", API, response)
+                    return todos
+                }
                 console.log("POST %s: %o", API, response)
                 todos.push(response)
                 showTodos()
@@ -133,7 +139,8 @@ function deleteTodo(id) {
         fetch(API + "/" + id, {
             method: "DELETE",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization": "Bearer "
             }
         })
             .then(checkLogin)
@@ -153,7 +160,8 @@ function changeStatus(id) {
         fetch(API + "/" + id, {
             method: "PUT",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization": "Bearer "
             },
             body: JSON.stringify(todo)
         })
@@ -169,7 +177,13 @@ function changeStatus(id) {
 }
 
 function loadTodos() {
-    return fetch(API)
+    return fetch(API, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer "
+        }
+    })
         .then(checkLogin)
         .then(response => response.json())
         .then(response => {
@@ -193,7 +207,7 @@ function loadTodos() {
  */
 function checkLogin(response) {
     // check if we need to login
-    if (response.status == 401) {
+    if (response.status === 401) {
         console.log("GET %s returned 401, need to log in", API)
         let state = document.cookie
             .split('; ')
@@ -209,7 +223,7 @@ function checkLogin(response) {
 
         // redirect to login URL with proper parameters
         window.location = LOGIN_URL + "?" + params.toString()
-        throw ("Need to log in")
+        throw new Error("Need to log in")
     }
     else return response
 }
