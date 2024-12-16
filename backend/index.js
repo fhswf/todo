@@ -8,6 +8,8 @@ import { check, validationResult } from 'express-validator';
 import cookieParser from 'cookie-parser';
 import { getRandomValues } from 'crypto';
 
+import getKeycloakToken from './utils.js';
+
 const PORT = process.env.PORT || 3000;
 
 const TOKEN_URL = "https://jupiter.fh-swf.de/keycloak/realms/webentwicklung/protocol/openid-connect/token"
@@ -118,7 +120,7 @@ const todoValidationRules = [
  * This middleware could be used to implement JWT-based authentication. Currently, this is only a stub.
 */
 let authenticate = (req, res, next) => {
-    let token = req.headers.authorization;
+    let token = getKeycloakToken();
     if (!token) {
         return res.status(401).json({ error: 'Unauthorized' });
     }
