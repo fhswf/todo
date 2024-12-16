@@ -45,3 +45,9 @@ jobs:
       - name: Run Cypress tests
         run: npm test
         working-directory: ./frontend
+
+      - name: Run SonarQube Scan
+        uses: sonarsource/sonarqube-scan-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
