@@ -11,7 +11,7 @@ on:
 
 jobs:
   tests:
-    name: Test Backend and Frontend
+    name: Test and SonarQube analysis
     runs-on: ubuntu-latest
     services:
       mongodb:
@@ -19,29 +19,27 @@ jobs:
         ports:
           - 27017:27017
     steps:
-      # Test backend
       - name: Checkout code
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
   
-      - name: Install dependencies
+      - name: Install backend dependencies
         run: npm install
         working-directory: ./backend
+
+      - name: Install frontend dependencies
+        run: npm install
+        working-directory: ./frontend
   
       - name: Run Backend Tests
         run: npm test
         working-directory: ./backend
 
-      # Test frontend
       - name: Start Backend
         run: npm start &
         working-directory: ./backend
-        
-      - name: Install frontend dependencies
-        run: npm install
-        working-directory: ./frontend
-
+      
       - name: Run Cypress tests
         run: npm test
         working-directory: ./frontend
