@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "starttest": "IS_TESTING=true nodemon index.js &",
-    "start": "nodemon index.js",
-    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest"
+    "start": "nodemon index.js"
   },
   "type": "module",
   "author": "",
