@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  backend:
+  Backend-test:
     runs-on: ubuntu-latest
     services:
       mongodb:
@@ -32,8 +32,8 @@ jobs:
         run: npm test
         working-directory: ./backend
 
-  frontend:
-    needs: backend
+  Frontend-test:
+    needs: Backend
     runs-on: ubuntu-latest
     services:
       mongodb:
@@ -61,7 +61,7 @@ jobs:
       - name: Run Cypress tests
         run: npm test
 
-  SonarQube:
+  SonarQube-analysis:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
