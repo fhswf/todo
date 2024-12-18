@@ -33,7 +33,7 @@ jobs:
         working-directory: ./backend
 
   Frontend-Test:
-    needs: Backend
+    needs: Backend-Test
     runs-on: ubuntu-latest
     services:
       mongodb:
