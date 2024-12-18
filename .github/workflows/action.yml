@@ -41,13 +41,14 @@ jobs:
       - name: Clear Database
         run: ./automate_mongo.sh
 
-      - name: Install Cypress
-        run: npm install cypress --save-dev
-
       - name: Start backend server
         run: |
           cd backend
           npm start &
+          cd ..
+
+      - name: Install Cypress
+        run: npm install cypress --save-dev
 
       - name: Run Cypress tests
         run: npx cypress run --spec "cypress/integration/todo.spec.js"
