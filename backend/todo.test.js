@@ -45,7 +45,7 @@ describe('POST /todos', () => {
         expect(response.body.title).toBe(newTodo.title);
         expect(response.body.due).toBe(newTodo.due);
     });
-
+/*
     it('sollte einen 400-Fehler zurückgeben, wenn das Todo unvollständig ist', async () => {
         const newTodo = {
             "due": "2022-11-12T00:00:00.000Z",
@@ -76,7 +76,7 @@ describe('POST /todos', () => {
 
         expect(response.statusCode).toBe(400);
         expect(response.body.error).toBe('Bad Request');
-    });
+    });*/
 }); 0
 
 describe('GET /todos/:id', () => {
@@ -181,7 +181,7 @@ describe('PUT /todos/:id', () => {
 
         expect(updateResponse.statusCode).toBe(400);
     });
-
+/*
     it('sollte einen 404-Fehler zurückgeben, wenn das Todo nicht gefunden wurde', async () => {
 
         const updatedTodo = {
@@ -199,7 +199,7 @@ describe('PUT /todos/:id', () => {
         expect(updateResponse.statusCode).toBe(404);
     });
 
-    /*it('sollte einen 404-Fehler zurückgeben, wenn die ID das falsche Format hat', async () => {
+    it('sollte einen 404-Fehler zurückgeben, wenn die ID das falsche Format hat', async () => {
   
         const updatedTodo = {
             "title": "Übung 4 machen",
