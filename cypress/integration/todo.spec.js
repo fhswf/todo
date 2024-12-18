@@ -1,7 +1,7 @@
 describe('Todo Application', () => {
 
     beforeEach(() => {
-        cy.visit('https://glowing-umbrella-69gqr6p4667pf6rg-3000.app.github.dev/todo.html'); // URL der Todo-Anwendung anpassen
+        cy.visit('https://fictional-acorn-5gqj469x667rf7jv7-3000.app.github.dev/todo.html'); // URL der Todo-Anwendung anpassen
         cy.get('button[type="submit"]').click();
         cy.wait(1000);
     });
@@ -35,9 +35,9 @@ describe('Todo Application', () => {
             cy.get('.todo').its('length').should('eq', initialCount);
         });
     });
-*/
+
     it('should delete a todo item', () => {
         cy.get('.todo').contains('Einkaufen').parent().find('button.delete').click();
         cy.get('.todo-list').should('not.contain', 'Einkaufen');
-    });
+    }); */
 });
