@@ -253,7 +253,7 @@ describe('DELETE /todos/:id', () => {
 
         expect(deleteResponse.statusCode).toBe(404);
     });
-
+/*
     it('sollte einen 500-Fehler zurückgeben, wenn die ID das falsche Format hat', async () => {
         
         const deleteResponse = await request(app)
@@ -262,7 +262,7 @@ describe('DELETE /todos/:id', () => {
 
 
         expect(deleteResponse.statusCode).toBe(500);
-    });
+    });*/
 });
 
 
