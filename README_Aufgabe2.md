@@ -169,3 +169,5 @@ Durch den Report Command nach dem durchführen der tests wird dann der entsprech
 - Die Validierung des Codes trägt zu einer besseren Struktur des Codes bei.
 - Die Übersicht zwischen neuen und den gesamten Code hilft bei der sorgfalt Erstellung der Tests
 - Anzeige von doppelten Code hilft bei der Strukturierung und Modularisierung des Codes
+ - Teilweise wird Code als Doppelt angezeigt obwohl dies nicht der Fall ist. Da ist die Analyse des Sonarqube falsch.
+ - Daher wurde hier das Quality Gate angepasst.
