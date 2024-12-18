@@ -53,6 +53,10 @@ jobs:
       - name: Install frontend dependencies
         run: npm install
       
+      - name: Start Backend
+        run: npm start &
+        working-directory: ./backend
+      
       - name: Run Cypress tests
         run: npm test
 
