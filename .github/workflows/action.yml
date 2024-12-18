@@ -22,22 +22,36 @@ jobs:
     steps:
       - name: Git Checkout
         uses: actions/checkout@v4
+
       - name: npm install
         working-directory: ./backend
         run: npm install
+
       - name: Run Tests
         working-directory: ./backend
         run: npm run test
+
+      - name: Install mongosh
+        run: |
+          wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
+          echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
+          sudo apt-get update
+          sudo apt-get install -y mongodb-mongosh
+
       - name: Clear Database
         run: ./automate_mongo.sh
+
       - name: npm install
         working-directory: ./frontend
         run: npm install
+
       - name: Start backend server
         run: |
           cd backend
           npm start &
+
       - name: Run Cypress tests
         run: npx cypress run --spec "cypress/integration/todo.spec.js"
+        
       - name: Clear Database
         run: ./automate_mongo.sh
