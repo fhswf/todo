@@ -1,7 +1,7 @@
 
 
 let todos = [];
-const status = ["offen", "in Bearbeitung", "erledigt"];
+const statusArray = ["offen", "in Bearbeitung", "erledigt"];
 
 const API = "/todos"
 
@@ -13,9 +13,9 @@ function createTodoElement(todo) {
            <div class="title">${todo.title}</div> 
            <div class="due">${due.toLocaleDateString()}</div>
            <div class="actions">
-              <button class="status" onclick="changeStatus(${todo._id})">${status[todo.status || 0]}</button>
-              <button class="edit" onclick="editTodo(${todo._id})">Bearbeiten</button>
-              <button class="delete" onclick="deleteTodo(${todo._id})">Löschen</button>
+              <button class="status" onclick="changeStatus('${todo._id}')">${statusArray[todo.status || 0]}</button>
+              <button class="edit" onclick="editTodo('${todo._id}')">Bearbeiten</button>
+              <button class="delete" onclick="deleteTodo('${todo._id}')">Löschen</button>
            </div>
          </div>`);
 
@@ -25,7 +25,7 @@ function createTodoElement(todo) {
 function showTodos() {
     let todoList = document.getElementById("todo-list");
 
-    // Clear the todo list
+    // Clear the todos list
     todoList.innerHTML = "";
 
     // Add all todos to the list
@@ -40,7 +40,7 @@ function initForm(event) {
     // Reset the form
     event.target.title.value = "";
     event.target.submit.value = "Todo hinzufügen";
-    // Reset the id. This is used to determine if we are editing or creating a new todo.
+    // Reset the id. This is used to determine if we are editing or creating a new todos.
     event.target.dataset.id = "";
 
     // Set the default due date to 3 days from now
@@ -62,8 +62,8 @@ async function init() {
 function saveTodo(evt) {
     evt.preventDefault();
 
-    // Get the id from the form. If it is not set, we are creating a new todo.
-    let _id = Number.parseInt(evt.target.dataset.id) || Date.now();
+    // Get the id from the form. If it is not set, we are creating a new todos.
+    let _id = evt.target.dataset._id || undefined;
 
     let todo = {
         _id,
@@ -72,7 +72,7 @@ function saveTodo(evt) {
         status: Number.parseInt(evt.target.status.value) || 0
     }
 
-    // Save the todo
+    // Save the todos
     let index = todos.findIndex(t => t._id === _id);
     if (index >= 0) {
         console.log("Updating todo: %o", todo);
@@ -149,7 +149,7 @@ function changeStatus(id) {
     let todo = todos.find(t => t._id === id);
     console.log("Changing status of todo: %o", todo);
     if (todo) {
-        todo.status = (todo.status + 1) % status.length;
+        todo.status = (todo.status + 1) % statusArray.length;
         fetch(API + "/" + id, {
             method: "PUT",
             headers: {
@@ -208,8 +208,8 @@ function checkLogin(response) {
         params.append("state", state)
 
         // redirect to login URL with proper parameters
-        window.location = LOGIN_URL + "?" + params.toString()
-        throw ("Need to log in")
+        window.location = TOKEN_URL + "?" + params.toString()
+        throw new Error("Need to log in")
     }
     else return response
 }

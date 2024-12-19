@@ -75,8 +75,11 @@ const swaggerOptions = {
 /** Zentrales Objekt für unsere Express-Applikation */
 const app = express();
 
-app.use(cookieParser())
-app.use(express.static('../frontend'));
+app.use(cookieParser());
+
+const isTesting = process.env.IS_TESTING || false;
+app.use(express.static(isTesting ? '../frontend/instrumented' : '../frontend/src'));
+
 app.use(express.json());
 
 /** Middleware für Swagger */
@@ -326,6 +329,44 @@ app.delete('/todos/:id', authenticate,
     }
 );
 
+/** Delete a todo by id.
+ * @swagger
+ * /todos/{id}:
+ *   delete:
+ *     summary: Löscht ein Todo
+ *     tags: [Todos]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *           required: true
+ *           description: Die ID des Todos
+ *     responses:
+ *        '204':
+ *          description: Todo gelöscht
+ *        '404':
+ *          description: Todo nicht gefunden
+ *        '500':
+ *          description: Serverfehler
+ */
+app.delete('/todos', authenticate,
+    async (req, res) => {
+        let id = req.params.id;
+        return db.deleteAll()
+            .then(todo => {
+                if (todo) {
+                    res.sendStatus(204);
+                } else {
+                    res.sendStatus(404);
+                }
+            })
+            .catch(err => {
+                console.log(err);
+                res.sendStatus(500);
+            });
+    }
+);
 
 
 let server;

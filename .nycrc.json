@@ -1,0 +1,7 @@
+{
+  "include": ["src/**/*.js"],
+  "exclude": ["node_modules", "coverage", "cypress", "*.config.js"],
+  "reporter": ["lcov"],
+  "all": true,
+  "compact": false
+}

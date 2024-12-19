@@ -1,0 +1,24 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "cypress.config.js",
+  "scripts": {
+    "test": "npm run cypress && nyc report --reporter=lcov",
+    "cypress": "npx cypress run",
+    "instrument": "npx nyc instrument --compact=false ./src ./instrumented",
+    "copy-html": "copyfiles -u 1 './src/*.html' ./instrumented",
+    "copy-css": "copyfiles -u 1 './src/*.css' ./instrumented",
+    "prepare": "npm run copy-html && npm run copy-css && npm run instrument"
+ 
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "nyc": "^17.1.0"
+  },
+  "devDependencies": {
+    "@cypress/code-coverage": "^3.13.9",
+    "copyfiles": "^2.4.1"
+  }
+}
