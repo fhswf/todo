@@ -1,7 +1,7 @@
 describe('Todo Application', () => {
 
     beforeEach(() => {
-        cy.visit('https://fictional-acorn-5gqj469x667rf7jv7-3000.app.github.dev/todo.html'); // URL der Todo-Anwendung anpassen
+        cy.visit('/todo.html'); // URL der Todo-Anwendung anpassen
         cy.get('button[type="submit"]').click();
         cy.wait(1000);
     });
