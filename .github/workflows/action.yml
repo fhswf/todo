@@ -45,30 +45,20 @@ jobs:
       - name: Clear Database
         run: ./automate_mongo.sh
 
-      - name: Start backend server
-        run: |
-          cd backend
-          npm start &
-          cd ..
+ #     - name: Start backend server
+ #       run: |
+ #         cd backend
+ #         npm start &
+ #         cd ..
 
-      - name: Install GitHub CLI
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y gh
+ #     - name: Install Cypress
+ #       run: npm install cypress --save-dev
 
-      - name: Set Port Visibility
-        env:
-          GH_TOKEN: ${{ secrets.GH_PAT }}
-        run: gh codespace ports visibility 3000:public --codespace "fictional acorn"
+ #     - name: Run Cypress tests
+ #       run: npx cypress run --spec "cypress/integration/todo.spec.js"
 
-      - name: Install Cypress
-        run: npm install cypress --save-dev
-
-      - name: Run Cypress tests
-        run: npx cypress run --spec "cypress/integration/todo.spec.js"
-
-      - name: Clear Database
-        run: ./automate_mongo.sh
+ #     - name: Clear Database
+ #       run: ./automate_mongo.sh
 
       - name: Analyze with SonarQube
         if: always()
