@@ -58,7 +58,7 @@ jobs:
 
       - name: Set Port Visibility
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_PAT }}
         run: gh codespace ports visibility 3000:public
 
       - name: Install Cypress
