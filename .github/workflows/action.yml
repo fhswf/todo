@@ -59,7 +59,7 @@ jobs:
       - name: Set Port Visibility
         env:
           GH_TOKEN: ${{ secrets.GH_PAT }}
-        run: gh codespace ports visibility 3000:public
+        run: gh codespace ports visibility 3000:public --codespace "fictional acorn"
 
       - name: Install Cypress
         run: npm install cypress --save-dev
