@@ -60,15 +60,19 @@ jobs:
       - name: Clear Database
         run: ./automate_mongo.sh
 
-      - uses: sonarsource/sonarqube-scan-action@master
-          env:
-            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-            SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      - name: Analyze with SonarQube
+        if: always()
+        # You can pin the exact commit or the version.
+        # uses: SonarSource/sonarqube-scan-action@v1.1.0
+        uses: sonarsource/sonarqube-scan-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
-          with:
+        with:
             # Additional arguments for the sonarcloud scanner
-            args:
+          args:
               # Unique key of your project. You can find it in SonarQube > [my project] > Project Information (top-right menu)
               # mandatory
-              -Dsonar.projectKey=Todo-App_jlh
-              -Dsonar.verbose=false
+            -Dsonar.projectKey=Todo-App_jlh
+            -Dsonar.verbose=false
