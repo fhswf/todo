@@ -10,6 +10,10 @@ on:
       - main
       - dev
 
+permissions:
+  pull-requests: read # allows SonarQube to decorate PRs with analysis results
+
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -55,3 +59,16 @@ jobs:
 
       - name: Clear Database
         run: ./automate_mongo.sh
+
+      - uses: sonarsource/sonarqube-scan-action@master
+          env:
+            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+            SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+          with:
+            # Additional arguments for the sonarcloud scanner
+            args:
+              # Unique key of your project. You can find it in SonarQube > [my project] > Project Information (top-right menu)
+              # mandatory
+              -Dsonar.projectKey=Todo-App_jlh
+              -Dsonar.verbose=false
