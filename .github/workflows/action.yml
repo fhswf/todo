@@ -57,8 +57,10 @@ jobs:
           sudo apt-get install -y gh
 
       - name: Set Port Visibility
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh codespace ports visibility 3000:public
-        
+
       - name: Install Cypress
         run: npm install cypress --save-dev
 
