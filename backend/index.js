@@ -4,7 +4,7 @@ import DB from './db.js'
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 
-import { check, validationResult } from 'express-validator';
+import { param, body, check, validationResult } from 'express-validator';
 import cookieParser from 'cookie-parser';
 import { getRandomValues } from 'crypto';
 
@@ -103,6 +103,12 @@ const todoValidationRules = [
         .withMessage('Titel muss mindestens 3 Zeichen lang sein'),
 ];
 
+const idValidationRules = [
+    param('id')
+        .isString().withMessage('ID must be a string')
+        .isLength({ min: 24, max: 24 }).withMessage('ID must be exactly 24 characters long')
+];
+
 
 /** Middleware for authentication. 
  * This middleware could be used to implement JWT-based authentication. Currently, this is only a stub.
@@ -166,8 +172,13 @@ app.get('/todos', authenticate,
  *     '500':
  *        description: Serverfehler
  */
-app.get('/todos/:id', authenticate,
+app.get('/todos/:id', idValidationRules, authenticate, 
     async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
         let id = req.params.id;
         return db.queryById(id)
             .then(todo => {
@@ -221,8 +232,13 @@ app.get('/todos/:id', authenticate,
  *    '500':
  *      description: Serverfehler
  */
-app.put('/todos/:id', authenticate,
+app.put('/todos/:id', idValidationRules, authenticate,
     async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+        
         let id = req.params.id;
         let todo = req.body;
         if (todo._id !== id) {

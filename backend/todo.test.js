@@ -104,7 +104,7 @@ describe('GET /todos/:id', () => {
     });
 
     it('sollte einen 404-Fehler zurückgeben, wenn das Todo nicht gefunden wurde', async () => {
-        const id = '123456789012345678901234';
+        const id = '67671536d128414e339547db';
 
         const getResponse = await request(app)
             .get(`/todos/${id}`)
@@ -114,16 +114,15 @@ describe('GET /todos/:id', () => {
         expect(getResponse.body.error).toMatch(/Todo with id .+ not found/);
     });
 
-    /*it('sollte einen 404-Fehler zurückgeben, wenn die ID ein falsches Format hat', async () => {
+    it('sollte einen 400-Fehler zurückgeben, wenn die ID ein falsches Format hat', async () => {
         const id = 'TEST';
 
         const getResponse = await request(app)
             .get(`/todos/${id}`)
             .set('Authorization', `Bearer ${token}`);
 
-        expect(getResponse.statusCode).toBe(404);
-        expect(getResponse.body.error).toMatch(/Todo with id .+ not found/);
-    });*/
+        expect(getResponse.statusCode).toBe(400);
+    });
 });
 
 describe('PUT /todos/:id', () => {
@@ -171,7 +170,7 @@ describe('PUT /todos/:id', () => {
             "title": "Übung 4 machen",
             "due": "2022-11-12T00:00:00.000Z",
             "status": 1,
-            "_id": "3147273457163434test"
+            "_id": "67671536d128414e339547db"
         };
 
         const updateResponse = await request(app)
@@ -181,40 +180,40 @@ describe('PUT /todos/:id', () => {
 
         expect(updateResponse.statusCode).toBe(400);
     });
-/*
+
     it('sollte einen 404-Fehler zurückgeben, wenn das Todo nicht gefunden wurde', async () => {
 
         const updatedTodo = {
             "title": "Übung 4 machen",
             "due": "2022-11-12T00:00:00.000Z",
             "status": 1,
-            "_id": "314727345716343465425847"
+            "_id": "67671536d128414e339547db"
         };
 
         const updateResponse = await request(app)
-            .put(`/todos/314727345716343465425847`)
+            .put(`/todos/67671536d128414e339547db`)
             .set('Authorization', `Bearer ${token}`)
             .send(updatedTodo);
 
         expect(updateResponse.statusCode).toBe(404);
     });
 
-    it('sollte einen 404-Fehler zurückgeben, wenn die ID das falsche Format hat', async () => {
+    it('sollte einen 400-Fehler zurückgeben, wenn die ID das falsche Format hat', async () => {
   
         const updatedTodo = {
             "title": "Übung 4 machen",
             "due": "2022-11-12T00:00:00.000Z",
             "status": 1,
-            "_id": "3147273457163434test"
+            "_id": "test"
         };
 
         const updateResponse = await request(app)
-            .put(`/todos/3147273457163434test`)
+            .put(`/todos/test`)
             .set('Authorization', `Bearer ${token}`)
             .send(updatedTodo);
 
         expect(updateResponse.statusCode).toBe(404);
-    });*/
+    });
 });
 
 describe('DELETE /todos/:id', () => {

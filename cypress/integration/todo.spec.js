@@ -13,7 +13,7 @@ describe('Todo Application', () => {
         cy.get('input[type="submit"]').click();
         cy.get('#todo-list').should('contain', 'Einkaufen');
     });
-/*
+
     it('should mark a todo item as completed', () => {
         cy.get('.todo').contains('Einkaufen').parent().find('button.status').click();
         cy.get('.todo').contains('Einkaufen').parent().find('button.status').should('not.contain', 'offen');
@@ -26,7 +26,7 @@ describe('Todo Application', () => {
             cy.get('.todo').contains('Einkaufen').parent().find('button.edit').click();
             cy.get('#todo').should('have.value', 'Einkaufen');
             cy.get('#due').should('have.value', '2024-12-31');
-            cy.get('#status').should('have.value', 0);
+            cy.get('#status').should('have.value', 1);
             cy.get('#todo').clear().type('Einkaufen erledigt');
             cy.get('input[type="submit"]').click();
             cy.get('#todo-list').should('contain', 'Einkaufen erledigt');
@@ -38,6 +38,6 @@ describe('Todo Application', () => {
 
     it('should delete a todo item', () => {
         cy.get('.todo').contains('Einkaufen').parent().find('button.delete').click();
-        cy.get('.todo-list').should('not.contain', 'Einkaufen');
-    }); */
+        cy.get('#todo-list').should('not.contain', 'Einkaufen');
+    }); 
 });
