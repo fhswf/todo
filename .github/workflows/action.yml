@@ -1,0 +1,78 @@
+name: action
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+  pull_request:
+    branches:
+      - main
+      - dev
+
+permissions:
+  pull-requests: read # allows SonarQube to decorate PRs with analysis results
+
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      mongodb:
+        image: mongo:4.4
+        ports: 
+        - 27017:27017
+
+    steps:
+      - name: Git Checkout
+        uses: actions/checkout@v4
+
+      - name: npm install
+        working-directory: ./backend
+        run: npm install
+
+      - name: Run Tests
+        working-directory: ./backend
+        run: npm run test
+
+      - name: Install mongosh
+        run: |
+          wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
+          echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
+          sudo apt-get update
+          sudo apt-get install -y mongodb-mongosh
+
+      - name: Clear Database
+        run: ./automate_mongo.sh
+
+ #     - name: Start backend server
+ #       run: |
+ #         cd backend
+ #         npm start &
+ #         cd ..
+
+ #     - name: Install Cypress
+ #       run: npm install cypress --save-dev
+
+ #     - name: Run Cypress tests
+ #       run: npx cypress run --spec "cypress/integration/todo.spec.js"
+
+ #     - name: Clear Database
+ #       run: ./automate_mongo.sh
+
+      - name: Analyze with SonarQube
+        if: always()
+        # You can pin the exact commit or the version.
+        # uses: SonarSource/sonarqube-scan-action@v1.1.0
+        uses: sonarsource/sonarqube-scan-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+        with:
+            # Additional arguments for the sonarcloud scanner
+          args:
+              # Unique key of your project. You can find it in SonarQube > [my project] > Project Information (top-right menu)
+              # mandatory
+            -Dsonar.projectKey=Todo-App_jlh
+            -Dsonar.verbose=false

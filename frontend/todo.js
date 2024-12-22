@@ -8,17 +8,17 @@ const API = "/todos"
 function createTodoElement(todo) {
     let list = document.getElementById("todo-list");
     let due = new Date(todo.due);
+    console.log("Created todo element: %o", todo._id);
     list.insertAdjacentHTML("beforeend",
         `<div class="todo" id="todo-${todo._id}">
            <div class="title">${todo.title}</div> 
            <div class="due">${due.toLocaleDateString()}</div>
            <div class="actions">
-              <button class="status" onclick="changeStatus(${todo._id})">${status[todo.status || 0]}</button>
-              <button class="edit" onclick="editTodo(${todo._id})">Bearbeiten</button>
-              <button class="delete" onclick="deleteTodo(${todo._id})">Löschen</button>
+              <button class="status" onclick="changeStatus('${todo._id}')">${status[todo.status || 0]}</button>
+              <button class="edit" onclick="editTodo('${todo._id}')">Bearbeiten</button>
+              <button class="delete" onclick="deleteTodo('${todo._id}')">Löschen</button>
            </div>
          </div>`);
-
 }
 
 
@@ -63,18 +63,18 @@ function saveTodo(evt) {
     evt.preventDefault();
 
     // Get the id from the form. If it is not set, we are creating a new todo.
-    let _id = Number.parseInt(evt.target.dataset.id) || Date.now();
-
-    let todo = {
-        _id,
-        title: evt.target.title.value,
-        due: evt.target.due.valueAsDate,
-        status: Number.parseInt(evt.target.status.value) || 0
-    }
+    let _id = evt.target.dataset._id || Date.now();
 
     // Save the todo
     let index = todos.findIndex(t => t._id === _id);
     if (index >= 0) {
+        let todo = {
+            _id,
+            title: evt.target.title.value,
+            due: evt.target.due.valueAsDate,
+            status: Number.parseInt(evt.target.status.value) || 0
+        }
+    
         console.log("Updating todo: %o", todo);
         fetch(API + "/" + _id, {
             method: "PUT",
@@ -92,6 +92,12 @@ function saveTodo(evt) {
                 return todos
             })
     } else {
+        let todo = {
+            title: evt.target.title.value,
+            due: evt.target.due.valueAsDate,
+            status: Number.parseInt(evt.target.status.value) || 0
+        }
+    
         console.log("Saving new todo: %o", todo);
         fetch(API, {
             method: "POST",
@@ -110,6 +116,7 @@ function saveTodo(evt) {
             })
     }
     evt.target.reset();
+    delete evt.target.dataset._id; // Entfernen der ID aus dem dataset des Formulars
 }
 
 function editTodo(id) {
