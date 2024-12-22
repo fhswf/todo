@@ -95,12 +95,48 @@ async function initDB() {
 }
 
 
-const todoValidationRules = [
+const addTodoValidationRules = [
     check('title')
         .notEmpty()
         .withMessage('Titel darf nicht leer sein')
         .isLength({ min: 3 })
         .withMessage('Titel muss mindestens 3 Zeichen lang sein'),
+    body('due')
+        .notEmpty().withMessage('Fälligkeitsdatum darf nicht leer sein')
+        .isISO8601().withMessage('Fälligkeitsdatum muss ein gültiges Datum sein'),
+    body('status')
+        .notEmpty().withMessage('Status darf nicht leer sein')
+        .isInt({ min: 0, max: 2 }).withMessage('Status muss eine Ganzzahl zwischen 0 und 2 sein'),
+    body().custom(value => {
+        const keys = ['title', 'due', 'status'];
+        const extraKeys = Object.keys(value).filter(key => !keys.includes(key));
+        if (extraKeys.length > 0) {
+            throw new Error(`Unbekannte Felder: ${extraKeys.join(', ')}`);
+        }
+        return true;
+    })
+];
+
+const editTodoValidationRules = [
+    check('title')
+        .notEmpty()
+        .withMessage('Titel darf nicht leer sein')
+        .isLength({ min: 3 })
+        .withMessage('Titel muss mindestens 3 Zeichen lang sein'),
+    body('due')
+        .notEmpty().withMessage('Fälligkeitsdatum darf nicht leer sein')
+        .isISO8601().withMessage('Fälligkeitsdatum muss ein gültiges Datum sein'),
+    body('status')
+        .notEmpty().withMessage('Status darf nicht leer sein')
+        .isInt({ min: 0, max: 2 }).withMessage('Status muss eine Ganzzahl zwischen 0 und 2 sein'),
+    body().custom(value => {
+        const keys = ['title', 'due', 'status', '_id'];
+        const extraKeys = Object.keys(value).filter(key => !keys.includes(key));
+        if (extraKeys.length > 0) {
+            throw new Error(`Unbekannte Felder: ${extraKeys.join(', ')}`);
+        }
+        return true;
+    })
 ];
 
 const idValidationRules = [
@@ -232,7 +268,7 @@ app.get('/todos/:id', idValidationRules, authenticate,
  *    '500':
  *      description: Serverfehler
  */
-app.put('/todos/:id', idValidationRules, authenticate,
+app.put('/todos/:id', idValidationRules.concat(editTodoValidationRules), authenticate,
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -251,7 +287,7 @@ app.put('/todos/:id', idValidationRules, authenticate,
                 if (todo) {
                     res.send(todo);
                 } else {
-                    res.sendStatus(404);
+                    res.status(404).send({ error: `Todo with id ${id} not found` });
                 }
             })
             .catch(err => {
@@ -285,8 +321,12 @@ app.put('/todos/:id', idValidationRules, authenticate,
  *     '500':
  *       description: Serverfehler
  */
-app.post('/todos', authenticate,
+app.post('/todos', addTodoValidationRules, authenticate,
     async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
         let todo = req.body;
         if (!todo) {
             res.sendStatus(400, { message: "Todo fehlt" });
@@ -324,15 +364,19 @@ app.post('/todos', authenticate,
  *        '500':
  *          description: Serverfehler
  */
-app.delete('/todos/:id', authenticate,
+app.delete('/todos/:id', idValidationRules, authenticate,
     async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
         let id = req.params.id;
         return db.delete(id)
             .then(todo => {
                 if (todo) {
                     res.sendStatus(204);
                 } else {
-                    res.sendStatus(404);
+                    res.status(404).send({ error: `Todo with id ${id} not found` });
                 }
             })
             .catch(err => {
