@@ -64,14 +64,6 @@ function saveTodo(evt) {
 
     // Get the id from the form. If it is not set, we are creating a new todo.
     let _id = evt.target.dataset._id || Date.now();
-    
-/*
-    let todo = {
-        _id,
-        title: evt.target.title.value,
-        due: evt.target.due.valueAsDate,
-        status: Number.parseInt(evt.target.status.value) || 0
-    }*/
 
     // Save the todo
     let index = todos.findIndex(t => t._id === _id);
